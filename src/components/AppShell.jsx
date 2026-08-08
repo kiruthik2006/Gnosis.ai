@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import {
   Terminal, LayoutDashboard, GitFork, Compass,
-  BookOpen, MessageSquareCode, Search, Bell, Settings,
-  ChevronLeft, ChevronRight, User, Sparkles
+  BookOpen, MessageSquareCode,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -24,6 +24,12 @@ const DEV_STEPS = [
   { num: 15, label: 'Dashboard'      },
 ];
 
+// How far the active tab protrudes rightward past the sidebar edge
+// to slide on top of the main container
+const TAB_PROTRUDE = 30;
+// Radius of the decorative curves at top/bottom of active tab
+const CURVE_R = 16;
+
 export default function AppShell({
   children,
   currentStep,
@@ -40,271 +46,297 @@ export default function AppShell({
     setStep(step);
   };
 
-  const gapSize = 16; // Gap size in pixels
-  const overlapSize = 48; // Extend 48px to completely slide behind the rounded main body
-
   return (
+    /*  ─── OUTER PAGE: deep dark-green radial gradient ─── */
     <div style={{
       height: '100vh',
       width: '100vw',
-      background: 'radial-gradient(circle at 50% 30%, #0A5E44 0%, #04241C 70%, #010F0B 100%)',
+      background: 'radial-gradient(ellipse 120% 80% at 50% 20%, #0d6b4a 0%, #042e20 55%, #01100a 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontFamily: 'var(--font-sans)',
-      boxSizing: 'border-box',
       overflow: 'hidden',
       position: 'relative',
-      padding: '20px'
+      padding: '20px',
+      boxSizing: 'border-box',
+      fontFamily: 'var(--font-sans)',
     }}>
-      
-      {/* Background star particles */}
-      <div style={{ position: 'absolute', top: '15%', left: '25%', width: '2px', height: '2px', background: '#FFF', opacity: 0.5, boxShadow: '0 0 8px #FFF' }} />
-      <div style={{ position: 'absolute', top: '8%', left: '45%', width: '3px', height: '3px', background: '#FFF', opacity: 0.7, boxShadow: '0 0 10px #FFF' }} />
-      <div style={{ position: 'absolute', top: '25%', right: '30%', width: '2px', height: '2px', background: '#FFF', opacity: 0.4, boxShadow: '0 0 6px #FFF' }} />
 
-      {/* Main outer wrapper */}
+      {/* Subtle star dots */}
+      {[
+        { top: '14%', left: '24%', s: 2, o: 0.5 },
+        { top:  '7%', left: '44%', s: 3, o: 0.7 },
+        { top: '24%', right: '29%', s: 2, o: 0.4 },
+        { top: '60%', left: '10%', s: 2, o: 0.35 },
+        { top: '80%', right: '15%', s: 2, o: 0.45 },
+      ].map((p, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          top: p.top, left: p.left, right: p.right,
+          width: p.s, height: p.s,
+          borderRadius: '50%',
+          background: '#fff',
+          opacity: p.o,
+          boxShadow: `0 0 ${p.s * 3}px #fff`,
+          pointerEvents: 'none',
+        }} />
+      ))}
+
+      {/*  ─── MAIN ROW: sidebar + 16px gap + white panel ─── */}
       <div style={{
         width: '100%',
-        maxWidth: '1200px',
+        maxWidth: 1220,
+        height: '100%',
+        maxHeight: 720,
         display: 'flex',
-        gap: `${gapSize}px`,
-        alignItems: 'stretch',
-        height: '700px',
-        overflow: 'hidden'
+        gap: 16,
+        overflow: 'visible',     // allow sidebar to paint over gap
       }}>
 
-        {/* ── 1. DYNAMIC EXPANDABLE SIDEBAR (Glassmorphic Green) ── */}
+        {/* ═══════════════════════════════════════════════
+            SIDEBAR
+            zIndex 20 — paints on top of the white panel
+        ═══════════════════════════════════════════════ */}
         {isLoggedIn && (
-          <aside 
+          <aside
             onMouseEnter={() => setIsExpanded(true)}
             onMouseLeave={() => setIsExpanded(false)}
             style={{
-              width: isExpanded ? '200px' : '72px',
-              background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(4, 36, 28, 0.35) 100%)',
+              position: 'relative',
+              zIndex: 20,              // above main panel (zIndex 10)
+              flexShrink: 0,
+              width: isExpanded ? 200 : 72,
+              transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1)',
+              // The pill itself is painted via an inner wrapper so that
+              // overflow:visible works on this element for the tab protrusion
+              overflow: 'visible',
+            }}
+          >
+            {/* Pill background — full height, rounded on ALL sides */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, rgba(16,185,129,0.16) 0%, rgba(4,36,28,0.42) 100%)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(16, 185, 129, 0.25)',
-              borderRadius: '32px',
-              padding: '24px 0',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(16,185,129,0.28)',
+              borderRadius: 32,
+              boxShadow: '0 20px 50px rgba(0,0,0,0.35)',
+              pointerEvents: 'none',
+            }} />
+
+            {/* Content column */}
+            <div style={{
+              position: 'relative',
+              zIndex: 2,
+              height: '100%',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-              flexShrink: 0,
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-              position: 'relative',
-              zIndex: 1, // Set lower than the main container so active tab slides behind it
-              overflow: 'visible'
-            }}
-          >
-            {/* Top Logo */}
-            <div style={{
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              position: 'relative'
+              padding: '24px 0',
             }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                background: 'rgba(16, 185, 129, 0.2)',
-                border: '1.5px solid rgba(16, 185, 129, 0.4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#A7F3D0',
-                cursor: 'pointer',
-                boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)'
-              }}>
-                <Terminal size={18} strokeWidth={2.5} />
+
+              {/* ── LOGO AREA ── */}
+              <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                {/* Terminal icon circle */}
+                <div
+                  onClick={() => navigate('dashboard', 15)}
+                  style={{
+                    width: 44, height: 44,
+                    borderRadius: '50%',
+                    background: 'rgba(16,185,129,0.22)',
+                    border: '1.5px solid rgba(255,255,255,0.35)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    boxShadow: '0 0 14px rgba(16,185,129,0.4)',
+                    flexShrink: 0,
+                  }}>
+                  <Terminal size={20} strokeWidth={2.4} />
+                </div>
+
+                {/* Chevron toggle — dark pill so it's always visible */}
+                <div style={{
+                  position: 'absolute',
+                  top: 12, right: -10,
+                  width: 18, height: 18,
+                  borderRadius: '50%',
+                  background: '#04241c',
+                  border: '1.5px solid rgba(16,185,129,0.6)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#a7f3d0',
+                  zIndex: 30,
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                }}>
+                  {isExpanded ? <ChevronLeft size={10} /> : <ChevronRight size={10} />}
+                </div>
               </div>
-              
-              <div style={{
-                position: 'absolute',
-                top: '12px',
-                right: '-9px',
-                background: 'rgba(16, 185, 129, 0.4)',
-                border: '1px solid rgba(16, 185, 129, 0.6)',
-                borderRadius: '50%',
-                width: '18px',
-                height: '18px',
+
+              {/* ── NAV ITEMS ── */}
+              <nav style={{
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFF',
-                zIndex: 12
+                flexDirection: 'column',
+                gap: 8,
+                width: '100%',
+                paddingLeft: isExpanded ? 12 : 0,
+                transition: 'padding 0.25s',
+                overflow: 'visible',
               }}>
-                {isExpanded ? <ChevronLeft size={10} /> : <ChevronRight size={10} />}
-              </div>
-            </div>
+                {NAV_ITEMS.map(item => {
+                  const Icon = item.icon;
+                  const isActive = activeNavId === item.id;
 
-            {/* Menu Navigation List */}
-            <nav style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              width: '100%',
-              paddingLeft: isExpanded ? '12px' : '0px',
-              transition: 'padding 0.25s',
-              overflow: 'visible'
-            }}>
-              {NAV_ITEMS.map(item => {
-                const Icon = item.icon;
-                const isActive = activeNavId === item.id;
-                
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => navigate(item.id, item.step)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '12px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      position: 'relative',
-                      background: isActive ? '#FFFFFF' : 'transparent',
-                      borderRadius: isActive ? '20px 0 0 20px' : '16px',
-                      color: isActive ? '#04241C' : '#A7F3D0',
-                      justifyContent: isExpanded ? 'flex-start' : 'center',
-                      // Protrude right to bridge the gap and slide underneath the main container
-                      width: isActive ? `calc(100% + ${overlapSize}px)` : '100%',
-                      marginRight: isActive ? `-${overlapSize}px` : '0px',
-                      boxShadow: isActive ? '-5px 5px 15px rgba(0,0,0,0.1)' : 'none'
-                    }}
-                  >
-                    <Icon size={18} strokeWidth={isActive ? 2.5 : 1.8} />
-                    {isExpanded && (
-                      <span style={{ 
-                        fontSize: '0.8rem', 
-                        fontWeight: 700,
-                        whiteSpace: 'nowrap'
-                      }}>
-                        {item.label}
-                      </span>
-                    )}
+                  return (
+                    <div
+                      key={item.id}
+                      style={{ position: 'relative', overflow: 'visible', width: '100%' }}
+                    >
+                      {/* Active tab button — protrudes rightward to cover gap + main border */}
+                      <button
+                        onClick={() => navigate(item.id, item.step)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 12,
+                          padding: 12,
+                          border: 'none',
+                          cursor: 'pointer',
+                          position: 'relative',
+                          background: isActive ? '#ffffff' : 'transparent',
+                          // Rounded on left, flat on right when active (seamless with main panel)
+                          borderRadius: isActive ? '20px 0 0 20px' : 16,
+                          color: isActive ? '#04241c' : '#a7f3d0',
+                          justifyContent: isExpanded ? 'flex-start' : 'center',
+                          transition: 'all 0.2s ease',
+                          // Protrude past the sidebar right edge
+                          width: isActive ? `calc(100% + ${TAB_PROTRUDE}px)` : '100%',
+                          marginRight: isActive ? -TAB_PROTRUDE : 0,
+                          fontFamily: 'inherit',
+                        }}
+                      >
+                        <Icon size={18} strokeWidth={isActive ? 2.4 : 1.8} />
+                        {isExpanded && (
+                          <span style={{ fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                            {item.label}
+                          </span>
+                        )}
+                      </button>
 
-                    {/* Seamless white connection/cutout */}
-                    {isActive && (
-                      <>
-                        {/* Top curve block positioned at the sidebar boundary */}
-                        <div style={{
-                          position: 'absolute',
-                          right: `${overlapSize}px`,
-                          top: '-16px',
-                          width: '16px',
-                          height: '16px',
-                          background: 'transparent',
-                          borderBottomRightRadius: '16px',
-                          boxShadow: '8px 8px 0 8px #FFFFFF',
-                          pointerEvents: 'none',
-                          zIndex: 25
-                        }} />
-                        {/* Bottom curve block positioned at the sidebar boundary */}
-                        <div style={{
-                          position: 'absolute',
-                          right: `${overlapSize}px`,
-                          bottom: '-16px',
-                          width: '16px',
-                          height: '16px',
-                          background: 'transparent',
-                          borderTopRightRadius: '16px',
-                          boxShadow: '8px -8px 0 8px #FFFFFF',
-                          pointerEvents: 'none',
-                          zIndex: 25
-                        }} />
-                      </>
-                    )}
-                  </button>
-                );
-              })}
-            </nav>
+                      {/* ── Reverse-curve cutouts that hug the sidebar right edge ── */}
+                      {isActive && (
+                        <>
+                          {/* TOP curve — white shadow pops outward to fill the notch */}
+                          <div style={{
+                            position: 'absolute',
+                            right: TAB_PROTRUDE,
+                            top: -CURVE_R,
+                            width: CURVE_R,
+                            height: CURVE_R,
+                            pointerEvents: 'none',
+                            background: 'transparent',
+                            borderBottomRightRadius: CURVE_R,
+                            boxShadow: `${CURVE_R / 2}px ${CURVE_R / 2}px 0 ${CURVE_R / 2}px #ffffff`,
+                            zIndex: 30,
+                          }} />
+                          {/* BOTTOM curve */}
+                          <div style={{
+                            position: 'absolute',
+                            right: TAB_PROTRUDE,
+                            bottom: -CURVE_R,
+                            width: CURVE_R,
+                            height: CURVE_R,
+                            pointerEvents: 'none',
+                            background: 'transparent',
+                            borderTopRightRadius: CURVE_R,
+                            boxShadow: `${CURVE_R / 2}px -${CURVE_R / 2}px 0 ${CURVE_R / 2}px #ffffff`,
+                            zIndex: 30,
+                          }} />
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </nav>
 
-            {/* Bottom Avatar */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}>
+              {/* ── BOTTOM AVATAR ── */}
               <div style={{
-                width: '32px',
-                height: '32px',
+                width: 34, height: 34,
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '2px solid rgba(16, 185, 129, 0.4)',
-                cursor: 'pointer'
+                border: '2px solid rgba(16,185,129,0.45)',
+                cursor: 'pointer',
+                flexShrink: 0,
               }}>
-                <img 
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" 
-                  alt="Avatar" 
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                  alt="Avatar"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
-            </div>
 
+            </div>
           </aside>
         )}
 
-        {/* ── 2. SEPARATE MAIN WORKSPACE (White Container) ── */}
+        {/* ═══════════════════════════════════════════════
+            MAIN WHITE PANEL
+            zIndex 10 — lower than sidebar
+            The active tab white area slides ON TOP of this panel's left border
+        ═══════════════════════════════════════════════ */}
         <div style={{
           flex: 1,
-          background: '#FFFFFF', // Solid white background hides overlapping active tab perfectly
-          borderRadius: '32px',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
+          position: 'relative',
+          zIndex: 10,
+          background: '#ffffff',
+          borderRadius: 32,
+          border: '1px solid rgba(16,185,129,0.18)',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.28)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           minWidth: 0,
-          border: '1px solid rgba(16, 185, 129, 0.2)',
-          position: 'relative',
-          zIndex: 10 // Set higher than the sidebar so the active tab white connector slides underneath
         }}>
 
-          {/* Floating Dev quick jumper bar */}
+          {/* Dev jumper bar (hidden on Dashboard step) */}
           {currentStep !== 15 && (
             <div style={{
-              background: '#F3F4F6',
-              borderBottom: '1px solid #E5E7EB',
-              height: '30px',
+              background: '#f3f4f6',
+              borderBottom: '1px solid #e5e7eb',
+              height: 30,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '0 24px',
               fontSize: '0.7rem',
-              flexShrink: 0
+              flexShrink: 0,
             }}>
-              <div style={{ fontWeight: 600, color: '#374151' }}>
-                PROTOTYPE STEP {currentStep}: {DEV_STEPS.find(s => s.num === currentStep)?.label}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontWeight: 600, color: '#374151' }}>
+                STEP {currentStep}: {DEV_STEPS.find(s => s.num === currentStep)?.label}
+              </span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <select
                   value={currentStep}
                   onChange={e => setStep(Number(e.target.value))}
-                  style={{ fontSize: '0.65rem', padding: '1px', borderRadius: '4px', border: '1px solid #D1D5DB' }}
+                  style={{ fontSize: '0.65rem', padding: '1px 2px', borderRadius: 4, border: '1px solid #d1d5db' }}
                 >
-                  {DEV_STEPS.map(s => <option key={s.num} value={s.num}>Step {s.num}: {s.label}</option>)}
+                  {DEV_STEPS.map(s => (
+                    <option key={s.num} value={s.num}>Step {s.num}: {s.label}</option>
+                  ))}
                 </select>
-                <button onClick={() => setStep(Math.max(1, currentStep - 1))} style={{ padding: '1px 4px', background: '#FFF', border: '1px solid #D1D5DB', borderRadius: '4px' }}>Prev</button>
-                <button onClick={() => setStep(Math.min(15, currentStep + 1))} style={{ padding: '1px 4px', background: '#FFF', border: '1px solid #D1D5DB', borderRadius: '4px' }}>Next</button>
+                <button onClick={() => setStep(Math.max(1, currentStep - 1))} style={{ padding: '1px 5px', background: '#fff', border: '1px solid #d1d5db', borderRadius: 4 }}>Prev</button>
+                <button onClick={() => setStep(Math.min(15, currentStep + 1))} style={{ padding: '1px 5px', background: '#fff', border: '1px solid #d1d5db', borderRadius: 4 }}>Next</button>
               </div>
             </div>
           )}
 
-          {/* Inner Content scroll body */}
-          <div style={{
-            flex: 1,
-            overflow: 'hidden'
-          }}>
+          {/* Page content — no scroll */}
+          <div style={{ flex: 1, overflow: 'hidden' }}>
             {children}
           </div>
 
         </div>
-
       </div>
     </div>
   );
