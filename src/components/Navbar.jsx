@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-  Terminal, LayoutDashboard, GitFork, Compass, BookOpen, MessageSquareCode
+  LayoutDashboard, GitFork, Compass, BookOpen, MessageSquareCode
 } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, isLoggedIn }) {
   const steps = [
@@ -27,18 +28,22 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
 
   return (
     <header style={{
-      background: 'var(--bg-card)',
-      borderBottom: '1px solid var(--border-light)',
+      background: 'rgba(255, 255, 255, 0.78)',
+      backdropFilter: 'blur(16px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+      borderBottom: '1px solid rgba(232, 226, 213, 0.7)',
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      boxShadow: 'var(--shadow-sm)'
+      boxShadow: '0 4px 20px rgba(28, 27, 26, 0.04)'
     }}>
       {/* ── Dev prototype navigation bar (hidden on dashboard) ── */}
       {showDevBar && (
         <div style={{
-          background: 'var(--bg-subtle)',
-          borderBottom: '1px solid var(--border-light)',
+          background: 'rgba(243, 239, 231, 0.65)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          borderBottom: '1px solid rgba(232, 226, 213, 0.6)',
           padding: '0.4rem 1.5rem',
           fontSize: '0.8125rem',
           display: 'flex',
@@ -118,42 +123,13 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
         gap: '1rem'
       }}>
         {/* Brand */}
-        <div
+        <Logo
+          size={32}
+          variant="dark"
+          showText={true}
+          subtitle="Build the interviewer, not the interview."
           onClick={() => setStep(15)}
-          style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', cursor: 'pointer', flexShrink: 0 }}
-        >
-          <div style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: 'var(--radius-sm)',
-            background: 'var(--text-primary)',
-            color: 'var(--bg-card)',
-            display: 'flex',
-            alignItems: 'center',
-            justify: 'center'
-          }}>
-            <Terminal size={17} strokeWidth={2.3} />
-          </div>
-          <div>
-            <div style={{
-              fontWeight: 700,
-              fontSize: '0.9375rem',
-              letterSpacing: '-0.02em',
-              color: 'var(--text-primary)',
-              lineHeight: 1.15
-            }}>
-              INTERVIEW AGENT
-            </div>
-            <div style={{
-              fontSize: '0.6875rem',
-              color: 'var(--text-muted)',
-              fontWeight: 500,
-              lineHeight: 1.1
-            }}>
-              Build the interviewer, not the interview.
-            </div>
-          </div>
-        </div>
+        />
 
         {/* Center nav tabs — only when logged in */}
         {isLoggedIn && (

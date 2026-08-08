@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   /* Warm Neutral Color Palette */
   --bg-main: #FAF8F5;
-  --bg-card: #FFFFFF;
-  --bg-card-hover: #FDFBF7;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(253, 251, 247, 0.95);
   --bg-subtle: #F3EFE7;
   --bg-muted: #EBE5D9;
   
-  --border-light: #E8E2D5;
+  --border-light: rgba(232, 226, 213, 0.8);
   --border-strong: #D6CFBE;
   --border-focus: #1C1B1A;
 
@@ -19,29 +19,35 @@
 
   /* Subtle Status & Accent Colors */
   --accent-warm: #C47838;
-  --accent-warm-light: #FDF6EE;
+  --accent-warm-light: rgba(253, 246, 238, 0.85);
   --accent-warm-border: #E8D4C0;
   
   --status-strong: #2E6F40;
-  --status-strong-bg: #F0F7F2;
+  --status-strong-bg: rgba(240, 257, 242, 0.85);
   --status-strong-border: #C6E3CE;
   
   --status-moderate: #C47838;
-  --status-moderate-bg: #FDF6EE;
+  --status-moderate-bg: rgba(253, 246, 238, 0.85);
   --status-moderate-border: #E8D4C0;
 
   --status-needs-practice: #D9534F;
-  --status-needs-practice-bg: #FDF2F2;
+  --status-needs-practice-bg: rgba(253, 242, 242, 0.85);
   --status-needs-practice-border: #F5C6C6;
 
   --status-locked: #8C867A;
   --status-locked-bg: #F3EFE7;
   --status-locked-border: #E4DFD5;
 
+  /* Glassmorphism Design Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-shadow: 0 8px 32px rgba(28, 27, 26, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  --glass-blur: blur(16px) saturate(180%);
+
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(28, 27, 26, 0.04), 0 1px 2px rgba(28, 27, 26, 0.02);
-  --shadow-md: 0 4px 16px rgba(28, 27, 26, 0.05), 0 2px 6px rgba(28, 27, 26, 0.03);
-  --shadow-lg: 0 12px 32px rgba(28, 27, 26, 0.07), 0 4px 12px rgba(28, 27, 26, 0.04);
+  --shadow-sm: 0 2px 6px rgba(28, 27, 26, 0.04);
+  --shadow-md: 0 6px 20px rgba(28, 27, 26, 0.06), 0 2px 6px rgba(28, 27, 26, 0.03);
+  --shadow-lg: 0 16px 40px rgba(28, 27, 26, 0.08), 0 4px 12px rgba(28, 27, 26, 0.04);
   --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.03);
 
   /* Fonts */
@@ -92,7 +98,7 @@ input, textarea, select {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
+  background: rgba(214, 207, 190, 0.8);
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -123,10 +129,44 @@ input, textarea, select {
   animation: pulseGlow 2s infinite;
 }
 
+/* Glassmorphism Utility Classes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 8px 32px rgba(28, 27, 26, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+}
+
+.glass-card-dark {
+  background: rgba(24, 24, 27, 0.82) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
+}
+
+.glass-bar {
+  background: rgba(243, 239, 231, 0.72) !important;
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border-bottom: 1px solid rgba(232, 226, 213, 0.6) !important;
+}
+
 /* Base Card Styles */
 .saas-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(232, 226, 213, 0.8);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -135,6 +175,7 @@ input, textarea, select {
 .saas-card:hover {
   border-color: var(--border-strong);
   box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .saas-card-interactive {
@@ -142,14 +183,14 @@ input, textarea, select {
 }
 
 .saas-card-selected {
-  background: var(--bg-card);
-  border-color: var(--text-primary) !important;
-  box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #18181b !important;
+  box-shadow: 0 8px 24px rgba(24, 24, 27, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
 }
 
 /* Primary & Secondary Buttons */
 .btn-primary {
-  background: var(--text-primary);
+  background: #18181b;
   color: var(--text-inverse);
   font-weight: 600;
   font-size: 0.9375rem;
@@ -160,18 +201,21 @@ input, textarea, select {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(24, 24, 27, 0.15);
 }
 
 .btn-primary:hover {
   background: #343230;
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 18px rgba(24, 24, 27, 0.25);
 }
 
 .btn-secondary {
-  background: var(--bg-card);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: var(--text-primary);
-  border: 1px solid var(--border-light);
+  border: 1px solid rgba(232, 226, 213, 0.9);
   font-weight: 600;
   font-size: 0.9375rem;
   padding: 0.75rem 1.5rem;
@@ -184,7 +228,7 @@ input, textarea, select {
 }
 
 .btn-secondary:hover {
-  background: var(--bg-subtle);
+  background: rgba(243, 239, 231, 0.9);
   border-color: var(--border-strong);
 }
 
@@ -200,7 +244,8 @@ input, textarea, select {
 
 .btn-ghost:hover {
   color: var(--text-primary);
-  background: var(--bg-subtle);
+  background: rgba(243, 239, 231, 0.7);
+  backdrop-filter: blur(6px);
 }
 
 /* Status Badges */
@@ -214,37 +259,35 @@ input, textarea, select {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .badge-strong {
-  background: var(--status-strong-bg);
+  background: rgba(240, 253, 244, 0.85);
   color: var(--status-strong);
   border: 1px solid var(--status-strong-border);
 }
 
 .badge-moderate {
-  background: var(--status-moderate-bg);
+  background: rgba(254, 252, 232, 0.85);
   color: var(--status-moderate);
   border: 1px solid var(--status-moderate-border);
 }
 
 .badge-practice {
-  background: var(--status-needs-practice-bg);
+  background: rgba(254, 242, 242, 0.85);
   color: var(--status-needs-practice);
   border: 1px solid var(--status-needs-practice-border);
 }
 
 .badge-locked {
-  background: var(--status-locked-bg);
+  background: rgba(243, 239, 231, 0.85);
   color: var(--status-locked);
   border: 1px solid var(--status-locked-border);
 }
 
-/* ── Skill Tree premium outer frame ── */
-.skill-tree-frame {
-  /* desktop defaults set inline */
-}
-
+/* Responsive */
 @media (max-width: 1024px) {
   .skill-tree-frame {
     border-radius: 24px !important;
@@ -256,18 +299,5 @@ input, textarea, select {
   .skill-tree-frame {
     border-radius: 16px !important;
     padding: 1.25rem 1rem !important;
-  }
-}
-
-/* ── App Shell responsive ── */
-@media (max-width: 1100px) {
-  .app-right-panel {
-    display: none !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .app-sidebar {
-    display: none !important;
   }
 }

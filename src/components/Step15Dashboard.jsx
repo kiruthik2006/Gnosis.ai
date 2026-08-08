@@ -38,12 +38,13 @@ export default function Step15Dashboard({ onNavigateStep }) {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      gap: '14px', // Reduced spacing to prevent overflow
-      padding: '16px 20px', // Compact padding
+      gap: '16px',
+      padding: '24px 28px',
       background: '#FAF9F6',
-      height: '100%',
+      flex: 1,
+      minHeight: '100%',
       boxSizing: 'border-box',
-      overflow: 'hidden' // Secure no inner scrollbars
+      overflowY: 'auto'
     }}>
 
       {/* ── 1. HEADER ROW ── */}

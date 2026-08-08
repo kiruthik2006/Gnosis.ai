@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Terminal, LayoutDashboard, GitFork, Compass,
+  LayoutDashboard, GitFork, Compass,
   BookOpen, MessageSquareCode,
   ChevronLeft, ChevronRight
 } from 'lucide-react';
+import Logo from './Logo';
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard',    icon: LayoutDashboard,   step: 15 },
@@ -24,11 +25,8 @@ const DEV_STEPS = [
   { num: 15, label: 'Dashboard'      },
 ];
 
-// How far the active tab protrudes rightward past the sidebar edge
-// to slide on top of the main container
+// How far active/hovered tabs protrude rightward past the sidebar edge to slide under the main panel
 const TAB_PROTRUDE = 30;
-// Radius of the decorative curves at top/bottom of active tab
-const CURVE_R = 16;
 
 export default function AppShell({
   children,
@@ -39,6 +37,7 @@ export default function AppShell({
   isLoggedIn
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [hoveredNavId, setHoveredNavId] = useState(null);
   const activeNavId = NAV_ITEMS.find(n => n.step === currentStep)?.id ?? activeTab;
 
   const navigate = (id, step) => {
@@ -57,7 +56,7 @@ export default function AppShell({
       justifyContent: 'center',
       overflow: 'hidden',
       position: 'relative',
-      padding: '20px',
+      padding: '16px',
       boxSizing: 'border-box',
       fontFamily: 'var(--font-sans)',
     }}>
@@ -85,9 +84,9 @@ export default function AppShell({
       {/*  ─── MAIN ROW: sidebar + 16px gap + white panel ─── */}
       <div style={{
         width: '100%',
-        maxWidth: 1220,
+        maxWidth: 1480,
         height: '100%',
-        maxHeight: 720,
+        maxHeight: 880,
         display: 'flex',
         gap: 16,
         overflow: 'visible',     // allow sidebar to paint over gap
@@ -95,7 +94,7 @@ export default function AppShell({
 
         {/* ═══════════════════════════════════════════════
             SIDEBAR
-            zIndex 20 — paints on top of the white panel
+            zIndex 5 — behind the white panel (zIndex 10)
         ═══════════════════════════════════════════════ */}
         {isLoggedIn && (
           <aside
@@ -103,12 +102,10 @@ export default function AppShell({
             onMouseLeave={() => setIsExpanded(false)}
             style={{
               position: 'relative',
-              zIndex: 20,              // above main panel (zIndex 10)
+              zIndex: 5,               // behind main panel (zIndex 10)
               flexShrink: 0,
               width: isExpanded ? 200 : 72,
               transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1)',
-              // The pill itself is painted via an inner wrapper so that
-              // overflow:visible works on this element for the tab protrusion
               overflow: 'visible',
             }}
           >
@@ -139,22 +136,11 @@ export default function AppShell({
 
               {/* ── LOGO AREA ── */}
               <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                {/* Terminal icon circle */}
-                <div
+                <Logo
+                  size={42}
+                  variant="emerald"
                   onClick={() => navigate('dashboard', 15)}
-                  style={{
-                    width: 44, height: 44,
-                    borderRadius: '50%',
-                    background: 'rgba(16,185,129,0.22)',
-                    border: '1.5px solid rgba(255,255,255,0.35)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#ffffff',
-                    cursor: 'pointer',
-                    boxShadow: '0 0 14px rgba(16,185,129,0.4)',
-                    flexShrink: 0,
-                  }}>
-                  <Terminal size={20} strokeWidth={2.4} />
-                </div>
+                />
 
                 {/* Chevron toggle — dark pill so it's always visible */}
                 <div style={{
@@ -187,15 +173,19 @@ export default function AppShell({
                 {NAV_ITEMS.map(item => {
                   const Icon = item.icon;
                   const isActive = activeNavId === item.id;
+                  const isHovered = hoveredNavId === item.id;
+                  const isExtended = isActive || isHovered;
 
                   return (
                     <div
                       key={item.id}
                       style={{ position: 'relative', overflow: 'visible', width: '100%' }}
                     >
-                      {/* Active tab button — protrudes rightward to cover gap + main border */}
+                      {/* Active or hovered tab button — extends rightward under main body panel */}
                       <button
                         onClick={() => navigate(item.id, item.step)}
+                        onMouseEnter={() => setHoveredNavId(item.id)}
+                        onMouseLeave={() => setHoveredNavId(null)}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
@@ -204,15 +194,21 @@ export default function AppShell({
                           border: 'none',
                           cursor: 'pointer',
                           position: 'relative',
-                          background: isActive ? '#ffffff' : 'transparent',
-                          // Rounded on left, flat on right when active (seamless with main panel)
-                          borderRadius: isActive ? '20px 0 0 20px' : 16,
-                          color: isActive ? '#04241c' : '#a7f3d0',
+                          background: isActive
+                            ? '#ffffff'
+                            : isHovered
+                              ? 'rgba(255, 255, 255, 0.15)'
+                              : 'transparent',
+                          borderRadius: isExtended ? '20px 0 0 20px' : 16,
+                          color: isActive
+                            ? '#04241c'
+                            : isHovered
+                              ? '#ffffff'
+                              : '#a7f3d0',
                           justifyContent: isExpanded ? 'flex-start' : 'center',
-                          transition: 'all 0.2s ease',
-                          // Protrude past the sidebar right edge
-                          width: isActive ? `calc(100% + ${TAB_PROTRUDE}px)` : '100%',
-                          marginRight: isActive ? -TAB_PROTRUDE : 0,
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                          width: isExtended ? `calc(100% + ${TAB_PROTRUDE}px)` : '100%',
+                          marginRight: isExtended ? -TAB_PROTRUDE : 0,
                           fontFamily: 'inherit',
                         }}
                       >
@@ -223,38 +219,6 @@ export default function AppShell({
                           </span>
                         )}
                       </button>
-
-                      {/* ── Reverse-curve cutouts that hug the sidebar right edge ── */}
-                      {isActive && (
-                        <>
-                          {/* TOP curve — white shadow pops outward to fill the notch */}
-                          <div style={{
-                            position: 'absolute',
-                            right: TAB_PROTRUDE,
-                            top: -CURVE_R,
-                            width: CURVE_R,
-                            height: CURVE_R,
-                            pointerEvents: 'none',
-                            background: 'transparent',
-                            borderBottomRightRadius: CURVE_R,
-                            boxShadow: `${CURVE_R / 2}px ${CURVE_R / 2}px 0 ${CURVE_R / 2}px #ffffff`,
-                            zIndex: 30,
-                          }} />
-                          {/* BOTTOM curve */}
-                          <div style={{
-                            position: 'absolute',
-                            right: TAB_PROTRUDE,
-                            bottom: -CURVE_R,
-                            width: CURVE_R,
-                            height: CURVE_R,
-                            pointerEvents: 'none',
-                            background: 'transparent',
-                            borderTopRightRadius: CURVE_R,
-                            boxShadow: `${CURVE_R / 2}px -${CURVE_R / 2}px 0 ${CURVE_R / 2}px #ffffff`,
-                            zIndex: 30,
-                          }} />
-                        </>
-                      )}
                     </div>
                   );
                 })}
@@ -281,18 +245,19 @@ export default function AppShell({
         )}
 
         {/* ═══════════════════════════════════════════════
-            MAIN WHITE PANEL
+            MAIN GLASS PANEL
             zIndex 10 — lower than sidebar
-            The active tab white area slides ON TOP of this panel's left border
         ═══════════════════════════════════════════════ */}
         <div style={{
           flex: 1,
           position: 'relative',
           zIndex: 10,
-          background: '#ffffff',
+          background: 'rgba(255, 255, 255, 0.88)',
+          backdropFilter: 'blur(20px) saturate(190%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(190%)',
           borderRadius: 32,
-          border: '1px solid rgba(16,185,129,0.18)',
-          boxShadow: '0 24px 60px rgba(0,0,0,0.28)',
+          border: '1px solid rgba(255, 255, 255, 0.65)',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.28), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -302,8 +267,10 @@ export default function AppShell({
           {/* Dev jumper bar (hidden on Dashboard step) */}
           {currentStep !== 15 && (
             <div style={{
-              background: '#f3f4f6',
-              borderBottom: '1px solid #e5e7eb',
+              background: 'rgba(243, 244, 246, 0.68)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              borderBottom: '1px solid rgba(229, 231, 235, 0.7)',
               height: 30,
               display: 'flex',
               alignItems: 'center',
@@ -331,8 +298,8 @@ export default function AppShell({
             </div>
           )}
 
-          {/* Page content — no scroll */}
-          <div style={{ flex: 1, overflow: 'hidden' }}>
+          {/* Page content */}
+          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
             {children}
           </div>
 

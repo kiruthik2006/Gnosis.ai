@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Terminal, Lock, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, ArrowRight } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Step1Login({ onContinue }) {
   const [email, setEmail] = useState('alex.morgan@example.com');
@@ -30,19 +31,8 @@ export default function Step1Login({ onContinue }) {
         textAlign: 'center'
       }}>
         {/* Logo Badge */}
-        <div style={{
-          width: '52px',
-          height: '52px',
-          margin: '0 auto 1.25rem auto',
-          borderRadius: 'var(--radius-md)',
-          background: 'var(--text-primary)',
-          color: 'var(--bg-card)',
-          display: 'flex',
-          alignItems: 'center',
-          justify: 'center',
-          boxShadow: 'var(--shadow-md)'
-        }}>
-          <Terminal size={28} strokeWidth={2} />
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+          <Logo size={48} variant="dark" />
         </div>
 
         {/* Title & Tagline */}
