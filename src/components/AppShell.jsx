@@ -40,61 +40,37 @@ export default function AppShell({
     setStep(step);
   };
 
+  const gapSize = 16; // 16px gap between sidebar and main container
+
   return (
     <div style={{
-      minHeight: '100vh',
-      // Deep glowing dark emerald radial gradient background with subtle stars
+      height: '100vh',
+      width: '100vw',
       background: 'radial-gradient(circle at 50% 30%, #0A5E44 0%, #04241C 70%, #010F0B 100%)',
-      padding: '24px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       fontFamily: 'var(--font-sans)',
       boxSizing: 'border-box',
       overflow: 'hidden',
-      position: 'relative'
+      position: 'relative',
+      padding: '20px'
     }}>
       
-      {/* Visual background star particles matching the screenshot */}
-      <div style={{
-        position: 'absolute',
-        top: '15%',
-        left: '25%',
-        width: '2px',
-        height: '2px',
-        background: '#FFF',
-        opacity: 0.5,
-        boxShadow: '0 0 8px #FFF'
-      }} />
-      <div style={{
-        position: 'absolute',
-        top: '8%',
-        left: '45%',
-        width: '3px',
-        height: '3px',
-        background: '#FFF',
-        opacity: 0.7,
-        boxShadow: '0 0 10px #FFF'
-      }} />
-      <div style={{
-        position: 'absolute',
-        top: '25%',
-        right: '30%',
-        width: '2px',
-        height: '2px',
-        background: '#FFF',
-        opacity: 0.4,
-        boxShadow: '0 0 6px #FFF'
-      }} />
+      {/* Background star particles */}
+      <div style={{ position: 'absolute', top: '15%', left: '25%', width: '2px', height: '2px', background: '#FFF', opacity: 0.5, boxShadow: '0 0 8px #FFF' }} />
+      <div style={{ position: 'absolute', top: '8%', left: '45%', width: '3px', height: '3px', background: '#FFF', opacity: 0.7, boxShadow: '0 0 10px #FFF' }} />
+      <div style={{ position: 'absolute', top: '25%', right: '30%', width: '2px', height: '2px', background: '#FFF', opacity: 0.4, boxShadow: '0 0 6px #FFF' }} />
 
-      {/* Main outer wrapper holding sidebar and workspace separate */}
+      {/* Main outer wrapper - sidebar and workspace separate with gap */}
       <div style={{
         width: '100%',
-        maxWidth: '1240px',
+        maxWidth: '1200px',
         display: 'flex',
-        gap: '20px',
+        gap: `${gapSize}px`,
         alignItems: 'stretch',
-        height: '780px'
+        height: '700px',
+        overflow: 'hidden'
       }}>
 
         {/* ── 1. DYNAMIC EXPANDABLE SIDEBAR (Glassmorphic Green) ── */}
@@ -104,22 +80,24 @@ export default function AppShell({
             onMouseLeave={() => setIsExpanded(false)}
             style={{
               width: isExpanded ? '200px' : '72px',
-              background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(4, 36, 28, 0.3) 100%)',
+              background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(4, 36, 28, 0.35) 100%)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(16, 185, 129, 0.25)',
-              borderRadius: '32px',
+              borderRadius: '32px', // Restored rounded corners on all sides
               padding: '24px 0',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
               flexShrink: 0,
               boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-              position: 'relative'
+              position: 'relative',
+              zIndex: 10,
+              overflow: 'visible' // Allow active tab white section to protrude
             }}
           >
-            {/* Top Logo / Leaf bubble */}
+            {/* Top Logo */}
             <div style={{
               width: '100%',
               display: 'flex',
@@ -128,8 +106,8 @@ export default function AppShell({
               position: 'relative'
             }}>
               <div style={{
-                width: '44px',
-                height: '44px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '50%',
                 background: 'rgba(16, 185, 129, 0.2)',
                 border: '1.5px solid rgba(16, 185, 129, 0.4)',
@@ -140,16 +118,15 @@ export default function AppShell({
                 cursor: 'pointer',
                 boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)'
               }}>
-                <Terminal size={20} strokeWidth={2.5} />
+                <Terminal size={18} strokeWidth={2.5} />
               </div>
               
-              {/* Expand/Collapse Chevron Indicator */}
               <div style={{
                 position: 'absolute',
                 top: '12px',
-                right: isExpanded ? '-10px' : '-6px',
-                background: 'rgba(16, 185, 129, 0.3)',
-                border: '1px solid rgba(16, 185, 129, 0.5)',
+                right: '-9px',
+                background: 'rgba(16, 185, 129, 0.4)',
+                border: '1px solid rgba(16, 185, 129, 0.6)',
                 borderRadius: '50%',
                 width: '18px',
                 height: '18px',
@@ -157,7 +134,7 @@ export default function AppShell({
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#FFF',
-                zIndex: 10
+                zIndex: 12
               }}>
                 {isExpanded ? <ChevronLeft size={10} /> : <ChevronRight size={10} />}
               </div>
@@ -167,10 +144,11 @@ export default function AppShell({
             <nav style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '12px',
+              gap: '8px',
               width: '100%',
               paddingLeft: isExpanded ? '12px' : '0px',
-              transition: 'padding 0.3s'
+              transition: 'padding 0.25s',
+              overflow: 'visible'
             }}>
               {NAV_ITEMS.map(item => {
                 const Icon = item.icon;
@@ -187,56 +165,76 @@ export default function AppShell({
                       padding: '12px',
                       border: 'none',
                       cursor: 'pointer',
-                      width: '100%',
                       transition: 'all 0.2s ease',
                       position: 'relative',
                       background: isActive ? '#FFFFFF' : 'transparent',
-                      // Rounded tab cutout shape look
+                      // Rounded tab cutout shape
                       borderRadius: isActive ? '20px 0 0 20px' : '16px',
                       color: isActive ? '#04241C' : '#A7F3D0',
                       justifyContent: isExpanded ? 'flex-start' : 'center',
+                      zIndex: isActive ? 20 : 1,
+                      // Protrude right by gapSize + 1px to bridge the gap and overlay the main container's left border
+                      width: isActive ? `calc(100% + ${gapSize + 1}px)` : '100%',
+                      marginRight: isActive ? `-${gapSize + 1}px` : '0px',
                       boxShadow: isActive ? '-5px 5px 15px rgba(0,0,0,0.1)' : 'none'
                     }}
                   >
                     <Icon size={18} strokeWidth={isActive ? 2.5 : 1.8} />
                     {isExpanded && (
                       <span style={{ 
-                        fontSize: '0.85rem', 
+                        fontSize: '0.8rem', 
                         fontWeight: 700,
-                        whiteSpace: 'nowrap',
-                        animation: 'fadeIn 0.2s forwards'
+                        whiteSpace: 'nowrap'
                       }}>
                         {item.label}
                       </span>
                     )}
 
-                    {/* Smooth custom tab blending flow into the right container */}
-                    {isActive && !isExpanded && (
-                      <span style={{
-                        position: 'absolute',
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        width: '4px',
-                        background: '#FFFFFF',
-                        borderRadius: '4px 0 0 4px'
-                      }} />
+                    {/* Seamless white connection/cutout matching screenshot */}
+                    {isActive && (
+                      <>
+                        {/* Top curve block positioned at the sidebar boundary */}
+                        <div style={{
+                          position: 'absolute',
+                          right: `${gapSize + 1}px`,
+                          top: '-16px',
+                          width: '16px',
+                          height: '16px',
+                          background: 'transparent',
+                          borderBottomRightRadius: '16px',
+                          boxShadow: '8px 8px 0 8px #FFFFFF',
+                          pointerEvents: 'none',
+                          zIndex: 25
+                        }} />
+                        {/* Bottom curve block positioned at the sidebar boundary */}
+                        <div style={{
+                          position: 'absolute',
+                          right: `${gapSize + 1}px`,
+                          bottom: '-16px',
+                          width: '16px',
+                          height: '16px',
+                          background: 'transparent',
+                          borderTopRightRadius: '16px',
+                          boxShadow: '8px -8px 0 8px #FFFFFF',
+                          pointerEvents: 'none',
+                          zIndex: 25
+                        }} />
+                      </>
                     )}
                   </button>
                 );
               })}
             </nav>
 
-            {/* Bottom Avatar / Settings */}
+            {/* Bottom Avatar */}
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
-              gap: '16px'
+              alignItems: 'center'
             }}>
               <div style={{
-                width: '36px',
-                height: '36px',
+                width: '32px',
+                height: '32px',
                 borderRadius: '50%',
                 overflow: 'hidden',
                 border: '2px solid rgba(16, 185, 129, 0.4)',
@@ -257,13 +255,15 @@ export default function AppShell({
         <div style={{
           flex: 1,
           background: '#FFFFFF', // Clean solid white workspace container
-          borderRadius: '32px',
+          borderRadius: '32px', // Restored rounded corners on all sides
           boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           minWidth: 0,
-          border: '1px solid rgba(255,255,255,0.8)'
+          border: '1px solid rgba(16, 185, 129, 0.2)',
+          position: 'relative',
+          zIndex: 5
         }}>
 
           {/* Floating Dev quick jumper bar */}
@@ -271,27 +271,27 @@ export default function AppShell({
             <div style={{
               background: '#F3F4F6',
               borderBottom: '1px solid #E5E7EB',
-              height: '32px',
+              height: '30px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '0 24px',
-              fontSize: '0.725rem',
+              fontSize: '0.7rem',
               flexShrink: 0
             }}>
               <div style={{ fontWeight: 600, color: '#374151' }}>
-                PROTOTYPE STEP {currentStep} OF 15: {DEV_STEPS.find(s => s.num === currentStep)?.label}
+                PROTOTYPE STEP {currentStep}: {DEV_STEPS.find(s => s.num === currentStep)?.label}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <select
                   value={currentStep}
                   onChange={e => setStep(Number(e.target.value))}
-                  style={{ fontSize: '0.7rem', padding: '1px 4px', borderRadius: '4px', border: '1px solid #D1D5DB' }}
+                  style={{ fontSize: '0.65rem', padding: '1px', borderRadius: '4px', border: '1px solid #D1D5DB' }}
                 >
                   {DEV_STEPS.map(s => <option key={s.num} value={s.num}>Step {s.num}: {s.label}</option>)}
                 </select>
-                <button onClick={() => setStep(Math.max(1, currentStep - 1))} style={{ padding: '1px 6px', background: '#FFF', border: '1px solid #D1D5DB', borderRadius: '4px' }}>Prev</button>
-                <button onClick={() => setStep(Math.min(15, currentStep + 1))} style={{ padding: '1px 6px', background: '#FFF', border: '1px solid #D1D5DB', borderRadius: '4px' }}>Next</button>
+                <button onClick={() => setStep(Math.max(1, currentStep - 1))} style={{ padding: '1px 4px', background: '#FFF', border: '1px solid #D1D5DB', borderRadius: '4px' }}>Prev</button>
+                <button onClick={() => setStep(Math.min(15, currentStep + 1))} style={{ padding: '1px 4px', background: '#FFF', border: '1px solid #D1D5DB', borderRadius: '4px' }}>Next</button>
               </div>
             </div>
           )}
@@ -299,7 +299,7 @@ export default function AppShell({
           {/* Inner Content scroll body */}
           <div style={{
             flex: 1,
-            overflowY: 'auto'
+            overflow: 'hidden'
           }}>
             {children}
           </div>
