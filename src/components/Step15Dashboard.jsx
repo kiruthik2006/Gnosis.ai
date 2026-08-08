@@ -1,37 +1,132 @@
 import React, { useState } from 'react';
 import { 
   ChevronRight, Play, Star, Plus, MoreHorizontal, ArrowRight,
-  TrendingUp, Calendar as CalIcon, BookOpen, Clock, Award, ShieldCheck,
-  Search, Bell, Sparkles, Zap, CheckCircle2, Flame
+  TrendingUp, BookOpen, Clock, Award, ShieldCheck, CheckCircle2,
+  Search, Bell, Sparkles, Zap, Flame, Terminal, AlertTriangle, RefreshCw, Send, Activity
 } from 'lucide-react';
 
 export default function Step15Dashboard({ onNavigateStep }) {
-  // New Courses cards data
-  const newSkills = [
-    { title: 'Advanced JavaScript & Async', lessons: '12 Lessons', type: 'Frontend UI', rate: '4.9', color: '#FEE2E2', iconColor: '#EF4444', step: 3 },
-    { title: 'FastAPI & Microservices', lessons: '15 Lessons', type: 'Backend API', rate: '5.0', color: '#ECFDF5', iconColor: '#10B981', step: 4 },
-    { title: 'Vector DB & RAG Pipelines', lessons: '8 Lessons', type: 'AI Core', rate: '4.8', color: '#EFF6FF', iconColor: '#3B82F6', step: 5 },
+  // Terminal streaming messages state
+  const [terminalLogs, setTerminalLogs] = useState([
+    { id: 1, time: '22:01:04', type: 'system', text: 'INITIALIZING SESSION: Candidate Alex Turner (CAND-002)...' },
+    { id: 2, time: '22:01:05', type: 'system', text: 'CLAIM TREE INSTANTIATED: 14 Domains (8 Mastered, 4 Familiar, 2 Weak)' },
+    { id: 3, time: '22:01:07', type: 'ai', text: 'Agent Turing: "Welcome Alex! Let\'s probe your understanding of ES6 Event Loop microtasks vs macrotasks..."' },
+    { id: 4, time: '22:01:12', type: 'user', text: 'Alex: "Promise microtasks execute immediately after the current stack clears, prior to setTimeout macrotasks."' },
+    { id: 5, time: '22:01:13', type: 'eval', text: 'EVALUATION ENGINE: Response validated. Confidence 98% -> Domain MASTERED (1 Attempt).' },
+    { id: 6, time: '22:01:15', type: 'ai', text: 'Agent Turing: "Pivoting to Module 6: How does vector similarity search handle high-dimensional embeddings in RAG?"' }
+  ]);
+
+  const [termInput, setTermInput] = useState('');
+
+  const handleSendTerminal = () => {
+    if (!termInput.trim()) return;
+    const newLog = {
+      id: Date.now(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      type: 'user',
+      text: `Alex: "${termInput}"`
+    };
+    setTerminalLogs(prev => [...prev, newLog]);
+    setTermInput('');
+
+    // Simulate AI streaming response
+    setTimeout(() => {
+      setTerminalLogs(prev => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          type: 'eval',
+          text: 'EVALUATION ENGINE: Processing live technical response... Score: 94%'
+        }
+      ]);
+    }, 900);
+  };
+
+  // 1. Claimed vs. Verified Skill Cards Data (Alex Turner CAND-002)
+  const skillClaimCards = [
+    { 
+      domain: 'Async & Event Loop', 
+      status: 'VERIFIED: MASTERED', 
+      attempts: '1 Attempt (First Try)', 
+      score: '96%', 
+      statusColor: '#10B981', 
+      badgeBg: 'rgba(236, 253, 245, 0.95)',
+      badgeBorder: '#10B981',
+      iconText: 'JS',
+      iconBg: '#F7DF1E',
+      iconColor: '#000'
+    },
+    { 
+      domain: 'FastAPI & Microservices', 
+      status: 'VERIFIED: MASTERED', 
+      attempts: 'Passed Day 16 (1 Attempt)', 
+      score: '98%', 
+      statusColor: '#10B981', 
+      badgeBg: 'rgba(236, 253, 245, 0.95)',
+      badgeBorder: '#10B981',
+      iconText: 'API',
+      iconBg: '#009688',
+      iconColor: '#FFF'
+    },
+    { 
+      domain: 'Vector DBs & RAG Pipelines', 
+      status: 'CLAIMED: FAMILIAR', 
+      attempts: '3 Attempts Needed (Friction)', 
+      score: '64%', 
+      statusColor: '#D97706', 
+      badgeBg: 'rgba(254, 243, 199, 0.95)',
+      badgeBorder: '#F59E0B',
+      iconText: 'RAG',
+      iconBg: '#3B82F6',
+      iconColor: '#FFF'
+    },
   ];
 
-  // Daily Schedule items
-  const dailySchedule = [
-    { title: 'Async Event Loop & Call Stack', sub: 'Adaptive AI Technical Interview', color: 'rgba(254, 226, 226, 0.8)', stepTarget: 11, time: '10:00 AM' },
-    { title: 'System Architecture & Data Flow', sub: 'Claim Tree Verification', color: 'rgba(239, 246, 255, 0.8)', stepTarget: 5, time: '01:30 PM' },
-    { title: 'Prompt Optimization & MCP', sub: 'Code Assessment Challenge', color: 'rgba(236, 253, 245, 0.8)', stepTarget: 6, time: '03:45 PM' },
-    { title: 'Vector Retrieval Evaluation', sub: 'Final Skills Assessment Report', color: 'rgba(254, 243, 199, 0.8)', stepTarget: 12, time: '05:15 PM' },
+  // 2. Friction & Attempts Chart Data
+  const frictionChart = [
+    { module: 'Async JS', attempts: 1, status: 'Mastered', color: '#10B981' },
+    { module: 'FastAPI', attempts: 1, status: 'Mastered', color: '#10B981' },
+    { module: 'Prompting', attempts: 5, status: 'High Friction ⚠️', highlight: true, color: '#EF4444' },
+    { module: 'Vector DBs', attempts: 3, status: 'Familiar', color: '#F59E0B' },
+    { module: 'Agentic AI', attempts: 2, status: 'In Evaluation', color: '#3B82F6' },
+    { module: 'Docker Guard', attempts: 1, status: 'Mastered', color: '#10B981' },
   ];
 
-  // Active courses taking
-  const activeCourses = [
-    { name: 'React 19 & Concurrent UI', instructor: 'Dr. Sarah Johnson', time: '4h 15min remaining', progress: 68, color: '#EEF2FF' },
-    { name: 'Multi-Agent Systems & LangGraph', instructor: 'Alex Turner', time: '9h 30min remaining', progress: 85, color: '#ECFDF5' },
-  ];
-
-  // Assignments
-  const assignments = [
-    { name: 'FastAPI Router Benchmark', date: 'Today, 04:30 PM', status: 'In progress', badgeColor: 'rgba(238, 242, 255, 0.9)', textColor: '#4F46E5' },
-    { name: 'RAG Retrieval Optimization', date: 'Yesterday, 11:15 AM', status: 'Completed', badgeColor: 'rgba(236, 253, 245, 0.9)', textColor: '#059669' },
-    { name: 'Docker Guardrail Security', date: 'Tomorrow, 09:00 AM', status: 'Upcoming', badgeColor: 'rgba(254, 243, 199, 0.9)', textColor: '#D97706' },
+  // 3. Evaluation Audit Log Data
+  const auditLogs = [
+    { 
+      action: 'Analyzing Vector DB Knowledge...', 
+      status: 'PARTIAL', 
+      desc: 'Friction detected on HNSW similarity indexing & top-k reranking.',
+      badgeColor: '#D97706',
+      badgeBg: 'rgba(254, 243, 199, 0.9)',
+      step: 5
+    },
+    { 
+      action: 'Pivoting to Module 6: Agentic AI...', 
+      status: 'ADAPTIVE PROMPT GENERATED', 
+      desc: 'Formulated multi-tool orchestration question based on candidate history.',
+      badgeColor: '#3B82F6',
+      badgeBg: 'rgba(239, 246, 255, 0.9)',
+      step: 11
+    },
+    { 
+      action: 'Evaluating ES6 Event Loop Microtasks...', 
+      status: 'MASTERED', 
+      desc: 'Candidate articulated promise queue vs macrotask execution order accurately.',
+      badgeColor: '#10B981',
+      badgeBg: 'rgba(236, 253, 245, 0.9)',
+      step: 12
+    },
+    { 
+      action: 'Validating Docker Security Guardrails...', 
+      status: 'VERIFICATION PENDING', 
+      desc: 'Container network isolation & memory limit checks queued.',
+      badgeColor: '#6B7280',
+      badgeBg: 'rgba(243, 244, 246, 0.9)',
+      step: 6
+    }
   ];
 
   return (
@@ -66,14 +161,14 @@ export default function Step15Dashboard({ onNavigateStep }) {
               letterSpacing: '-0.025em',
               margin: 0
             }}>
-              Welcome back Alex 👋
+              Candidate Evaluation Dashboard
             </h1>
             <span className="badge badge-strong" style={{ fontSize: '0.6875rem', gap: '0.35rem', padding: '0.25rem 0.65rem' }}>
               <Flame size={12} fill="#10B981" /> 88% READINESS SCORE
             </span>
           </div>
           <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0 0' }}>
-            Candidate Profile: <strong style={{ color: 'var(--text-primary)' }}>Alex Turner (CAND-002)</strong> — 31-Day AI Engineering Path
+            Active Candidate: <strong style={{ color: 'var(--text-primary)' }}>Alex Turner (CAND-002)</strong> — Senior AI Engineer Track
           </p>
         </div>
 
@@ -94,7 +189,7 @@ export default function Step15Dashboard({ onNavigateStep }) {
             <Search size={14} color="var(--text-muted)" />
             <input 
               type="text" 
-              placeholder="Search curriculum skills..." 
+              placeholder="Search candidate claims..." 
               style={{
                 border: 'none',
                 background: 'transparent',
@@ -110,33 +205,34 @@ export default function Step15Dashboard({ onNavigateStep }) {
             onClick={() => onNavigateStep(11)}
             className="btn-primary"
             style={{ 
-              padding: '0.55rem 1.15rem', 
+              padding: '0.55rem 1.2rem', 
               fontSize: '0.8125rem',
               borderRadius: 'var(--radius-full)',
-              background: 'linear-gradient(135deg, #18181B 0%, #064E3B 100%)',
-              gap: '0.45rem'
+              background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+              gap: '0.45rem',
+              boxShadow: '0 4px 14px rgba(5, 150, 105, 0.3)'
             }}
           >
-            <Zap size={14} color="#10B981" fill="#10B981" />
-            <span>Launch AI Interview</span>
+            <Zap size={14} color="#FFF" fill="#FFF" />
+            <span>Launch Live AI Session</span>
           </button>
         </div>
       </div>
 
-      {/* ── 2. NEW CURRICULUM COURSES GRID (3 cards) ── */}
+      {/* ── 2. CLAIMED VS. VERIFIED SKILL CARDS (3 Cards) ── */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Sparkles size={16} color="var(--accent-warm)" />
+            <ShieldCheck size={16} color="var(--status-strong)" />
             <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.01em' }}>
-              Featured AI Engineering Stack
+              Claimed vs. Verified Skill Matrix (Alex Turner)
             </h2>
           </div>
           <span 
-            onClick={() => onNavigateStep(9)}
+            onClick={() => onNavigateStep(5)}
             style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-warm)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
           >
-            View Full Curriculum <ArrowRight size={12} />
+            Inspect Claim Tree <ArrowRight size={12} />
           </span>
         </div>
 
@@ -145,10 +241,9 @@ export default function Step15Dashboard({ onNavigateStep }) {
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '1rem'
         }}>
-          {newSkills.map((c, idx) => (
+          {skillClaimCards.map((c, idx) => (
             <div 
               key={idx}
-              onClick={() => onNavigateStep(c.step)}
               className="glass-card"
               style={{
                 borderRadius: 'var(--radius-lg)',
@@ -156,29 +251,47 @@ export default function Step15Dashboard({ onNavigateStep }) {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.85rem',
-                cursor: 'pointer',
                 transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <div style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: 'var(--radius-md)',
-                  background: c.color,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: c.iconColor,
-                  flexShrink: 0,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: 'var(--radius-md)',
+                    background: c.iconBg,
+                    color: c.iconColor,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 900,
+                    fontSize: '0.8rem',
+                    flexShrink: 0,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                  }}>
+                    {c.iconText}
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '0.875rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, lineHeight: 1.25 }}>{c.domain}</h4>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600, display: 'inline-block', marginTop: '0.2rem' }}>
+                      {c.attempts}
+                    </span>
+                  </div>
+                </div>
+
+                <span style={{
+                  background: c.badgeBg,
+                  color: c.statusColor,
+                  border: `1px solid ${c.badgeBorder}`,
+                  padding: '3px 8px',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.65rem',
+                  fontWeight: 800,
+                  whiteSpace: 'nowrap'
                 }}>
-                  <BookOpen size={18} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h4 style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, lineHeight: 1.25 }}>{c.title}</h4>
-                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', fontWeight: 500, display: 'inline-block', marginTop: '0.2rem' }}>{c.lessons}</span>
-                </div>
+                  {c.status}
+                </span>
               </div>
 
               <div style={{
@@ -189,186 +302,147 @@ export default function Step15Dashboard({ onNavigateStep }) {
                 paddingTop: '0.65rem'
               }}>
                 <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
-                  Domain: <strong style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{c.type}</strong>
+                  Evaluated Accuracy: <strong style={{ color: c.statusColor, fontWeight: 850 }}>{c.score}</strong>
                 </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                  <Star size={12} color="#F59E0B" fill="#F59E0B" />
-                  <span>{c.rate}</span>
-                </div>
+                <button 
+                  onClick={() => onNavigateStep(5)}
+                  style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-primary)', background: 'transparent', display: 'flex', alignItems: 'center', gap: '2px', cursor: 'pointer' }}
+                >
+                  <span>Verify Node</span>
+                  <ChevronRight size={12} />
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── 3. DETAILED WIDGETS ROW (Hours Activity, Daily Schedule, Right Panel Widgets) ── */}
+      {/* ── 3. DETAILED WIDGETS ROW: FRICTION CHART + EVALUATION AUDIT LOG + AI TERMINAL ── */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1.75fr 1fr 1.05fr',
+        gridTemplateColumns: '1.7fr 1.15fr 1.3fr',
         gap: '1rem',
         alignItems: 'stretch',
         flex: 1,
         minHeight: 0
       }}>
         
-        {/* LEFT COLUMN: Hours Activity + Active Courses */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
-          
-          {/* Hours Activity Card */}
-          <div className="glass-card" style={{
-            borderRadius: 'var(--radius-lg)',
-            padding: '1.25rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem',
-            flex: 1
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* LEFT COLUMN: Friction & Attempts Chart */}
+        <div className="glass-card" style={{
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.25rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justify: 'space-between',
+          gap: '1rem'
+        }}>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-                  Weekly Learning & Practice Velocity
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0 }}>
+                  Candidate Friction & Assessment Attempts
                 </h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '0.2rem' }}>
-                  <TrendingUp size={12} color="#10B981" />
-                  <span style={{ fontSize: '0.725rem', color: '#10B981', fontWeight: 700 }}>+14.2% velocity increase vs last week</span>
-                </div>
+                <p style={{ fontSize: '0.725rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0 0' }}>
+                  Analyzes attempt history per module to pinpoint candidate strengths & struggles.
+                </p>
               </div>
-              <span className="badge badge-strong" style={{ fontSize: '0.6875rem', padding: '0.2rem 0.6rem' }}>
-                LIVE METRICS
+              <span className="badge badge-strong" style={{ fontSize: '0.65rem', padding: '0.2rem 0.6rem' }}>
+                HISTORICAL FRICTION
               </span>
             </div>
 
-            {/* Interactive Bar Chart */}
+            {/* Friction Bar Chart (X: Curriculum Modules, Y: Attempts) */}
             <div style={{
               display: 'flex',
               alignItems: 'flex-end',
               justify: 'space-between',
-              height: '95px',
-              padding: '0 8px',
-              position: 'relative',
-              marginTop: '0.4rem'
+              height: '140px',
+              padding: '1.5rem 0.5rem 0 0.5rem',
+              position: 'relative'
             }}>
-              {[
-                { label: 'Sun', hours: 32 },
-                { label: 'Mon', hours: 55 },
-                { label: 'Tue', hours: 42 },
-                { label: 'Wed', hours: 68 },
-                { label: 'Thu', hours: 88, highlight: true },
-                { label: 'Fri', hours: 50 },
-                { label: 'Sat', hours: 60 },
-              ].map((bar, idx) => (
-                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flex: 1 }}>
-                  <div style={{
-                    width: '8px',
-                    height: `${bar.hours * 0.85}px`,
-                    background: bar.highlight ? 'linear-gradient(180deg, #10B981 0%, #064E3B 100%)' : 'rgba(214, 207, 190, 0.7)',
-                    borderRadius: '99px',
-                    position: 'relative',
-                    boxShadow: bar.highlight ? '0 0 10px rgba(16, 185, 129, 0.4)' : 'none',
-                    transition: 'all 0.2s ease'
-                  }}>
-                    {bar.highlight && (
-                      <div style={{
+              {frictionChart.map((bar, idx) => {
+                const heightPx = bar.attempts * 22; // Scale attempts to height
+                return (
+                  <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flex: 1, position: 'relative' }}>
+                    <div style={{
+                      width: '18px',
+                      height: `${heightPx}px`,
+                      background: bar.highlight ? 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)' : bar.color,
+                      borderRadius: '6px',
+                      position: 'relative',
+                      boxShadow: bar.highlight ? '0 0 12px rgba(239, 68, 68, 0.4)' : 'none',
+                      transition: 'all 0.2s ease'
+                    }}>
+                      {/* Highlight Tooltip Callout */}
+                      {bar.highlight && (
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '100%',
+                          left: '50%',
+                          transform: 'translateX(-50%) translateY(-8px)',
+                          background: '#18181B',
+                          color: '#F87171',
+                          fontSize: '0.625rem',
+                          fontWeight: 800,
+                          padding: '4px 8px',
+                          borderRadius: 'var(--radius-sm)',
+                          whiteSpace: 'nowrap',
+                          zIndex: 999,
+                          boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
+                          border: '1px solid rgba(239,68,68,0.4)',
+                          textAlign: 'center'
+                        }}>
+                          ⚠️ High Friction: 5 Attempts
+                          <div style={{ fontSize: '0.55rem', color: '#D1D5DB', fontWeight: 500 }}>Struggled with Prompting</div>
+                        </div>
+                      )}
+                      
+                      {/* Attempts number tag inside bar */}
+                      <span style={{
                         position: 'absolute',
-                        bottom: '100%',
+                        top: '4px',
                         left: '50%',
-                        transform: 'translateX(-50%) translateY(-6px)',
-                        background: '#18181B',
-                        color: '#10B981',
-                        fontSize: '0.625rem',
-                        fontWeight: 700,
-                        padding: '3px 8px',
-                        borderRadius: 'var(--radius-sm)',
-                        whiteSpace: 'nowrap',
-                        zIndex: 999,
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                        border: '1px solid rgba(16,185,129,0.3)'
+                        transform: 'translateX(-50%)',
+                        color: '#FFF',
+                        fontSize: '0.65rem',
+                        fontWeight: 900
                       }}>
-                        ⚡ Peak: 3.5h Active Code
-                      </div>
-                    )}
+                        {bar.attempts}
+                      </span>
+                    </div>
+
+                    <span style={{ 
+                      fontSize: '0.6875rem', 
+                      color: bar.highlight ? '#EF4444' : 'var(--text-primary)', 
+                      fontWeight: bar.highlight ? 850 : 600,
+                      textAlign: 'center'
+                    }}>
+                      {bar.module}
+                    </span>
                   </div>
-                  <span style={{ fontSize: '0.6875rem', color: bar.highlight ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: bar.highlight ? 800 : 600 }}>{bar.label}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          {/* Active Courses Section */}
-          <div className="glass-card" style={{
-            borderRadius: 'var(--radius-lg)',
-            padding: '1.25rem',
+          {/* Chart Insights Footer */}
+          <div style={{
+            background: 'rgba(243, 239, 231, 0.7)',
+            borderRadius: 'var(--radius-md)',
+            padding: '0.75rem 1rem',
+            border: '1px solid rgba(232, 226, 213, 0.8)',
             display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem',
-            flex: 1
+            alignItems: 'center',
+            justify: 'space-between',
+            fontSize: '0.75rem'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Active Skill Modules</h3>
-              <button 
-                onClick={() => onNavigateStep(3)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: '0.725rem',
-                  fontWeight: 700,
-                  color: 'var(--accent-warm)',
-                  background: 'transparent'
-                }}
-              >
-                <span>Add Skill Module</span>
-                <Plus size={12} strokeWidth={3} />
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              {activeCourses.map((ac, idx) => (
-                <div key={idx} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justify: 'space-between',
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderRadius: 'var(--radius-md)',
-                  padding: '0.75rem 1rem',
-                  border: '1px solid rgba(232, 226, 213, 0.8)',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{
-                      width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', background: ac.color,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E1B26'
-                    }}>
-                      <BookOpen size={16} />
-                    </div>
-                    <div>
-                      <h5 style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{ac.name}</h5>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Lead: {ac.instructor}</span>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ textAlign: 'right' }}>
-                      <strong style={{ fontSize: '0.725rem', color: 'var(--text-primary)', display: 'block' }}>{ac.time}</strong>
-                    </div>
-                    <div style={{
-                      width: '30px', height: '30px', borderRadius: '50%',
-                      border: '2.5px solid var(--border-light)', borderTopColor: '#10B981', borderRightColor: '#10B981',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-primary)',
-                      background: 'rgba(240, 253, 244, 0.8)'
-                    }}>
-                      {ac.progress}%
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <span style={{ color: 'var(--text-secondary)' }}>
+              Evaluation Finding: Candidate <strong style={{ color: 'var(--text-primary)' }}>Alex Turner</strong> crushed <strong style={{ color: '#10B981' }}>FastAPI Backend (1 Attempt)</strong> but needs targeted probing on <strong style={{ color: '#EF4444' }}>Prompt Engineering (5 Attempts)</strong>.
+            </span>
           </div>
-
         </div>
 
-        {/* MIDDLE COLUMN: Daily Technical Schedule */}
+        {/* CENTER COLUMN: Evaluation Audit Log */}
         <div className="glass-card" style={{
           borderRadius: 'var(--radius-lg)',
           padding: '1.25rem',
@@ -377,21 +451,24 @@ export default function Step15Dashboard({ onNavigateStep }) {
           gap: '0.85rem'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-              Daily Schedule & Interviews
-            </h3>
-            <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-muted)' }}>4 Tasks Today</span>
+            <div>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0 }}>
+                Evaluation Audit Log
+              </h3>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Real-Time AI Internal Reasoning</span>
+            </div>
+            <Activity size={15} color="#10B981" />
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, justifyContent: 'space-between' }}>
-            {dailySchedule.map((sched, idx) => (
+            {auditLogs.map((log, idx) => (
               <div 
                 key={idx}
-                onClick={() => onNavigateStep(sched.stepTarget)}
+                onClick={() => onNavigateStep(log.step)}
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
-                  justify: 'space-between',
+                  flexDirection: 'column',
+                  gap: '0.35rem',
                   background: 'rgba(255, 255, 255, 0.9)',
                   border: '1px solid rgba(232, 226, 213, 0.8)',
                   borderRadius: 'var(--radius-md)',
@@ -409,146 +486,151 @@ export default function Step15Dashboard({ onNavigateStep }) {
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <div style={{
-                    width: '30px', height: '30px', borderRadius: 'var(--radius-sm)', background: sched.color,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E1B26', flexShrink: 0
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.785rem', fontWeight: 850, color: 'var(--text-primary)' }}>
+                    {log.action}
+                  </span>
+                  <span style={{
+                    fontSize: '0.625rem',
+                    fontWeight: 800,
+                    padding: '2px 6px',
+                    borderRadius: 'var(--radius-sm)',
+                    background: log.badgeBg,
+                    color: log.badgeColor
                   }}>
-                    <CalIcon size={14} />
-                  </div>
-                  <div>
-                    <h5 style={{ fontSize: '0.785rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, lineHeight: 1.2 }}>{sched.title}</h5>
-                    <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>{sched.sub} • {sched.time}</span>
-                  </div>
+                    {log.status}
+                  </span>
                 </div>
-                <ChevronRight size={15} color="var(--text-muted)" />
+                <span style={{ fontSize: '0.6875rem', color: 'var(--text-secondary)', lineHeight: 1.3 }}>
+                  {log.desc}
+                </span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* RIGHT COLUMN: AI Pro Assessment, Calendar, Assignments */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', justifyContent: 'space-between' }}>
+        {/* RIGHT COLUMN: AI Turing Evaluation Terminal (No August Calendar!) */}
+        <div style={{
+          background: '#0D1117',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1rem',
+          border: '1px solid rgba(16, 185, 129, 0.3)',
+          display: 'flex',
+          flexDirection: 'column',
+          justify: 'space-between',
+          gap: '0.75rem',
+          boxShadow: '0 12px 32px rgba(0, 0, 0, 0.4)',
+          overflow: 'hidden'
+        }}>
           
-          {/* AI Pro Assessment Card */}
+          {/* Top Launch Session Button */}
+          <button 
+            onClick={() => onNavigateStep(11)}
+            style={{
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+              color: '#04241C',
+              border: 'none',
+              borderRadius: 'var(--radius-md)',
+              padding: '0.65rem 1rem',
+              fontSize: '0.8125rem',
+              fontWeight: 850,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
+            }}
+          >
+            <Zap size={15} fill="#04241C" />
+            <span>Launch Live AI Evaluation Session</span>
+          </button>
+
+          {/* Terminal Window Header */}
           <div style={{
-            background: 'linear-gradient(135deg, #18181B 0%, #064E3B 100%)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '1.15rem',
-            color: '#FFFFFF',
-            position: 'relative',
-            overflow: 'hidden',
-            boxShadow: '0 8px 24px rgba(6, 78, 59, 0.25)',
-            border: '1px solid rgba(16, 185, 129, 0.3)'
+            display: 'flex',
+            alignItems: 'center',
+            justify: 'space-between',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            paddingBottom: '0.5rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
-              <Zap size={14} color="#C6F438" fill="#C6F438" />
-              <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#C6F438', margin: 0 }}>
-                AI Turing Evaluation
-              </h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }} />
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B' }} />
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981' }} />
+              <span style={{ fontSize: '0.7rem', color: '#9CA3AF', fontFamily: 'var(--font-mono)', marginLeft: '4px' }}>
+                turing_eval_stream.log
+              </span>
             </div>
-            <p style={{ fontSize: '0.725rem', color: '#D1D5DB', margin: '0 0 0.85rem 0', lineHeight: 1.35 }}>
-              Ready for your adaptive technical evaluation session?
-            </p>
-            <button 
-              onClick={() => onNavigateStep(11)}
-              style={{
-                background: '#C6F438', 
-                color: '#18181B', 
-                border: 'none', 
-                borderRadius: 'var(--radius-md)',
-                padding: '0.5rem 1rem', 
-                fontSize: '0.75rem', 
-                fontWeight: 800, 
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                boxShadow: '0 4px 12px rgba(198, 244, 56, 0.3)'
-              }}
-            >
-              <span>Start Session</span>
-              <ArrowRight size={13} strokeWidth={2.5} />
-            </button>
+
+            <span style={{ fontSize: '0.625rem', color: '#10B981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span className="pulse-glow" style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }} />
+              LIVE WEBSOCKET
+            </span>
           </div>
 
-          {/* Mini Calendar Widget */}
-          <div className="glass-card" style={{
-            borderRadius: 'var(--radius-lg)',
-            padding: '0.85rem 1rem'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>August, 2026</span>
-              <div style={{ display: 'flex', gap: '6px', fontSize: '0.7rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
-                <span>‹</span>
-                <span>›</span>
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '2px', textAlign: 'center', fontSize: '0.625rem' }}>
-              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, idx) => (
-                <span key={idx} style={{ color: 'var(--text-muted)', fontWeight: 800, paddingBottom: '2px' }}>{d}</span>
-              ))}
-              {[...Array(31)].map((_, i) => {
-                const day = i + 1;
-                const isSelected = day === 8;
-                return (
-                  <span 
-                    key={i} 
-                    style={{
-                      borderRadius: '50%',
-                      background: isSelected ? '#10B981' : 'transparent',
-                      color: isSelected ? '#FFFFFF' : 'var(--text-primary)',
-                      fontWeight: isSelected ? 800 : 500,
-                      display: 'inline-block',
-                      width: '18px',
-                      height: '18px',
-                      lineHeight: '18px',
-                      margin: 'auto',
-                      boxShadow: isSelected ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none'
-                    }}
-                  >
-                    {day}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Technical Verification Status */}
-          <div className="glass-card" style={{
-            borderRadius: 'var(--radius-lg)',
-            padding: '0.85rem 1rem',
+          {/* Streaming Log Stream Area */}
+          <div style={{
+            flex: 1,
+            maxHeight: '230px',
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.5rem'
+            gap: '0.6rem',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.7rem',
+            lineHeight: 1.45,
+            paddingRight: '4px'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h4 style={{ fontSize: '0.785rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Verification Milestones</h4>
-              <ShieldCheck size={14} color="#10B981" />
-            </div>
+            {terminalLogs.map(log => {
+              let color = '#D1D5DB';
+              if (log.type === 'system') color = '#6B7280';
+              if (log.type === 'ai') color = '#A7F3D0';
+              if (log.type === 'user') color = '#F3E8FF';
+              if (log.type === 'eval') color = '#F59E0B';
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              {assignments.map((as, idx) => (
-                <div key={idx} style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderRadius: 'var(--radius-sm)',
-                  padding: '0.4rem 0.6rem',
-                  border: '1px solid rgba(232, 226, 213, 0.7)'
-                }}>
-                  <div>
-                    <h5 style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{as.name}</h5>
-                    <span style={{ fontSize: '0.625rem', color: 'var(--text-muted)' }}>{as.date}</span>
-                  </div>
-                  <span style={{
-                    fontSize: '0.625rem', fontWeight: 800, padding: '2px 6px', borderRadius: 'var(--radius-sm)',
-                    background: as.badgeColor, color: as.textColor
-                  }}>{as.status}</span>
+              return (
+                <div key={log.id} style={{ color }}>
+                  <span style={{ color: '#6B7280', fontSize: '0.625rem', marginRight: '6px' }}>[{log.time}]</span>
+                  {log.text}
                 </div>
-              ))}
-            </div>
+              );
+            })}
+          </div>
+
+          {/* Terminal Interactive Input Field */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: 'var(--radius-md)',
+            padding: '4px 8px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <span style={{ color: '#10B981', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>&gt;_</span>
+            <input 
+              type="text" 
+              value={termInput}
+              onChange={e => setTermInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSendTerminal()}
+              placeholder="Inject prompt test..." 
+              style={{
+                border: 'none',
+                background: 'transparent',
+                outline: 'none',
+                color: '#FFF',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                width: '100%'
+              }}
+            />
+            <button 
+              onClick={handleSendTerminal}
+              style={{ background: 'transparent', border: 'none', color: '#10B981', cursor: 'pointer', padding: '2px' }}
+            >
+              <Send size={12} />
+            </button>
           </div>
 
         </div>
