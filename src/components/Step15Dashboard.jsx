@@ -1,463 +1,516 @@
-import React from 'react';
-import {
-  GitFork, Compass, MessageSquareCode,
-  ArrowRight, Sparkles, BookOpen
+import React, { useState } from 'react';
+import { 
+  CheckCircle2, Compass, GitFork, BookOpen, MessageSquareCode, 
+  ArrowRight, Sparkles, Clock, Globe, ShieldCheck, Activity, Award,
+  Sliders, ArrowUpRight, HelpCircle
 } from 'lucide-react';
 
-/* ─── tiny design helpers ─── */
-const Label = ({ children, style = {} }) => (
-  <div style={{
-    fontSize: '0.6875rem',
-    fontWeight: 700,
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-    color: 'var(--text-muted)',
-    ...style
-  }}>
-    {children}
-  </div>
-);
+export default function Step15Dashboard({ onNavigateStep }) {
+  const [selectedFilter, setSelectedFilter] = useState('All');
 
-const Divider = () => (
-  <div style={{ height: '1px', background: 'var(--border-light)', margin: '1.25rem 0' }} />
-);
+  // Interactive mock data for daily activity bar graph
+  const dailyActivity = [
+    { day: '22 Sept', val: 30, active: false },
+    { day: '23 Sept', val: 50, active: false },
+    { day: '24 Sept', val: 40, active: false },
+    { day: '25 Sept', val: 75, active: false },
+    { day: '26 Sept', val: 95, active: true }, // high peak matching screenshot
+    { day: '27 Sept', val: 65, active: false },
+    { day: '28 Sept', val: 45, active: false },
+    { day: '29 Sept', val: 55, active: false },
+    { day: '30 Sept', val: 50, active: false },
+  ];
 
-/* ─── Progress bar ─── */
-function ProgressBar({ value, color = 'var(--text-primary)', height = 3 }) {
   return (
     <div style={{
-      height: `${height}px`,
-      background: 'var(--bg-muted)',
-      borderRadius: '99px',
-      overflow: 'hidden'
-    }}>
-      <div style={{
-        height: '100%',
-        width: `${value}%`,
-        background: color,
-        borderRadius: '99px',
-        transition: 'width 0.4s ease'
-      }} />
-    </div>
-  );
-}
-
-/* ─── Stat card ─── */
-function StatCard({ label, value, sub, progress, progressColor, badge, badgeColor }) {
-  return (
-    <div style={{
-      background: 'var(--bg-card)',
-      border: '1px solid var(--border-light)',
-      borderRadius: 'var(--radius-md)',
-      padding: '1.125rem 1.25rem',
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.35rem',
-      flex: 1,
-      minWidth: 0
+      gap: '20px',
+      animation: 'fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards'
     }}>
-      <Label>{label}</Label>
+      
+      {/* ── HEADER ROW (Verification Stats style from screenshot) ── */}
       <div style={{
-        fontSize: '1.75rem',
-        fontWeight: 800,
-        color: 'var(--text-primary)',
-        letterSpacing: '-0.02em',
-        lineHeight: 1.1
-      }}>
-        {value}
-      </div>
-      {progress !== undefined && (
-        <ProgressBar value={progress} color={progressColor} height={3} />
-      )}
-      {badge && (
-        <span style={{
-          display: 'inline-block',
-          fontSize: '0.6875rem',
-          fontWeight: 600,
-          color: badgeColor || 'var(--text-muted)',
-          background: 'var(--bg-subtle)',
-          padding: '0.15rem 0.5rem',
-          borderRadius: 'var(--radius-sm)',
-          alignSelf: 'flex-start',
-          marginTop: '0.1rem'
-        }}>
-          {badge}
-        </span>
-      )}
-      {sub && !badge && (
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-          {sub}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ─── Hub card ─── */
-function HubCard({ icon: Icon, iconAccent, label, title, description, badgeText, badgeGreen, button, onAction, prominent }) {
-  const [hovered, setHovered] = React.useState(false);
-
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: 'var(--bg-card)',
-        border: prominent ? '1.5px solid var(--text-primary)' : '1px solid var(--border-light)',
-        borderRadius: 'var(--radius-lg)',
-        padding: '1.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        transition: 'box-shadow 0.2s ease, transform 0.2s ease',
-        boxShadow: hovered ? 'var(--shadow-md)' : 'var(--shadow-sm)',
-        transform: hovered ? 'translateY(-1px)' : 'none',
-        cursor: 'default'
-      }}
-    >
-      {/* Icon + badge row */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          borderRadius: 'var(--radius-sm)',
-          background: prominent ? 'var(--text-primary)' : 'var(--bg-subtle)',
-          color: prominent ? '#fff' : (iconAccent || 'var(--text-secondary)'),
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0
-        }}>
-          <Icon size={20} />
-        </div>
-
-        {badgeText && (
-          <span style={{
-            fontSize: '0.6875rem',
-            fontWeight: 700,
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            padding: '0.2rem 0.6rem',
-            borderRadius: 'var(--radius-sm)',
-            background: badgeGreen ? '#EEF7F1' : 'var(--bg-subtle)',
-            color: badgeGreen ? '#2E6F40' : 'var(--text-muted)',
-            border: badgeGreen ? '1px solid #C8E6D0' : '1px solid var(--border-light)'
-          }}>
-            {badgeText}
-          </span>
-        )}
-      </div>
-
-      {/* Text block */}
-      <div style={{ flex: 1 }}>
-        <Label style={{ marginBottom: '0.3rem' }}>{label}</Label>
-        <div style={{
-          fontSize: '1.0625rem',
-          fontWeight: 700,
-          color: 'var(--text-primary)',
-          marginBottom: '0.4rem',
-          lineHeight: 1.3
-        }}>
-          {title}
-        </div>
-        <p style={{
-          fontSize: '0.8125rem',
-          color: 'var(--text-secondary)',
-          lineHeight: 1.55
-        }}>
-          {description}
-        </p>
-      </div>
-
-      {/* CTA Button */}
-      <button
-        onClick={onAction}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '0.4rem',
-          width: '100%',
-          padding: '0.65rem 1rem',
-          borderRadius: 'var(--radius-md)',
-          fontSize: '0.875rem',
-          fontWeight: 600,
-          border: prominent ? 'none' : '1px solid var(--border-strong)',
-          background: prominent ? 'var(--text-primary)' : 'transparent',
-          color: prominent ? '#fff' : 'var(--text-primary)',
-          cursor: 'pointer',
-          transition: 'opacity 0.15s ease, background 0.15s ease'
-        }}
-        onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
-        onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
-      >
-        {prominent && <Sparkles size={14} style={{ color: 'var(--accent-warm)' }} />}
-        <span>{button}</span>
-        <ArrowRight size={14} />
-      </button>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════════════
-   MAIN DASHBOARD
-════════════════════════════════════════════════ */
-export default function Step15Dashboard({ onNavigateStep }) {
-  return (
-    <div
-      className="animate-fade-in"
-      style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '2.5rem 1.5rem 4rem'
-      }}
-    >
-
-      {/* ── HERO ROW ── */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '1.25rem',
-        marginBottom: '2rem'
-      }}>
-        {/* Left: greeting */}
-        <div>
-          <div style={{
-            fontSize: '1.625rem',
-            fontWeight: 800,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.2,
-            marginBottom: '0.4rem'
-          }}>
-            Welcome back, Alex 👋
-          </div>
-          <p style={{
-            fontSize: '0.9375rem',
-            color: 'var(--text-secondary)',
-            fontWeight: 400,
-            maxWidth: '440px',
-            lineHeight: 1.5
-          }}>
-            Track your progress, strengthen your skills, and get interview-ready.
-          </p>
-        </div>
-
-        {/* Right: recommended next step */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.875rem',
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border-light)',
-          borderRadius: 'var(--radius-md)',
-          padding: '0.85rem 1.125rem',
-          boxShadow: 'var(--shadow-sm)',
-          flexShrink: 0
-        }}>
-          <div style={{
-            width: '34px',
-            height: '34px',
-            borderRadius: 'var(--radius-sm)',
-            background: '#FEF4E8',
-            border: '1px solid #F0D9BC',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--accent-warm)',
-            flexShrink: 0
-          }}>
-            <Sparkles size={16} />
-          </div>
-          <div>
-            <Label style={{ color: 'var(--accent-warm)', marginBottom: '0.2rem' }}>
-              Recommended Next Step
-            </Label>
-            <div style={{
-              fontSize: '0.875rem',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              whiteSpace: 'nowrap'
-            }}>
-              Complete Advanced JavaScript
-            </div>
-          </div>
-          <button
-            onClick={() => onNavigateStep(8)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.3rem',
-              padding: '0.4rem 0.875rem',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '0.8125rem',
-              fontWeight: 600,
-              background: 'var(--text-primary)',
-              color: '#fff',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              border: 'none',
-              transition: 'opacity 0.15s'
-            }}
-            onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
-            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-          >
-            Resume <ArrowRight size={13} />
-          </button>
-        </div>
-      </div>
-
-      {/* ── STATISTICS ROW ── */}
-      <div style={{
-        display: 'flex',
-        gap: '0.875rem',
-        flexWrap: 'wrap',
-        marginBottom: '2rem'
-      }}>
-        <StatCard
-          label="Overall Progress"
-          value="68%"
-          progress={68}
-          progressColor="var(--text-primary)"
-        />
-        <StatCard
-          label="Current Level"
-          value="Intermediate"
-          badge="Frontend → Backend"
-        />
-        <StatCard
-          label="Skills"
-          value="7 / 12"
-          sub="HTML · CSS · JS"
-        />
-        <StatCard
-          label="Courses"
-          value="4 / 6"
-          sub="2 remaining"
-        />
-        <StatCard
-          label="Interview Readiness"
-          value="72%"
-          progress={72}
-          progressColor="#4A7C59"
-          sub="Ready for mock"
-        />
-      </div>
-
-      {/* ── MAIN HUB CARDS ── */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '1.125rem',
-        marginBottom: '1.75rem'
-      }}
-        className="hub-grid"
-      >
-        <HubCard
-          icon={GitFork}
-          label="Skill Tree"
-          title="Your Skill Tree"
-          description="See your strengths, gaps, and unlocked technologies across your learning path."
-          badgeText="7 Strong Nodes"
-          button="View Skill Tree"
-          onAction={() => onNavigateStep(5)}
-        />
-
-        <HubCard
-          icon={Compass}
-          iconAccent="var(--text-primary)"
-          label="Roadmap"
-          title="Your Roadmap"
-          description="Continue building the skills needed for your target role. Step 2 of 6."
-          badgeText="In Progress"
-          button="Continue Learning"
-          onAction={() => onNavigateStep(8)}
-        />
-
-        <HubCard
-          icon={MessageSquareCode}
-          label="AI Technical Interview"
-          title="AI Technical Interview"
-          description="Test your technical knowledge through an adaptive interview based on your learning journey."
-          badgeText="Unlocked & Ready"
-          badgeGreen
-          button="Start AI Interview"
-          onAction={() => onNavigateStep(11)}
-          prominent
-        />
-      </div>
-
-      {/* ── NEXT MILESTONE STRIP ── */}
-      <div style={{
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-light)',
-        borderRadius: 'var(--radius-md)',
-        padding: '1.125rem 1.375rem',
         display: 'flex',
         alignItems: 'center',
-        gap: '1.5rem',
-        flexWrap: 'wrap'
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '16px'
       }}>
-        <div style={{ flexShrink: 0 }}>
-          <Label style={{ marginBottom: '0.25rem' }}>Next Milestone</Label>
-          <div style={{
-            fontSize: '0.9375rem',
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-            maxWidth: '420px'
-          }}>
-            Complete Advanced JavaScript to unlock React Fundamentals.
+        {/* Title */}
+        <h1 style={{
+          fontSize: '2.125rem',
+          fontWeight: 800,
+          color: 'var(--text-primary)',
+          letterSpacing: '-0.03em',
+          margin: 0
+        }}>
+          Interview stats
+        </h1>
+
+        {/* Small Counters in Header Row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          {/* Counter 1 */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: '#F3F4F6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#374151'
+            }}>
+              <Clock size={18} />
+            </div>
+            <div>
+              <span style={{ fontSize: '0.675rem', color: '#6B7280', display: 'block' }}>Study time this week</span>
+              <strong style={{ fontSize: '1rem', color: '#111827', fontWeight: 800 }}>12.4h</strong>
+            </div>
+          </div>
+
+          {/* Counter 2 */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: '#F3F4F6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#374151'
+            }}>
+              <Globe size={18} />
+            </div>
+            <div>
+              <span style={{ fontSize: '0.675rem', color: '#6B7280', display: 'block' }}>Topics completed</span>
+              <strong style={{ fontSize: '1rem', color: '#111827', fontWeight: 800 }}>7 / 12</strong>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div style={{ flex: 1, minWidth: '160px' }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '0.4rem'
-          }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500 }}>Progress</span>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>72%</span>
-          </div>
-          <ProgressBar value={72} color="var(--text-primary)" height={4} />
+      {/* ── FILTER TABS BAR (All, Activity, Protection...) ── */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px',
+        borderBottom: '1px solid #F3F4F6',
+        paddingBottom: '12px'
+      }}>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          {['All', 'Skill Tree', 'Roadmap', 'Courses', 'AI Interview'].map((tab) => {
+            const isSel = selectedFilter === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setSelectedFilter(tab)}
+                style={{
+                  fontSize: '0.7875rem',
+                  fontWeight: 600,
+                  padding: '6px 14px',
+                  borderRadius: '99px',
+                  background: isSel ? '#E1EFEA' : 'transparent',
+                  color: isSel ? '#10B981' : '#6B7280',
+                  border: isSel ? '1px solid #C2DFD6' : '1px solid transparent',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {tab}
+              </button>
+            );
+          })}
         </div>
 
-        <button
-          onClick={() => onNavigateStep(8)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.35rem',
-            padding: '0.55rem 1rem',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '0.8125rem',
-            fontWeight: 600,
-            background: 'transparent',
-            color: 'var(--text-primary)',
-            border: '1px solid var(--border-strong)',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-            transition: 'background 0.15s'
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-subtle)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-        >
-          Continue Roadmap <ArrowRight size={13} />
+        {/* Small action icon on filter row */}
+        <button style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          border: '1px solid #E5E7EB',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#4B5563',
+          cursor: 'pointer'
+        }}>
+          <Sliders size={14} />
         </button>
       </div>
 
-      {/* ── Responsive grid style ── */}
+      {/* ── 5. MAIN MOCK CHART WIDGET (Mint Green Rounded Card) ── */}
+      <div style={{
+        background: '#E6F4F0',
+        borderRadius: '24px',
+        padding: '24px',
+        border: '1px solid #CBEAE0',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
+      }}>
+        {/* Widget Top Title */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <span style={{ fontSize: '0.675rem', fontWeight: 700, color: '#0F766E', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              TRACK PROGRESS
+            </span>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: '2px 0 0 0' }}>
+              Your activity
+            </h2>
+          </div>
+          <span style={{
+            fontSize: '0.725rem',
+            background: '#FFFFFF',
+            padding: '4px 10px',
+            borderRadius: '99px',
+            color: '#0F766E',
+            fontWeight: 600,
+            border: '1px solid #BFE3D8'
+          }}>
+            31-Day AI Engineering
+          </span>
+        </div>
+
+        {/* Main Chart Content Grid */}
+        <div style={{
+          display: 'flex',
+          gap: '24px',
+          alignItems: 'stretch',
+          flexWrap: 'wrap'
+        }}>
+          {/* Left panel info cards (inline devices / stats) */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            width: '200px',
+            flexShrink: 0
+          }}>
+            {/* Box 1 */}
+            <div style={{ background: '#FFFFFF', padding: '12px 14px', borderRadius: '16px', border: '1px solid #D3EDE3' }}>
+              <div style={{ fontSize: '0.725rem', color: '#6B7280', fontWeight: 500 }}>Active Track</div>
+              <strong style={{ fontSize: '0.85rem', color: '#1C1B1A', fontWeight: 700 }}>AI Engineer</strong>
+            </div>
+
+            {/* Box 2 */}
+            <div style={{ background: '#FFFFFF', padding: '12px 14px', borderRadius: '16px', border: '1px solid #D3EDE3' }}>
+              <div style={{ fontSize: '0.725rem', color: '#6B7280', fontWeight: 500 }}>Completed Lessons</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                <strong style={{ fontSize: '0.85rem', color: '#1C1B1A', fontWeight: 700 }}>4 Modules</strong>
+                <span style={{ fontSize: '0.675rem', color: '#10B981', fontWeight: 600 }}>✓ On schedule</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Center: Realized bar chart */}
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            height: '140px',
+            background: 'rgba(255, 255, 255, 0.4)',
+            borderRadius: '16px',
+            padding: '16px 20px',
+            border: '1px solid #D3EDE3',
+            minWidth: '280px'
+          }}>
+            {dailyActivity.map((d, idx) => (
+              <div key={idx} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '8px',
+                flex: 1
+              }}>
+                {/* Bar */}
+                <div style={{
+                  width: '18px',
+                  height: `${d.val}px`,
+                  background: d.active ? '#1C1B1A' : '#A7F3D0',
+                  borderRadius: '99px',
+                  transition: 'height 0.3s ease'
+                }} />
+                {/* Day Label */}
+                <span style={{ fontSize: '0.625rem', color: '#0F766E', fontWeight: 600 }}>
+                  {d.day.split(' ')[0]}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Right vertical utility buttons strip */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            justifyContent: 'center'
+          }}>
+            {['chart', 'history', 'settings'].map((btn, idx) => (
+              <button key={idx} style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                background: '#FFFFFF',
+                border: '1px solid #CBEAE0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#1C1B1A',
+                cursor: 'pointer',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+              }}>
+                <Activity size={13} />
+              </button>
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* ── THREE LOWER WIDGETS ROW ── */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '16px',
+        alignItems: 'stretch'
+      }} className="lower-widgets-row">
+        
+        {/* Widget 1: Most Used (Capsule vertical progress bars) */}
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid #E5E7EB',
+          borderRadius: '24px',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
+        }}>
+          <div>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 800, color: '#111827', marginBottom: '12px' }}>
+              Skill Node Strength
+            </h3>
+            
+            {/* Custom styled progress rows */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[
+                { name: 'HTML & CSS', val: 90, color: '#A7F3D0' },
+                { name: 'JavaScript', val: 75, color: '#FCD34D' },
+                { name: 'React Framework', val: 68, color: '#60A5FA' },
+                { name: 'FastAPI Router', val: 80, color: '#F87171' },
+              ].map((prog, idx) => (
+                <div key={idx}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.725rem', marginBottom: '2px' }}>
+                    <span style={{ color: '#4B5563', fontWeight: 500 }}>{prog.name}</span>
+                    <strong style={{ color: '#111827' }}>{prog.val}%</strong>
+                  </div>
+                  <div style={{ height: '6px', background: '#F3F4F6', borderRadius: '99px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${prog.val}%`, background: prog.color }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button 
+            onClick={() => onNavigateStep(5)}
+            style={{
+              marginTop: '16px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              color: '#1C1B1A',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              cursor: 'pointer',
+              alignSelf: 'flex-start'
+            }}
+          >
+            <span>View full skill tree</span>
+            <ArrowRight size={12} />
+          </button>
+        </div>
+
+        {/* Widget 2: Readiness / Verification Speed dial */}
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid #E5E7EB',
+          borderRadius: '24px',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
+        }}>
+          <div>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 800, color: '#111827', marginBottom: '4px' }}>
+              Readiness metrics
+            </h3>
+            <span style={{ fontSize: '0.675rem', color: '#6B7280', display: 'block', marginBottom: '14px' }}>
+              Based on active mock assignments
+            </span>
+
+            {/* Circular readiness dial look */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              background: '#F9FAFB',
+              padding: '12px 14px',
+              borderRadius: '16px',
+              border: '1px solid #F3F4F6'
+            }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: '#E1EFEA',
+                border: '3px solid #10B981',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.9rem',
+                fontWeight: 800,
+                color: '#0F766E'
+              }}>
+                72%
+              </div>
+              <div>
+                <strong style={{ fontSize: '0.8125rem', color: '#111827', display: 'block' }}>Ready for Mock</strong>
+                <span style={{ fontSize: '0.675rem', color: '#10B981', fontWeight: 600 }}>✓ Pre-assessment completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div style={{
+            fontSize: '0.725rem',
+            color: '#6B7280',
+            borderTop: '1px solid #F3F4F6',
+            paddingTop: '12px',
+            marginTop: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <span>Benchmark percentile:</span>
+            <strong style={{ color: '#111827' }}>Top 15%</strong>
+          </div>
+        </div>
+
+        {/* Widget 3: Turing Evaluator update card */}
+        <div style={{
+          background: '#FAFAF9',
+          border: '1px solid #E5E7EB',
+          borderRadius: '24px',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div>
+            <span style={{
+              fontSize: '0.625rem',
+              fontWeight: 700,
+              background: '#FEF3C7',
+              color: '#D97706',
+              padding: '2px 8px',
+              borderRadius: '99px',
+              textTransform: 'uppercase',
+              display: 'inline-block',
+              marginBottom: '10px'
+            }}>
+              Agent Turing
+            </span>
+            <h3 style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#111827', marginBottom: '6px' }}>
+              AI Tech Interview
+            </h3>
+            <p style={{ fontSize: '0.725rem', color: '#6B7280', lineHeight: '1.4' }}>
+              Launch the live interactive AI evaluation to get your skills verified on-chain.
+            </p>
+          </div>
+
+          {/* Colorful sphere style background graphic */}
+          <div style={{
+            position: 'absolute',
+            top: '-20px',
+            right: '-20px',
+            width: '64px',
+            height: '64px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(167,243,208,1) 0%, rgba(96,165,250,1) 100%)',
+            opacity: 0.7,
+            filter: 'blur(8px)',
+            pointerEvents: 'none'
+          }} />
+
+          <button 
+            onClick={() => onNavigateStep(11)}
+            style={{
+              marginTop: '16px',
+              width: '100%',
+              background: '#1C1B1A',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              fontSize: '0.775rem',
+              padding: '8px 12px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            <span>Start AI Interview</span>
+            <ArrowRight size={12} />
+          </button>
+        </div>
+
+      </div>
+
+      {/* ── NEXT MILESTONE STRIP (Subtle strip matching bottom card styles) ── */}
+      <div style={{
+        background: '#FAF8F5',
+        border: '1px solid #E5E7EB',
+        borderRadius: '20px',
+        padding: '12px 18px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={16} color="#D97706" />
+          <span style={{ fontSize: '0.7875rem', color: '#374151' }}>
+            Next Milestone: <strong>Complete Advanced JavaScript</strong> to unlock React Fundamentals.
+          </span>
+        </div>
+        <button 
+          onClick={() => onNavigateStep(8)}
+          style={{
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            color: '#1C1B1A',
+            cursor: 'pointer',
+            border: 'none',
+            background: 'transparent'
+          }}
+        >
+          Resume Roadmap →
+        </button>
+      </div>
+
       <style>{`
         @media (max-width: 900px) {
-          .hub-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        @media (max-width: 580px) {
-          .hub-grid {
+          .lower-widgets-row {
             grid-template-columns: 1fr !important;
           }
         }
