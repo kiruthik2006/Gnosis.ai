@@ -1,338 +1,467 @@
 import React from 'react';
-import { 
-  LayoutDashboard, GitFork, Compass, BookOpen, MessageSquareCode, 
-  User, CheckCircle2, ArrowRight, Sparkles, Trophy, PlayCircle, Clock, Award, ShieldCheck
+import {
+  GitFork, Compass, MessageSquareCode,
+  ArrowRight, Sparkles, BookOpen
 } from 'lucide-react';
 
-export default function Step15Dashboard({ onNavigateStep }) {
+/* ─── tiny design helpers ─── */
+const Label = ({ children, style = {} }) => (
+  <div style={{
+    fontSize: '0.6875rem',
+    fontWeight: 700,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: 'var(--text-muted)',
+    ...style
+  }}>
+    {children}
+  </div>
+);
+
+const Divider = () => (
+  <div style={{ height: '1px', background: 'var(--border-light)', margin: '1.25rem 0' }} />
+);
+
+/* ─── Progress bar ─── */
+function ProgressBar({ value, color = 'var(--text-primary)', height = 3 }) {
   return (
     <div style={{
-      maxWidth: '1200px',
-      margin: '0 auto',
-      padding: '2rem 1.5rem 5rem 1.5rem'
-    }} className="animate-fade-in">
+      height: `${height}px`,
+      background: 'var(--bg-muted)',
+      borderRadius: '99px',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        height: '100%',
+        width: `${value}%`,
+        background: color,
+        borderRadius: '99px',
+        transition: 'width 0.4s ease'
+      }} />
+    </div>
+  );
+}
 
-      {/* Header Banner */}
+/* ─── Stat card ─── */
+function StatCard({ label, value, sub, progress, progressColor, badge, badgeColor }) {
+  return (
+    <div style={{
+      background: 'var(--bg-card)',
+      border: '1px solid var(--border-light)',
+      borderRadius: 'var(--radius-md)',
+      padding: '1.125rem 1.25rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.35rem',
+      flex: 1,
+      minWidth: 0
+    }}>
+      <Label>{label}</Label>
+      <div style={{
+        fontSize: '1.75rem',
+        fontWeight: 800,
+        color: 'var(--text-primary)',
+        letterSpacing: '-0.02em',
+        lineHeight: 1.1
+      }}>
+        {value}
+      </div>
+      {progress !== undefined && (
+        <ProgressBar value={progress} color={progressColor} height={3} />
+      )}
+      {badge && (
+        <span style={{
+          display: 'inline-block',
+          fontSize: '0.6875rem',
+          fontWeight: 600,
+          color: badgeColor || 'var(--text-muted)',
+          background: 'var(--bg-subtle)',
+          padding: '0.15rem 0.5rem',
+          borderRadius: 'var(--radius-sm)',
+          alignSelf: 'flex-start',
+          marginTop: '0.1rem'
+        }}>
+          {badge}
+        </span>
+      )}
+      {sub && !badge && (
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+          {sub}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Hub card ─── */
+function HubCard({ icon: Icon, iconAccent, label, title, description, badgeText, badgeGreen, button, onAction, prominent }) {
+  const [hovered, setHovered] = React.useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: 'var(--bg-card)',
+        border: prominent ? '1.5px solid var(--text-primary)' : '1px solid var(--border-light)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '1.5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+        boxShadow: hovered ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+        transform: hovered ? 'translateY(-1px)' : 'none',
+        cursor: 'default'
+      }}
+    >
+      {/* Icon + badge row */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          borderRadius: 'var(--radius-sm)',
+          background: prominent ? 'var(--text-primary)' : 'var(--bg-subtle)',
+          color: prominent ? '#fff' : (iconAccent || 'var(--text-secondary)'),
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0
+        }}>
+          <Icon size={20} />
+        </div>
+
+        {badgeText && (
+          <span style={{
+            fontSize: '0.6875rem',
+            fontWeight: 700,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            padding: '0.2rem 0.6rem',
+            borderRadius: 'var(--radius-sm)',
+            background: badgeGreen ? '#EEF7F1' : 'var(--bg-subtle)',
+            color: badgeGreen ? '#2E6F40' : 'var(--text-muted)',
+            border: badgeGreen ? '1px solid #C8E6D0' : '1px solid var(--border-light)'
+          }}>
+            {badgeText}
+          </span>
+        )}
+      </div>
+
+      {/* Text block */}
+      <div style={{ flex: 1 }}>
+        <Label style={{ marginBottom: '0.3rem' }}>{label}</Label>
+        <div style={{
+          fontSize: '1.0625rem',
+          fontWeight: 700,
+          color: 'var(--text-primary)',
+          marginBottom: '0.4rem',
+          lineHeight: 1.3
+        }}>
+          {title}
+        </div>
+        <p style={{
+          fontSize: '0.8125rem',
+          color: 'var(--text-secondary)',
+          lineHeight: 1.55
+        }}>
+          {description}
+        </p>
+      </div>
+
+      {/* CTA Button */}
+      <button
+        onClick={onAction}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.4rem',
+          width: '100%',
+          padding: '0.65rem 1rem',
+          borderRadius: 'var(--radius-md)',
+          fontSize: '0.875rem',
+          fontWeight: 600,
+          border: prominent ? 'none' : '1px solid var(--border-strong)',
+          background: prominent ? 'var(--text-primary)' : 'transparent',
+          color: prominent ? '#fff' : 'var(--text-primary)',
+          cursor: 'pointer',
+          transition: 'opacity 0.15s ease, background 0.15s ease'
+        }}
+        onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
+        onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+      >
+        {prominent && <Sparkles size={14} style={{ color: 'var(--accent-warm)' }} />}
+        <span>{button}</span>
+        <ArrowRight size={14} />
+      </button>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════
+   MAIN DASHBOARD
+════════════════════════════════════════════════ */
+export default function Step15Dashboard({ onNavigateStep }) {
+  return (
+    <div
+      className="animate-fade-in"
+      style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '2.5rem 1.5rem 4rem'
+      }}
+    >
+
+      {/* ── HERO ROW ── */}
       <div style={{
         display: 'flex',
-        alignItems: 'center',
-        justify: 'space-between',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '1.5rem',
+        gap: '1.25rem',
         marginBottom: '2rem'
       }}>
+        {/* Left: greeting */}
         <div>
-          <span className="badge badge-strong" style={{ marginBottom: '0.4rem' }}>
-            OVERVIEW DASHBOARD
-          </span>
-          <h1 style={{
-            fontSize: '2.25rem',
+          <div style={{
+            fontSize: '1.625rem',
             fontWeight: 800,
             color: 'var(--text-primary)',
-            letterSpacing: '-0.03em'
+            letterSpacing: '-0.025em',
+            lineHeight: 1.2,
+            marginBottom: '0.4rem'
           }}>
-            Welcome back, Alex
-          </h1>
-          <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
-            Track your skills, complete course prerequisites, and practice AI mock interviews.
+            Welcome back, Alex 👋
+          </div>
+          <p style={{
+            fontSize: '0.9375rem',
+            color: 'var(--text-secondary)',
+            fontWeight: 400,
+            maxWidth: '440px',
+            lineHeight: 1.5
+          }}>
+            Track your progress, strengthen your skills, and get interview-ready.
           </p>
         </div>
 
-        {/* Recommended Next Step Widget */}
+        {/* Right: recommended next step */}
         <div style={{
-          background: 'var(--accent-warm-light)',
-          border: '1px solid var(--accent-warm-border)',
-          padding: '1rem 1.25rem',
-          borderRadius: 'var(--radius-lg)',
           display: 'flex',
           alignItems: 'center',
-          gap: '1rem'
+          gap: '0.875rem',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-light)',
+          borderRadius: 'var(--radius-md)',
+          padding: '0.85rem 1.125rem',
+          boxShadow: 'var(--shadow-sm)',
+          flexShrink: 0
         }}>
           <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            background: 'var(--accent-warm)',
-            color: '#FFF',
+            width: '34px',
+            height: '34px',
+            borderRadius: 'var(--radius-sm)',
+            background: '#FEF4E8',
+            border: '1px solid #F0D9BC',
             display: 'flex',
             alignItems: 'center',
-            justify: 'center'
+            justifyContent: 'center',
+            color: 'var(--accent-warm)',
+            flexShrink: 0
           }}>
-            <Sparkles size={20} />
+            <Sparkles size={16} />
           </div>
           <div>
-            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--accent-warm)', textTransform: 'uppercase' }}>
-              RECOMMENDED NEXT STEP
-            </div>
-            <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-primary)' }}>
-              "Complete Advanced JavaScript"
+            <Label style={{ color: 'var(--accent-warm)', marginBottom: '0.2rem' }}>
+              Recommended Next Step
+            </Label>
+            <div style={{
+              fontSize: '0.875rem',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              whiteSpace: 'nowrap'
+            }}>
+              Complete Advanced JavaScript
             </div>
           </div>
           <button
             onClick={() => onNavigateStep(8)}
-            className="btn-primary"
-            style={{ padding: '0.5rem 1rem', fontSize: '0.8125rem' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              padding: '0.4rem 0.875rem',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              background: 'var(--text-primary)',
+              color: '#fff',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              border: 'none',
+              transition: 'opacity 0.15s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
           >
-            <span>Resume</span>
-            <ArrowRight size={14} />
+            Resume <ArrowRight size={13} />
           </button>
         </div>
       </div>
 
-      {/* 5 Key Metric Cards */}
+      {/* ── STATISTICS ROW ── */}
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '1rem',
+        display: 'flex',
+        gap: '0.875rem',
+        flexWrap: 'wrap',
         marginBottom: '2rem'
       }}>
-        {/* Metric 1 */}
-        <div className="saas-card" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-            OVERALL PROGRESS
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0.2rem 0' }}>
-            68%
-          </div>
-          <div style={{ height: '4px', background: 'var(--bg-subtle)', borderRadius: '99px', overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: '68%', background: 'var(--accent-warm)' }} />
-          </div>
-        </div>
-
-        {/* Metric 2 */}
-        <div className="saas-card" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-            CURRENT LEVEL
-          </div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0.4rem 0' }}>
-            Intermediate
-          </div>
-          <span className="badge badge-strong" style={{ fontSize: '0.65rem' }}>FRONTEND → BACKEND</span>
-        </div>
-
-        {/* Metric 3 */}
-        <div className="saas-card" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-            SKILLS COMPLETED
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0.2rem 0' }}>
-            7 / 12
-          </div>
-          <span style={{ fontSize: '0.75rem', color: 'var(--status-strong)', fontWeight: 600 }}>✓ HTML, CSS, Async JS</span>
-        </div>
-
-        {/* Metric 4 */}
-        <div className="saas-card" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-            COURSES COMPLETED
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0.2rem 0' }}>
-            4 / 6
-          </div>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>2 modules remaining</span>
-        </div>
-
-        {/* Metric 5 */}
-        <div className="saas-card" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-            INTERVIEW READINESS
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0.2rem 0' }}>
-            72%
-          </div>
-          <span className="badge badge-strong" style={{ fontSize: '0.65rem', background: '#F0F7F2', color: '#2E6F40' }}>READY FOR MOCK</span>
-        </div>
+        <StatCard
+          label="Overall Progress"
+          value="68%"
+          progress={68}
+          progressColor="var(--text-primary)"
+        />
+        <StatCard
+          label="Current Level"
+          value="Intermediate"
+          badge="Frontend → Backend"
+        />
+        <StatCard
+          label="Skills"
+          value="7 / 12"
+          sub="HTML · CSS · JS"
+        />
+        <StatCard
+          label="Courses"
+          value="4 / 6"
+          sub="2 remaining"
+        />
+        <StatCard
+          label="Interview Readiness"
+          value="72%"
+          progress={72}
+          progressColor="#4A7C59"
+          sub="Ready for mock"
+        />
       </div>
 
-      {/* Main Grid: Core Hub Cards */}
+      {/* ── MAIN HUB CARDS ── */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-        gap: '1.5rem',
-        marginBottom: '3rem'
-      }}>
-        {/* Hub Card 1: Skill Tree */}
-        <div className="saas-card" style={{
-          padding: '1.75rem',
-          display: 'flex',
-          flexDirection: 'column',
-          justify: 'space-between',
-          borderRadius: 'var(--radius-lg)'
-        }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <div style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--bg-subtle)',
-                color: 'var(--text-primary)',
-                display: 'flex',
-                alignItems: 'center',
-                justify: 'center'
-              }}>
-                <GitFork size={22} />
-              </div>
-              <span className="badge badge-strong">7 STRONG NODES</span>
-            </div>
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '1.125rem',
+        marginBottom: '1.75rem'
+      }}
+        className="hub-grid"
+      >
+        <HubCard
+          icon={GitFork}
+          label="Skill Tree"
+          title="Your Skill Tree"
+          description="See your strengths, gaps, and unlocked technologies across your learning path."
+          badgeText="7 Strong Nodes"
+          button="View Skill Tree"
+          onAction={() => onNavigateStep(5)}
+        />
 
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              Interactive Skill Tree
-            </h3>
+        <HubCard
+          icon={Compass}
+          iconAccent="var(--text-primary)"
+          label="Roadmap"
+          title="Your Roadmap"
+          description="Continue building the skills needed for your target role. Step 2 of 6."
+          badgeText="In Progress"
+          button="Continue Learning"
+          onAction={() => onNavigateStep(8)}
+        />
 
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '1.25rem' }}>
-              Explore node dependencies, assess weaknesses, and unlock locked future technologies.
-            </p>
-          </div>
-
-          <button
-            onClick={() => onNavigateStep(5)}
-            className="btn-secondary"
-            style={{ width: '100%', padding: '0.75rem' }}
-          >
-            <span>View Skill Tree</span>
-            <ArrowRight size={16} />
-          </button>
-        </div>
-
-        {/* Hub Card 2: Roadmap */}
-        <div className="saas-card" style={{
-          padding: '1.75rem',
-          display: 'flex',
-          flexDirection: 'column',
-          justify: 'space-between',
-          borderRadius: 'var(--radius-lg)'
-        }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <div style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--bg-subtle)',
-                color: 'var(--text-primary)',
-                display: 'flex',
-                alignItems: 'center',
-                justify: 'center'
-              }}>
-                <Compass size={22} />
-              </div>
-              <span className="badge badge-moderate">IN PROGRESS</span>
-            </div>
-
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              Current Roadmap
-            </h3>
-
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '1.25rem' }}>
-              Step 2 of 6: Advanced JavaScript & Asynchronous Event Loop mechanics.
-            </p>
-          </div>
-
-          <button
-            onClick={() => onNavigateStep(8)}
-            className="btn-primary"
-            style={{ width: '100%', padding: '0.75rem' }}
-          >
-            <span>Continue Learning</span>
-            <ArrowRight size={16} />
-          </button>
-        </div>
-
-        {/* Hub Card 3: AI Interview Simulator */}
-        <div className="saas-card" style={{
-          padding: '1.75rem',
-          display: 'flex',
-          flexDirection: 'column',
-          justify: 'space-between',
-          borderRadius: 'var(--radius-lg)',
-          border: '2px solid var(--text-primary)'
-        }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <div style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--text-primary)',
-                color: '#FFF',
-                display: 'flex',
-                alignItems: 'center',
-                justify: 'center'
-              }}>
-                <MessageSquareCode size={22} />
-              </div>
-              <span className="badge badge-strong" style={{ background: '#F0F7F2', color: '#2E6F40' }}>UNLOCKED & READY</span>
-            </div>
-
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              AI Technical Interview
-            </h3>
-
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '1.25rem' }}>
-              Take an adaptive live interview session with Agent Turing to earn verified credentials.
-            </p>
-          </div>
-
-          <button
-            onClick={() => onNavigateStep(11)}
-            className="btn-primary"
-            style={{ width: '100%', padding: '0.85rem' }}
-          >
-            <Sparkles size={16} color="var(--accent-warm)" />
-            <span>Start AI Interview</span>
-          </button>
-        </div>
+        <HubCard
+          icon={MessageSquareCode}
+          label="AI Technical Interview"
+          title="AI Technical Interview"
+          description="Test your technical knowledge through an adaptive interview based on your learning journey."
+          badgeText="Unlocked & Ready"
+          badgeGreen
+          button="Start AI Interview"
+          onAction={() => onNavigateStep(11)}
+          prominent
+        />
       </div>
 
-      {/* Bottom Sticky Mobile/Desktop Navigation Bar */}
+      {/* ── NEXT MILESTONE STRIP ── */}
       <div style={{
-        position: 'fixed',
-        bottom: '1rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
         background: 'var(--bg-card)',
-        border: '1px solid var(--border-strong)',
-        borderRadius: 'var(--radius-full)',
-        padding: '0.4rem 0.6rem',
+        border: '1px solid var(--border-light)',
+        borderRadius: 'var(--radius-md)',
+        padding: '1.125rem 1.375rem',
         display: 'flex',
         alignItems: 'center',
-        gap: '0.25rem',
-        boxShadow: 'var(--shadow-lg)',
-        zIndex: 90
+        gap: '1.5rem',
+        flexWrap: 'wrap'
       }}>
-        {[
-          { label: 'Dashboard', icon: LayoutDashboard, step: 15, active: true },
-          { label: 'Skill Tree', icon: GitFork, step: 5 },
-          { label: 'Roadmap', icon: Compass, step: 8 },
-          { label: 'Courses', icon: BookOpen, step: 9 },
-          { label: 'Interview', icon: MessageSquareCode, step: 11 },
-          { label: 'Profile', icon: User, step: 1 }
-        ].map((nav, idx) => {
-          const Icon = nav.icon;
-          return (
-            <button
-              key={idx}
-              onClick={() => onNavigateStep(nav.step)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                padding: '0.45rem 0.95rem',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '0.8125rem',
-                fontWeight: nav.active ? 700 : 500,
-                color: nav.active ? 'var(--text-inverse)' : 'var(--text-secondary)',
-                background: nav.active ? 'var(--text-primary)' : 'transparent',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <Icon size={15} />
-              <span>{nav.label}</span>
-            </button>
-          );
-        })}
+        <div style={{ flexShrink: 0 }}>
+          <Label style={{ marginBottom: '0.25rem' }}>Next Milestone</Label>
+          <div style={{
+            fontSize: '0.9375rem',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            maxWidth: '420px'
+          }}>
+            Complete Advanced JavaScript to unlock React Fundamentals.
+          </div>
+        </div>
+
+        <div style={{ flex: 1, minWidth: '160px' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '0.4rem'
+          }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500 }}>Progress</span>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>72%</span>
+          </div>
+          <ProgressBar value={72} color="var(--text-primary)" height={4} />
+        </div>
+
+        <button
+          onClick={() => onNavigateStep(8)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            padding: '0.55rem 1rem',
+            borderRadius: 'var(--radius-sm)',
+            fontSize: '0.8125rem',
+            fontWeight: 600,
+            background: 'transparent',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-strong)',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            transition: 'background 0.15s'
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-subtle)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+        >
+          Continue Roadmap <ArrowRight size={13} />
+        </button>
       </div>
+
+      {/* ── Responsive grid style ── */}
+      <style>{`
+        @media (max-width: 900px) {
+          .hub-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 580px) {
+          .hub-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
