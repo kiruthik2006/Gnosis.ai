@@ -40,7 +40,8 @@ export default function AppShell({
     setStep(step);
   };
 
-  const gapSize = 16; // 16px gap between sidebar and main container
+  const gapSize = 16; // Gap size in pixels
+  const overlapSize = 48; // Extend 48px to completely slide behind the rounded main body
 
   return (
     <div style={{
@@ -62,7 +63,7 @@ export default function AppShell({
       <div style={{ position: 'absolute', top: '8%', left: '45%', width: '3px', height: '3px', background: '#FFF', opacity: 0.7, boxShadow: '0 0 10px #FFF' }} />
       <div style={{ position: 'absolute', top: '25%', right: '30%', width: '2px', height: '2px', background: '#FFF', opacity: 0.4, boxShadow: '0 0 6px #FFF' }} />
 
-      {/* Main outer wrapper - sidebar and workspace separate with gap */}
+      {/* Main outer wrapper */}
       <div style={{
         width: '100%',
         maxWidth: '1200px',
@@ -83,7 +84,7 @@ export default function AppShell({
               background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(4, 36, 28, 0.35) 100%)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(16, 185, 129, 0.25)',
-              borderRadius: '32px', // Restored rounded corners on all sides
+              borderRadius: '32px',
               padding: '24px 0',
               display: 'flex',
               flexDirection: 'column',
@@ -93,8 +94,8 @@ export default function AppShell({
               flexShrink: 0,
               boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
               position: 'relative',
-              zIndex: 10,
-              overflow: 'visible' // Allow active tab white section to protrude
+              zIndex: 1, // Set lower than the main container so active tab slides behind it
+              overflow: 'visible'
             }}
           >
             {/* Top Logo */}
@@ -168,14 +169,12 @@ export default function AppShell({
                       transition: 'all 0.2s ease',
                       position: 'relative',
                       background: isActive ? '#FFFFFF' : 'transparent',
-                      // Rounded tab cutout shape
                       borderRadius: isActive ? '20px 0 0 20px' : '16px',
                       color: isActive ? '#04241C' : '#A7F3D0',
                       justifyContent: isExpanded ? 'flex-start' : 'center',
-                      zIndex: isActive ? 20 : 1,
-                      // Protrude right by gapSize + 1px to bridge the gap and overlay the main container's left border
-                      width: isActive ? `calc(100% + ${gapSize + 1}px)` : '100%',
-                      marginRight: isActive ? `-${gapSize + 1}px` : '0px',
+                      // Protrude right to bridge the gap and slide underneath the main container
+                      width: isActive ? `calc(100% + ${overlapSize}px)` : '100%',
+                      marginRight: isActive ? `-${overlapSize}px` : '0px',
                       boxShadow: isActive ? '-5px 5px 15px rgba(0,0,0,0.1)' : 'none'
                     }}
                   >
@@ -190,13 +189,13 @@ export default function AppShell({
                       </span>
                     )}
 
-                    {/* Seamless white connection/cutout matching screenshot */}
+                    {/* Seamless white connection/cutout */}
                     {isActive && (
                       <>
                         {/* Top curve block positioned at the sidebar boundary */}
                         <div style={{
                           position: 'absolute',
-                          right: `${gapSize + 1}px`,
+                          right: `${overlapSize}px`,
                           top: '-16px',
                           width: '16px',
                           height: '16px',
@@ -209,7 +208,7 @@ export default function AppShell({
                         {/* Bottom curve block positioned at the sidebar boundary */}
                         <div style={{
                           position: 'absolute',
-                          right: `${gapSize + 1}px`,
+                          right: `${overlapSize}px`,
                           bottom: '-16px',
                           width: '16px',
                           height: '16px',
@@ -254,8 +253,8 @@ export default function AppShell({
         {/* ── 2. SEPARATE MAIN WORKSPACE (White Container) ── */}
         <div style={{
           flex: 1,
-          background: '#FFFFFF', // Clean solid white workspace container
-          borderRadius: '32px', // Restored rounded corners on all sides
+          background: '#FFFFFF', // Solid white background hides overlapping active tab perfectly
+          borderRadius: '32px',
           boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
           display: 'flex',
           flexDirection: 'column',
@@ -263,7 +262,7 @@ export default function AppShell({
           minWidth: 0,
           border: '1px solid rgba(16, 185, 129, 0.2)',
           position: 'relative',
-          zIndex: 5
+          zIndex: 10 // Set higher than the sidebar so the active tab white connector slides underneath
         }}>
 
           {/* Floating Dev quick jumper bar */}
