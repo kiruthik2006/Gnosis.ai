@@ -293,25 +293,31 @@ export default function AppShell({
           flex: 1,
           position: 'relative',
           zIndex: 10,
-          background: 'rgba(255, 255, 255, 0.88)',
+          background: currentStep === 1 
+            ? 'linear-gradient(180deg, #F3F1EC 0%, #0E1C14 30%, #050D08 65%, #000000 100%)' 
+            : 'rgba(255, 255, 255, 0.88)',
           backdropFilter: 'blur(20px) saturate(190%)',
           WebkitBackdropFilter: 'blur(20px) saturate(190%)',
           borderRadius: 32,
-          border: '1px solid rgba(255, 255, 255, 0.65)',
-          boxShadow: '0 24px 60px rgba(0,0,0,0.28), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
+          border: currentStep === 1 ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.65)',
+          borderBottom: currentStep === 1 ? 'none' : undefined,
+          boxShadow: currentStep === 1 
+            ? '0 24px 60px rgba(0, 0, 0, 0.6)' 
+            : '0 24px 60px rgba(0, 0, 0, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           minWidth: 0,
         }}>
 
-          {/* Dev jumper bar (hidden on Dashboard step) */}
-          {currentStep !== 15 && (
+          {/* Dev jumper bar (hidden on Step 1 Landing & Step 15 Dashboard) */}
+          {currentStep !== 1 && currentStep !== 15 && (
             <div style={{
-              background: 'rgba(243, 244, 246, 0.68)',
+              background: currentStep === 1 ? 'rgba(0, 0, 0, 0.4)' : 'rgba(243, 244, 246, 0.68)',
+              color: currentStep === 1 ? '#A7F3D0' : 'inherit',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
-              borderBottom: '1px solid rgba(229, 231, 235, 0.7)',
+              borderBottom: currentStep === 1 ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(229, 231, 235, 0.7)',
               height: 30,
               display: 'flex',
               alignItems: 'center',
@@ -320,7 +326,7 @@ export default function AppShell({
               fontSize: '0.7rem',
               flexShrink: 0,
             }}>
-              <span style={{ fontWeight: 600, color: '#374151' }}>
+              <span style={{ fontWeight: 600, color: currentStep === 1 ? '#A7F3D0' : '#374151' }}>
                 STEP {currentStep}: {DEV_STEPS.find(s => s.num === currentStep)?.label}
               </span>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -340,7 +346,7 @@ export default function AppShell({
           )}
 
           {/* Page content */}
-          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, overflowY: currentStep === 1 ? 'hidden' : 'auto', display: 'flex', flexDirection: 'column' }}>
             {children}
           </div>
 

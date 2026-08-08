@@ -1,167 +1,295 @@
-import React, { useState } from 'react';
-import { Lock, Mail, ArrowRight } from 'lucide-react';
+import React from 'react';
+import { 
+  Sparkles, ArrowRight, ShieldCheck, Zap, Bot, Code, Terminal, 
+  Layers, CheckCircle2, Award, Play, ChevronRight, Activity
+} from 'lucide-react';
 import Logo from './Logo';
 
 export default function Step1Login({ onContinue }) {
-  const [email, setEmail] = useState('alex.morgan@example.com');
-  const [password, setPassword] = useState('••••••••••••');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onContinue();
-  };
-
   return (
     <div style={{
-      minHeight: 'calc(100vh - 120px)',
+      width: '100%',
+      height: '100%',
+      position: 'relative',
+      padding: '1.5rem 2rem 1.75rem 2rem',
+      boxSizing: 'border-box',
       display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
       alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2rem 1rem',
-      background: 'var(--bg-main)'
+      overflow: 'hidden'
     }} className="animate-fade-in">
+
+      {/* ── 0. HALF-PAGE GREEN ARC BACKGROUND + SEAMLESS MASK FADE OVERLAY ── */}
       <div style={{
-        maxWidth: '420px',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         width: '100%',
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-light)',
-        borderRadius: 'var(--radius-lg)',
-        padding: '2.5rem 2rem',
-        boxShadow: 'var(--shadow-lg)',
-        textAlign: 'center'
+        height: '100%',
+        zIndex: 1,
+        pointerEvents: 'none',
+        overflow: 'hidden'
       }}>
-        {/* Logo Badge */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-          <Logo size={48} variant="dark" />
-        </div>
+        {/* Background Green Arc Image with top mask fade */}
+        <img 
+          src="/green_arc.png" 
+          alt="Glowing Green Arc Background" 
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center 65%',
+            transform: 'translateY(14%) scale(1.05)',
+            display: 'block',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, transparent 30%, rgba(0,0,0,0.6) 48%, rgba(0,0,0,1) 65%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, transparent 30%, rgba(0,0,0,0.6) 48%, rgba(0,0,0,1) 65%)'
+          }}
+        />
 
-        {/* Title & Tagline */}
-        <h1 style={{
-          fontSize: '1.5rem',
-          fontWeight: 700,
-          color: 'var(--text-primary)',
-          letterSpacing: '-0.025em',
-          marginBottom: '0.35rem'
-        }}>
-          INTERVIEW AGENT
-        </h1>
-
-        <p style={{
-          fontSize: '0.9375rem',
-          color: 'var(--text-secondary)',
-          fontWeight: 500,
-          marginBottom: '2rem'
-        }}>
-          "Build the interviewer, not the interview."
-        </p>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left' }}>
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '0.8125rem',
-              fontWeight: 600,
-              color: 'var(--text-primary)',
-              marginBottom: '0.4rem'
-            }}>
-              Email address
-            </label>
-            <div style={{ position: 'relative' }}>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@work-email.com"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem 0.75rem 2.5rem',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-strong)',
-                  background: 'var(--bg-card)',
-                  fontSize: '0.875rem',
-                  outline: 'none',
-                  transition: 'all 0.15s ease'
-                }}
-              />
-              <Mail size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-            </div>
-          </div>
-
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-              <label style={{
-                fontSize: '0.8125rem',
-                fontWeight: 600,
-                color: 'var(--text-primary)'
-              }}>
-                Password
-              </label>
-              <a href="#forgot" onClick={(e) => e.preventDefault()} style={{ fontSize: '0.75rem', color: 'var(--accent-warm)', textDecoration: 'none', fontWeight: 500 }}>
-                Forgot password?
-              </a>
-            </div>
-            <div style={{ position: 'relative' }}>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem 0.75rem 2.5rem',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-strong)',
-                  background: 'var(--bg-card)',
-                  fontSize: '0.875rem',
-                  outline: 'none',
-                  transition: 'all 0.15s ease'
-                }}
-              />
-              <Lock size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-            </div>
-          </div>
-
-          <button type="submit" className="btn-primary" style={{ width: '100%', padding: '0.85rem', marginTop: '0.5rem' }}>
-            <span>Continue</span>
-            <ArrowRight size={18} />
-          </button>
-        </form>
-
-        {/* Divider */}
+        {/* Lighter Overlay Layer for Vibrant Green Arc Illumination */}
         <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, transparent 0%, rgba(8, 16, 11, 0.12) 30%, rgba(3, 7, 5, 0.38) 70%, rgba(0, 0, 0, 0.8) 100%)'
+        }} />
+      </div>
+
+      {/* ── FOREGROUND CONTENT CONTAINER ── */}
+      <div style={{
+        maxWidth: '1200px',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justify: 'space-between',
+        position: 'relative',
+        zIndex: 2
+      }}>
+
+        {/* ── 1. HERO HEADER ── */}
+        <div style={{
+          textAlign: 'center',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          margin: '1.75rem 0 1.25rem 0',
-          color: 'var(--text-muted)',
-          fontSize: '0.75rem',
-          fontWeight: 500
+          maxWidth: '820px',
+          margin: '0.5rem auto 0 auto'
         }}>
-          <div style={{ flex: 1, height: '1px', background: 'var(--border-light)' }}></div>
-          <span style={{ padding: '0 0.75rem' }}>OR</span>
-          <div style={{ flex: 1, height: '1px', background: 'var(--border-light)' }}></div>
+          {/* Badge */}
+          <div className="badge badge-strong" style={{ 
+            marginBottom: '0.75rem', 
+            padding: '0.4rem 1.05rem', 
+            fontSize: '0.75rem',
+            gap: '0.45rem',
+            boxShadow: '0 4px 16px rgba(16, 185, 129, 0.2)'
+          }}>
+            <Sparkles size={14} fill="#10B981" />
+            <span>AUTONOMOUS 31-DAY AI TECHNICAL EVALUATOR</span>
+          </div>
+
+          {/* Title */}
+          <h1 style={{
+            fontSize: '2.7rem',
+            fontWeight: 900,
+            color: 'var(--text-primary)',
+            letterSpacing: '-0.035em',
+            lineHeight: 1.1,
+            marginBottom: '0.75rem'
+          }}>
+            Build the Interviewer. <br />
+            <span style={{
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              Verify Technical Mastery.
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p style={{
+            fontSize: '1rem',
+            color: 'var(--text-secondary)',
+            lineHeight: 1.5,
+            fontWeight: 500,
+            marginBottom: '1.5rem',
+            maxWidth: '700px'
+          }}>
+            Transform candidate self-claims into an interactive 31-Day Initial Claim Tree. Probe real technical depth with Agent Turing’s live adaptive interviewing engine.
+          </p>
+
+          {/* CTA Buttons */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button 
+              onClick={onContinue}
+              className="btn-primary"
+              style={{ 
+                padding: '0.85rem 2rem', 
+                fontSize: '0.95rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'linear-gradient(135deg, #18181B 0%, #04241C 100%)',
+                boxShadow: '0 8px 24px rgba(4, 36, 28, 0.35)',
+                gap: '0.6rem'
+              }}
+            >
+              <span>Start Evaluation Flow</span>
+              <ArrowRight size={17} />
+            </button>
+
+            <button 
+              onClick={onContinue}
+              className="btn-secondary"
+              style={{ 
+                padding: '0.85rem 1.8rem', 
+                fontSize: '0.95rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'rgba(255, 255, 255, 0.88)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(232, 226, 213, 0.9)',
+                gap: '0.55rem'
+              }}
+            >
+              <Zap size={17} color="#10B981" fill="#10B981" />
+              <span>Launch Live AI Interview Demo</span>
+            </button>
+          </div>
         </div>
 
-        {/* Google SSO Button */}
-        <button 
-          onClick={onContinue}
-          className="btn-secondary" 
-          style={{ width: '100%', padding: '0.8rem', fontSize: '0.875rem', fontWeight: 500 }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-          </svg>
-          <span>Continue with Google</span>
-        </button>
+        {/* ── 2. CENTER PLATFORM ARCHITECTURE FANCY WORDS & STATS ── */}
+        <div style={{ 
+          textAlign: 'center', 
+          margin: '1.25rem 0 0.85rem 0',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.4rem'
+        }}>
+          <span style={{ 
+            fontSize: '0.725rem', 
+            fontWeight: 850, 
+            color: '#10B981', 
+            letterSpacing: '0.1em', 
+            textTransform: 'uppercase',
+            background: 'rgba(16, 185, 129, 0.15)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            padding: '3px 12px',
+            borderRadius: '99px',
+            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)'
+          }}>
+            ✨ VERIFICATION & FRICTION INTELLIGENCE
+          </span>
+          <h2 style={{ fontSize: '1.7rem', fontWeight: 850, color: '#FFFFFF', margin: 0, letterSpacing: '-0.025em' }}>
+            31-Day Claim Tree & Adaptive Turing Engine
+          </h2>
+          <p style={{ fontSize: '0.875rem', color: '#9CA3AF', margin: 0, maxWidth: '620px', lineHeight: 1.45 }}>
+            Probe real engineering depth, eliminate candidate resume inflation, and inspect live AI evaluation reasoning in real-time.
+          </p>
 
-        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1.5rem' }}>
-          By continuing, you agree to Interview Agent's Terms of Service and Privacy Policy.
-        </p>
+          {/* Fancy Stat Pills */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.35rem' }}>
+            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#A7F3D0', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: '99px' }}>
+              ⚡ 100% Adaptive Probing
+            </span>
+            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#93C5FD', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: '99px' }}>
+              🛡️ Zero Resume Inflation
+            </span>
+            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#FDE68A', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: '99px' }}>
+              📊 Real-Time Friction Graphs
+            </span>
+          </div>
+        </div>
+
+        {/* ── 3. LOWER FEATURE CARDS OVER DARK OVERLAY ── */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '1.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          {/* Feature 1 */}
+          <div style={{
+            background: 'rgba(12, 20, 15, 0.65)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: '20px',
+            padding: '1.35rem 1.4rem',
+            border: '1px solid rgba(16, 185, 129, 0.25)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.65rem',
+            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.6)'
+          }}>
+            <div style={{
+              width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10B981', border: '1px solid rgba(16, 185, 129, 0.35)'
+            }}>
+              <Layers size={19} />
+            </div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 850, color: '#FFFFFF', margin: 0 }}>
+              31-Day Claim Tree Builder
+            </h3>
+            <p style={{ fontSize: '0.8125rem', color: '#9CA3AF', margin: 0, lineHeight: 1.45 }}>
+              Categorize candidate claims across 4 roofs (Frontend UI, Backend API, AI Core, DevOps) using 3-state confidence toggles.
+            </p>
+          </div>
+
+          {/* Feature 2 */}
+          <div style={{
+            background: 'rgba(12, 20, 15, 0.65)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: '20px',
+            padding: '1.35rem 1.4rem',
+            border: '1px solid rgba(59, 130, 246, 0.25)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.65rem',
+            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.6)'
+          }}>
+            <div style={{
+              width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(59, 130, 246, 0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60A5FA', border: '1px solid rgba(59, 130, 246, 0.35)'
+            }}>
+              <Bot size={19} />
+            </div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 850, color: '#FFFFFF', margin: 0 }}>
+              Agent Turing AI Simulator
+            </h3>
+            <p style={{ fontSize: '0.8125rem', color: '#9CA3AF', margin: 0, lineHeight: 1.45 }}>
+              Live adaptive interviewing engine with audio speech-to-text, microtask probing questions, and dynamic scaling.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div style={{
+            background: 'rgba(12, 20, 15, 0.65)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: '20px',
+            padding: '1.35rem 1.4rem',
+            border: '1px solid rgba(245, 158, 11, 0.25)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.65rem',
+            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.6)'
+          }}>
+            <div style={{
+              width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(245, 158, 11, 0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FBBF24', border: '1px solid rgba(245, 158, 11, 0.35)'
+            }}>
+              <Terminal size={19} />
+            </div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 850, color: '#FFFFFF', margin: 0 }}>
+              Audit Log & Friction Analysis
+            </h3>
+            <p style={{ fontSize: '0.8125rem', color: '#9CA3AF', margin: 0, lineHeight: 1.45 }}>
+              Real-time streaming terminal logs, historical friction metrics per module, and automated evaluation reports.
+            </p>
+          </div>
+        </div>
+
       </div>
+
     </div>
   );
 }

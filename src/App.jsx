@@ -54,6 +54,10 @@ export default function App() {
         return (
           <Step1Login
             onContinue={() => { setIsLoggedIn(true); setCurrentStep(2); }}
+            onNavigateStep={(step) => {
+              setIsLoggedIn(true);
+              setCurrentStep(step);
+            }}
           />
         );
       case 2:
