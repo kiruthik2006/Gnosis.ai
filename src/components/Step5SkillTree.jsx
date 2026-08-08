@@ -405,7 +405,7 @@ export default function Step5SkillTree({
           </button>
         </div>
       )}
-    </div>   {/* end premium frame */}
-    </div>   {/* end page-margin wrapper */}
+    </div>
+    </div>
   );
 }

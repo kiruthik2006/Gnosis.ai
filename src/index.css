@@ -64,7 +64,7 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-main);
+  background-color: #E9E4DC;
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -259,3 +259,15 @@ input, textarea, select {
   }
 }
 
+/* ── App Shell responsive ── */
+@media (max-width: 1100px) {
+  .app-right-panel {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-sidebar {
+    display: none !important;
+  }
+}

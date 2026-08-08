@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import Step1TargetProfile from './components/Step1TargetProfile';
-import Step2AppStack from './components/Step2AppStack';
-import Step3AICoreDevOps from './components/Step3AICoreDevOps';
-import Step4ClaimTreePayload from './components/Step4ClaimTreePayload';
+import AppShell from './components/AppShell';
+import Step1Login from './components/Step1Login';
+import Step2TrackSelection from './components/Step2TrackSelection';
+import Step3FrontendSkills from './components/Step3FrontendSkills';
+import Step4BackendSkills from './components/Step4BackendSkills';
 import Step5SkillTree from './components/Step5SkillTree';
 import Step6Assessment from './components/Step6Assessment';
 import Step7UpdatedTree from './components/Step7UpdatedTree';
@@ -17,94 +17,69 @@ import Step14FuturePath from './components/Step14FuturePath';
 import Step15Dashboard from './components/Step15Dashboard';
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [currentStep, setCurrentStep] = useState(15);
+  const [activeTab, setActiveTab]     = useState('dashboard');
+  const [isLoggedIn, setIsLoggedIn]   = useState(true);
 
-  // Selected candidate profile state (Default: Sarah Johnson -> CAND-001)
-  const [candidateId, setCandidateId] = useState('CAND-001');
+  /* Track / skill selection */
+  const [selectedTrack,   setSelectedTrack]   = useState(null);
+  const [selectedSkills,  setSelectedSkills]  = useState([]);
+  const [selectedBackend, setSelectedBackend] = useState([]);
 
-  // Initial Claim Tree state (3-state confidence levels per category)
+  /* Claim tree */
   const [claimTree, setClaimTree] = useState({
     frontend: {
-      "React & Vite": "CONFIDENT",
-      "Streamlit": "WEAK"
+      'React & Vite': 'CONFIDENT',
+      'Streamlit': 'WEAK',
     },
     backend: {
-      "FastAPI": "CONFIDENT",
-      "Vector Databases": "FAMILIAR",
-      "Retrieval Engine": "CONFIDENT"
+      'FastAPI': 'CONFIDENT',
+      'Vector Databases': 'FAMILIAR',
+      'Retrieval Engine': 'CONFIDENT',
     },
     aiCore: {
-      "Embeddings": "CONFIDENT",
-      "Multi-Agent Orchestration": "FAMILIAR",
-      "Model Context Protocol (MCP)": "WEAK"
+      'Embeddings': 'CONFIDENT',
+      'Multi-Agent Orchestration': 'FAMILIAR',
+      'Model Context Protocol (MCP)': 'WEAK',
     },
     devOps: {
-      "Docker & Kubernetes": "WEAK",
-      "Security Guardrails": "FAMILIAR"
-    }
+      'Docker & Kubernetes': 'WEAK',
+      'Security Guardrails': 'FAMILIAR',
+    },
   });
 
-  // Handler to update skill proficiency state
-  const handleUpdateSkill = (category, skillTitle, level) => {
-    setClaimTree((prev) => {
-      const updatedCat = { ...prev[category] };
-      if (!level) {
-        delete updatedCat[skillTitle];
-      } else {
-        updatedCat[skillTitle] = level;
-      }
-      return {
-        ...prev,
-        [category]: updatedCat
-      };
-    });
-  };
-
-  // Compiled payload output function
-  const getCompiledPayload = () => ({
-    candidateId,
-    initialClaimTree: claimTree
-  });
-
-  const renderStepComponent = () => {
+  const renderStep = () => {
     switch (currentStep) {
       case 1:
         return (
-          <Step1TargetProfile
-            candidateId={candidateId}
-            setCandidateId={setCandidateId}
-            onContinue={() => setCurrentStep(2)}
+          <Step1Login
+            onContinue={() => { setIsLoggedIn(true); setCurrentStep(2); }}
           />
         );
-
       case 2:
         return (
-          <Step2AppStack
-            claimTree={claimTree}
-            onUpdateSkill={handleUpdateSkill}
+          <Step2TrackSelection
+            selectedTrack={selectedTrack}
+            setSelectedTrack={setSelectedTrack}
             onContinue={() => setCurrentStep(3)}
           />
         );
-
       case 3:
         return (
-          <Step3AICoreDevOps
-            claimTree={claimTree}
-            onUpdateSkill={handleUpdateSkill}
+          <Step3FrontendSkills
+            selectedSkills={selectedSkills}
+            setSelectedSkills={setSelectedSkills}
             onContinue={() => setCurrentStep(4)}
           />
         );
-
       case 4:
         return (
-          <Step4ClaimTreePayload
-            payload={getCompiledPayload()}
-            onProceed={() => setCurrentStep(5)}
+          <Step4BackendSkills
+            selectedBackend={selectedBackend}
+            setSelectedBackend={setSelectedBackend}
+            onGenerateTree={() => setCurrentStep(5)}
           />
         );
-
       case 5:
         return (
           <Step5SkillTree
@@ -112,21 +87,18 @@ export default function App() {
             onStartAssessment={() => setCurrentStep(6)}
           />
         );
-
       case 6:
         return (
           <Step6Assessment
             onCompleteAssessment={() => setCurrentStep(7)}
           />
         );
-
       case 7:
         return (
           <Step7UpdatedTree
             onGoToRoadmap={() => setCurrentStep(8)}
           />
         );
-
       case 8:
         return (
           <Step8Roadmap
@@ -134,7 +106,6 @@ export default function App() {
             onGoToCourses={() => setCurrentStep(9)}
           />
         );
-
       case 9:
         return (
           <Step9Courses
@@ -142,7 +113,6 @@ export default function App() {
             onProceedToInterview={() => setCurrentStep(10)}
           />
         );
-
       case 10:
         return (
           <Step10Progress
@@ -150,57 +120,49 @@ export default function App() {
             onReviewTree={() => setCurrentStep(7)}
           />
         );
-
       case 11:
         return (
           <Step11AIInterview
             onFinishInterview={() => setCurrentStep(12)}
           />
         );
-
       case 12:
         return (
           <Step12Evaluation
             onUpdateTree={() => setCurrentStep(13)}
           />
         );
-
       case 13:
         return (
           <Step13FinalTreeUpdate
             onGoToFuturePath={() => setCurrentStep(14)}
           />
         );
-
       case 14:
         return (
           <Step14FuturePath
             onGoToDashboard={() => setCurrentStep(15)}
           />
         );
-
       case 15:
       default:
         return (
           <Step15Dashboard
-            onNavigateStep={(stepNum) => setCurrentStep(stepNum)}
+            onNavigateStep={step => setCurrentStep(step)}
           />
         );
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-main)' }}>
-      <Navbar
-        currentStep={currentStep}
-        setStep={setCurrentStep}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isLoggedIn={isLoggedIn}
-      />
-      <main>
-        {renderStepComponent()}
-      </main>
-    </div>
+    <AppShell
+      currentStep={currentStep}
+      setStep={setCurrentStep}
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      isLoggedIn={isLoggedIn}
+    >
+      {renderStep()}
+    </AppShell>
   );
 }
