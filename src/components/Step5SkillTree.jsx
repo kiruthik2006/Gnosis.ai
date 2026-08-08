@@ -167,7 +167,7 @@ export default function Step5SkillTree({
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '1rem',
         marginBottom: '1.5rem'
@@ -317,7 +317,7 @@ export default function Step5SkillTree({
                   color: textColor,
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'center',
+                  justifyContent: 'center',
                   gap: '0.35rem'
                 }}>
                   {isStrong && <span>🟢</span>}
@@ -342,7 +342,7 @@ export default function Step5SkillTree({
           marginBottom: '2rem',
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           boxShadow: 'var(--shadow-md)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -353,7 +353,7 @@ export default function Step5SkillTree({
               background: 'var(--bg-subtle)',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center'
+              justifyContent: 'center'
             }}>
               <Info size={20} />
             </div>
@@ -379,7 +379,7 @@ export default function Step5SkillTree({
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           background: 'var(--bg-card)',
           padding: '1.25rem 1.75rem',
           borderRadius: 'var(--radius-lg)',

@@ -156,7 +156,7 @@ export default function Step10Progress({ onStartInterview, onReviewTree }) {
             color: 'var(--status-strong)',
             display: 'flex',
             alignItems: 'center',
-            justify: 'center'
+            justifyContent: 'center'
           }}>
             <Unlock size={22} />
           </div>

@@ -2,50 +2,50 @@ import React, { useState } from 'react';
 import { 
   ChevronRight, Play, Star, Plus, MoreHorizontal, ArrowRight,
   TrendingUp, Calendar as CalIcon, BookOpen, Clock, Award, ShieldCheck,
-  Search, Bell
+  Search, Bell, Sparkles, Zap, CheckCircle2, Flame
 } from 'lucide-react';
 
 export default function Step15Dashboard({ onNavigateStep }) {
   // New Courses cards data
   const newSkills = [
-    { title: 'Advanced JavaScript', lessons: '12 Lessons', type: 'Frontend UI', rate: '4.8', color: '#FEE2E2', iconColor: '#EF4444' },
-    { title: 'FastAPI Routing', lessons: '15 Lessons', type: 'Backend API', rate: '5.0', color: '#ECFDF5', iconColor: '#10B981' },
-    { title: 'Vector DB & RAG', lessons: '8 Lessons', type: 'AI Core', rate: '4.7', color: '#EFF6FF', iconColor: '#3B82F6' },
+    { title: 'Advanced JavaScript & Async', lessons: '12 Lessons', type: 'Frontend UI', rate: '4.9', color: '#FEE2E2', iconColor: '#EF4444', step: 3 },
+    { title: 'FastAPI & Microservices', lessons: '15 Lessons', type: 'Backend API', rate: '5.0', color: '#ECFDF5', iconColor: '#10B981', step: 4 },
+    { title: 'Vector DB & RAG Pipelines', lessons: '8 Lessons', type: 'AI Core', rate: '4.8', color: '#EFF6FF', iconColor: '#3B82F6', step: 5 },
   ];
 
   // Daily Schedule items
   const dailySchedule = [
-    { title: 'Design System', sub: 'Lecture - Class', color: '#FEE2E2', stepTarget: 8 },
-    { title: 'Typography', sub: 'Group - Test', color: '#EFF6FF', stepTarget: 8 },
-    { title: 'Color Style', sub: 'Group - Test', color: '#ECFDF5', stepTarget: 8 },
-    { title: 'Visual Design', sub: 'Lecture - Test', color: '#FEF3C7', stepTarget: 8 },
+    { title: 'Async Event Loop & Call Stack', sub: 'Adaptive AI Technical Interview', color: 'rgba(254, 226, 226, 0.8)', stepTarget: 11, time: '10:00 AM' },
+    { title: 'System Architecture & Data Flow', sub: 'Claim Tree Verification', color: 'rgba(239, 246, 255, 0.8)', stepTarget: 5, time: '01:30 PM' },
+    { title: 'Prompt Optimization & MCP', sub: 'Code Assessment Challenge', color: 'rgba(236, 253, 245, 0.8)', stepTarget: 6, time: '03:45 PM' },
+    { title: 'Vector Retrieval Evaluation', sub: 'Final Skills Assessment Report', color: 'rgba(254, 243, 199, 0.8)', stepTarget: 12, time: '05:15 PM' },
   ];
 
   // Active courses taking
   const activeCourses = [
-    { name: 'React Fundamentals', instructor: 'Micheal Andrew', time: '8h 45min', progress: 45, color: '#EEF2FF' },
-    { name: 'Python & PyTest', instructor: 'Natalia Vaman', time: '18h 12min', progress: 75, color: '#FFF1F2' },
+    { name: 'React 19 & Concurrent UI', instructor: 'Dr. Sarah Johnson', time: '4h 15min remaining', progress: 68, color: '#EEF2FF' },
+    { name: 'Multi-Agent Systems & LangGraph', instructor: 'Alex Turner', time: '9h 30min remaining', progress: 85, color: '#ECFDF5' },
   ];
 
   // Assignments
   const assignments = [
-    { name: 'Methods of data', date: '02 July, 10:30 AM', status: 'In progress', badgeColor: '#EEF2FF', textColor: '#4F46E5' },
-    { name: 'Market Research', date: '14 June, 12:45 AM', status: 'Completed', badgeColor: '#ECFDF5', textColor: '#059669' },
-    { name: 'Data Collection', date: '12 May, 11:00 AM', status: 'Upcoming', badgeColor: '#FFF7ED', textColor: '#D97706' },
+    { name: 'FastAPI Router Benchmark', date: 'Today, 04:30 PM', status: 'In progress', badgeColor: 'rgba(238, 242, 255, 0.9)', textColor: '#4F46E5' },
+    { name: 'RAG Retrieval Optimization', date: 'Yesterday, 11:15 AM', status: 'Completed', badgeColor: 'rgba(236, 253, 245, 0.9)', textColor: '#059669' },
+    { name: 'Docker Guardrail Security', date: 'Tomorrow, 09:00 AM', status: 'Upcoming', badgeColor: 'rgba(254, 243, 199, 0.9)', textColor: '#D97706' },
   ];
 
   return (
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      gap: '16px',
-      padding: '24px 28px',
-      background: '#FAF9F6',
+      gap: '1.25rem',
+      padding: '1.5rem 2rem',
+      background: 'transparent',
       flex: 1,
       minHeight: '100%',
       boxSizing: 'border-box',
       overflowY: 'auto'
-    }}>
+    }} className="animate-fade-in">
 
       {/* ── 1. HEADER ROW ── */}
       <div style={{
@@ -53,116 +53,146 @@ export default function Step15Dashboard({ onNavigateStep }) {
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '12px'
+        gap: '1rem',
+        paddingBottom: '0.25rem',
+        borderBottom: '1px solid rgba(232, 226, 213, 0.6)'
       }}>
-        <h1 style={{
-          fontSize: '1.4rem', // Slightly smaller font
-          fontWeight: 850,
-          color: '#1E1B26',
-          letterSpacing: '-0.025em',
-          margin: 0
-        }}>
-          Welcome back Alex 👋
-        </h1>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <h1 style={{
+              fontSize: '1.6rem',
+              fontWeight: 850,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.025em',
+              margin: 0
+            }}>
+              Welcome back Alex 👋
+            </h1>
+            <span className="badge badge-strong" style={{ fontSize: '0.6875rem', gap: '0.35rem', padding: '0.25rem 0.65rem' }}>
+              <Flame size={12} fill="#10B981" /> 88% READINESS SCORE
+            </span>
+          </div>
+          <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', margin: '0.2rem 0 0 0' }}>
+            Candidate Profile: <strong style={{ color: 'var(--text-primary)' }}>Alex Turner (CAND-002)</strong> — 31-Day AI Engineering Path
+          </p>
+        </div>
 
         {/* Header Right Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: '#FFFFFF',
-            borderRadius: '99px',
-            padding: '5px 12px',
-            border: '1px solid #E5E7EB',
-            width: '180px'
+            background: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: 'var(--radius-full)',
+            padding: '6px 14px',
+            border: '1px solid rgba(232, 226, 213, 0.8)',
+            width: '210px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
           }}>
-            <Search size={12} color="#9CA3AF" />
+            <Search size={14} color="var(--text-muted)" />
             <input 
               type="text" 
-              placeholder="Search courses" 
+              placeholder="Search curriculum skills..." 
               style={{
                 border: 'none',
                 background: 'transparent',
                 outline: 'none',
-                fontSize: '0.7rem',
+                fontSize: '0.785rem',
                 width: '100%',
-                color: '#1C1B1A'
+                color: 'var(--text-primary)'
               }}
             />
           </div>
 
-          <div style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            border: '2px solid #E5E7EB'
-          }}>
-            <img 
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" 
-              alt="Avatar" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
+          <button 
+            onClick={() => onNavigateStep(11)}
+            className="btn-primary"
+            style={{ 
+              padding: '0.55rem 1.15rem', 
+              fontSize: '0.8125rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'linear-gradient(135deg, #18181B 0%, #064E3B 100%)',
+              gap: '0.45rem'
+            }}
+          >
+            <Zap size={14} color="#10B981" fill="#10B981" />
+            <span>Launch AI Interview</span>
+          </button>
         </div>
       </div>
 
-      {/* ── 2. NEW COURSES GRID (3 cards) ── */}
+      {/* ── 2. NEW CURRICULUM COURSES GRID (3 cards) ── */}
       <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
-          <h2 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>New Courses</h2>
-          <span style={{ fontSize: '0.675rem', color: '#9CA3AF', cursor: 'pointer' }}>View All</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Sparkles size={16} color="var(--accent-warm)" />
+            <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.01em' }}>
+              Featured AI Engineering Stack
+            </h2>
+          </div>
+          <span 
+            onClick={() => onNavigateStep(9)}
+            style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-warm)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
+          >
+            View Full Curriculum <ArrowRight size={12} />
+          </span>
         </div>
 
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '12px'
+          gap: '1rem'
         }}>
           {newSkills.map((c, idx) => (
             <div 
               key={idx}
+              onClick={() => onNavigateStep(c.step)}
+              className="glass-card"
               style={{
-                background: '#FFFFFF',
-                border: '1px solid #E5E7EB',
-                borderRadius: '16px',
-                padding: '12px',
+                borderRadius: 'var(--radius-lg)',
+                padding: '1.15rem',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8px',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.01)'
+                gap: '0.85rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                 <div style={{
-                  width: '30px',
-                  height: '30px',
-                  borderRadius: '8px',
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: 'var(--radius-md)',
                   background: c.color,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: c.iconColor
+                  color: c.iconColor,
+                  flexShrink: 0,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
                 }}>
-                  <BookOpen size={14} />
+                  <BookOpen size={18} />
                 </div>
-                <div>
-                  <h4 style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>{c.title}</h4>
-                  <span style={{ fontSize: '0.625rem', color: '#9CA3AF' }}>{c.lessons}</span>
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, lineHeight: 1.25 }}>{c.title}</h4>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', fontWeight: 500, display: 'inline-block', marginTop: '0.2rem' }}>{c.lessons}</span>
                 </div>
               </div>
 
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                borderTop: '1px solid #F3F4F6',
-                paddingTop: '8px'
+                justify: 'space-between',
+                borderTop: '1px solid rgba(232, 226, 213, 0.7)',
+                paddingTop: '0.65rem'
               }}>
-                <span style={{ fontSize: '0.625rem', color: '#9CA3AF' }}>Type: <strong style={{ color: '#4B5563' }}>{c.type}</strong></span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '0.65rem', fontWeight: 700, color: '#1E1B26' }}>
-                  <Star size={10} color="#FBBF24" fill="#FBBF24" />
+                <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
+                  Domain: <strong style={{ color: 'var(--text-primary)', fontWeight: 700 }}>{c.type}</strong>
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  <Star size={12} color="#F59E0B" fill="#F59E0B" />
                   <span>{c.rate}</span>
                 </div>
               </div>
@@ -174,149 +204,159 @@ export default function Step15Dashboard({ onNavigateStep }) {
       {/* ── 3. DETAILED WIDGETS ROW (Hours Activity, Daily Schedule, Right Panel Widgets) ── */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1.85fr 1fr 1fr',
-        gap: '14px',
+        gridTemplateColumns: '1.75fr 1fr 1.05fr',
+        gap: '1rem',
         alignItems: 'stretch',
         flex: 1,
         minHeight: 0
-      }} className="dashboard-content-columns">
+      }}>
         
-        {/* LEFT COLUMN: Hours Activity + Courses You're Taking */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'space-between' }}>
+        {/* LEFT COLUMN: Hours Activity + Active Courses */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
           
           {/* Hours Activity Card */}
-          <div style={{
-            background: '#FFFFFF',
-            border: '1px solid #E5E7EB',
-            borderRadius: '16px',
-            padding: '14px',
+          <div className="glass-card" style={{
+            borderRadius: 'var(--radius-lg)',
+            padding: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: '0.85rem',
             flex: 1
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <h3 style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>Hours Activity</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '1px' }}>
-                  <TrendingUp size={10} color="#10B981" />
-                  <span style={{ fontSize: '0.625rem', color: '#10B981', fontWeight: 600 }}>+3% increase than last week</span>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                  Weekly Learning & Practice Velocity
+                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '0.2rem' }}>
+                  <TrendingUp size={12} color="#10B981" />
+                  <span style={{ fontSize: '0.725rem', color: '#10B981', fontWeight: 700 }}>+14.2% velocity increase vs last week</span>
                 </div>
               </div>
-              <span style={{ fontSize: '0.625rem', background: '#F3F4F6', padding: '3px 8px', borderRadius: '99px', color: '#4B5563', fontWeight: 600 }}>
-                Weekly
+              <span className="badge badge-strong" style={{ fontSize: '0.6875rem', padding: '0.2rem 0.6rem' }}>
+                LIVE METRICS
               </span>
             </div>
 
-            {/* Bar chart representation - highly compact */}
+            {/* Interactive Bar Chart */}
             <div style={{
               display: 'flex',
               alignItems: 'flex-end',
-              justifyContent: 'space-between',
-              height: '80px',
-              padding: '0 4px',
+              justify: 'space-between',
+              height: '95px',
+              padding: '0 8px',
               position: 'relative',
-              marginTop: '4px'
+              marginTop: '0.4rem'
             }}>
               {[
-                { label: 'Su', hours: 22 },
-                { label: 'Mo', hours: 35 },
-                { label: 'Tu', hours: 45 },
-                { label: 'We', hours: 20 },
-                { label: 'Th', hours: 65, highlight: true },
-                { label: 'Fr', hours: 30 },
-                { label: 'Sa', hours: 40 },
+                { label: 'Sun', hours: 32 },
+                { label: 'Mon', hours: 55 },
+                { label: 'Tue', hours: 42 },
+                { label: 'Wed', hours: 68 },
+                { label: 'Thu', hours: 88, highlight: true },
+                { label: 'Fri', hours: 50 },
+                { label: 'Sat', hours: 60 },
               ].map((bar, idx) => (
-                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
+                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flex: 1 }}>
                   <div style={{
-                    width: '6px',
-                    height: `${bar.hours}px`,
-                    background: bar.highlight ? '#1E1B26' : '#E5E7EB',
+                    width: '8px',
+                    height: `${bar.hours * 0.85}px`,
+                    background: bar.highlight ? 'linear-gradient(180deg, #10B981 0%, #064E3B 100%)' : 'rgba(214, 207, 190, 0.7)',
                     borderRadius: '99px',
-                    position: 'relative'
+                    position: 'relative',
+                    boxShadow: bar.highlight ? '0 0 10px rgba(16, 185, 129, 0.4)' : 'none',
+                    transition: 'all 0.2s ease'
                   }}>
                     {bar.highlight && (
                       <div style={{
                         position: 'absolute',
                         bottom: '100%',
                         left: '50%',
-                        transform: 'translateX(-50%) translateY(-4px)',
-                        background: '#1E1B26',
-                        color: '#FFFFFF',
-                        fontSize: '0.5rem',
-                        padding: '2px 6px',
-                        borderRadius: '3px',
+                        transform: 'translateX(-50%) translateY(-6px)',
+                        background: '#18181B',
+                        color: '#10B981',
+                        fontSize: '0.625rem',
+                        fontWeight: 700,
+                        padding: '3px 8px',
+                        borderRadius: 'var(--radius-sm)',
                         whiteSpace: 'nowrap',
-                        zIndex: 999
+                        zIndex: 999,
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                        border: '1px solid rgba(16,185,129,0.3)'
                       }}>
-                        01:45 min 5 Jan 2023
+                        ⚡ Peak: 3.5h Active Code
                       </div>
                     )}
                   </div>
-                  <span style={{ fontSize: '0.55rem', color: '#9CA3AF', fontWeight: 600 }}>{bar.label}</span>
+                  <span style={{ fontSize: '0.6875rem', color: bar.highlight ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: bar.highlight ? 800 : 600 }}>{bar.label}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Courses You're Taking Section */}
-          <div style={{
-            background: '#FFFFFF',
-            border: '1px solid #E5E7EB',
-            borderRadius: '16px',
-            padding: '14px',
+          {/* Active Courses Section */}
+          <div className="glass-card" style={{
+            borderRadius: 'var(--radius-lg)',
+            padding: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: '0.85rem',
             flex: 1
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>Course You're Taking</h3>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '0.65rem', color: '#9CA3AF', fontWeight: 600 }}>Active</span>
-                <button style={{
-                  width: '18px', height: '18px', borderRadius: '50%', background: '#C6F438', border: 'none',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E1B26', cursor: 'pointer'
-                }}>
-                  <Plus size={10} strokeWidth={3} />
-                </button>
-              </div>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Active Skill Modules</h3>
+              <button 
+                onClick={() => onNavigateStep(3)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontSize: '0.725rem',
+                  fontWeight: 700,
+                  color: 'var(--accent-warm)',
+                  background: 'transparent'
+                }}
+              >
+                <span>Add Skill Module</span>
+                <Plus size={12} strokeWidth={3} />
+              </button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               {activeCourses.map((ac, idx) => (
                 <div key={idx} style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  background: '#FAF9F6',
-                  borderRadius: '12px',
-                  padding: '8px 12px',
-                  border: '1px solid #F0F0F0'
+                  justify: 'space-between',
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '0.75rem 1rem',
+                  border: '1px solid rgba(232, 226, 213, 0.8)',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{
-                      width: '26px', height: '26px', borderRadius: '6px', background: ac.color,
+                      width: '32px', height: '32px', borderRadius: 'var(--radius-sm)', background: ac.color,
                       display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E1B26'
                     }}>
-                      <BookOpen size={12} />
+                      <BookOpen size={16} />
                     </div>
                     <div>
-                      <h5 style={{ fontSize: '0.7rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>{ac.name}</h5>
-                      <span style={{ fontSize: '0.55rem', color: '#9CA3AF' }}>{ac.instructor}</span>
+                      <h5 style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{ac.name}</h5>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Lead: {ac.instructor}</span>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ textAlign: 'right' }}>
-                      <span style={{ fontSize: '0.55rem', color: '#9CA3AF', display: 'block' }}>Remaining</span>
-                      <strong style={{ fontSize: '0.625rem', color: '#4B5563' }}>{ac.time}</strong>
+                      <strong style={{ fontSize: '0.725rem', color: 'var(--text-primary)', display: 'block' }}>{ac.time}</strong>
                     </div>
                     <div style={{
-                      width: '24px', height: '24px', borderRadius: '50%',
-                      border: '2px solid #E5E7EB', borderTopColor: '#C6F438',
+                      width: '30px', height: '30px', borderRadius: '50%',
+                      border: '2.5px solid var(--border-light)', borderTopColor: '#10B981', borderRightColor: '#10B981',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '0.5rem', fontWeight: 800, color: '#1E1B26'
+                      fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-primary)',
+                      background: 'rgba(240, 253, 244, 0.8)'
                     }}>
                       {ac.progress}%
                     </div>
@@ -328,19 +368,22 @@ export default function Step15Dashboard({ onNavigateStep }) {
 
         </div>
 
-        {/* MIDDLE COLUMN: Daily Schedule */}
-        <div style={{
-          background: '#FFFFFF',
-          border: '1px solid #E5E7EB',
-          borderRadius: '16px',
-          padding: '14px',
+        {/* MIDDLE COLUMN: Daily Technical Schedule */}
+        <div className="glass-card" style={{
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.25rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: '10px'
+          gap: '0.85rem'
         }}>
-          <h3 style={{ fontSize: '0.8rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>Daily Schedule</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+              Daily Schedule & Interviews
+            </h3>
+            <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-muted)' }}>4 Tasks Today</span>
+          </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, justifyContent: 'space-between' }}>
             {dailySchedule.map((sched, idx) => (
               <div 
                 key={idx}
@@ -348,98 +391,120 @@ export default function Step15Dashboard({ onNavigateStep }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  background: '#FFFFFF',
-                  border: '1px solid #E5E7EB',
-                  borderRadius: '12px',
-                  padding: '8px 10px',
+                  justify: 'space-between',
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(232, 226, 213, 0.8)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '0.75rem 0.85rem',
                   cursor: 'pointer',
-                  transition: 'all 0.15s ease'
+                  transition: 'all 0.15s ease',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
                 }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = '#1E1B26'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = '#E5E7EB'}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--text-primary)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'rgba(232, 226, 213, 0.8)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <div style={{
-                    width: '24px', height: '24px', borderRadius: '6px', background: sched.color,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E1B26'
+                    width: '30px', height: '30px', borderRadius: 'var(--radius-sm)', background: sched.color,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E1B26', flexShrink: 0
                   }}>
-                    <BookOpen size={10} />
+                    <CalIcon size={14} />
                   </div>
                   <div>
-                    <h5 style={{ fontSize: '0.7rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>{sched.title}</h5>
-                    <span style={{ fontSize: '0.55rem', color: '#9CA3AF' }}>{sched.sub}</span>
+                    <h5 style={{ fontSize: '0.785rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, lineHeight: 1.2 }}>{sched.title}</h5>
+                    <span style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>{sched.sub} • {sched.time}</span>
                   </div>
                 </div>
-                <ChevronRight size={12} color="#9CA3AF" />
+                <ChevronRight size={15} color="var(--text-muted)" />
               </div>
             ))}
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Go Premium, Calendar, Assignments */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', justifyContent: 'space-between' }}>
+        {/* RIGHT COLUMN: AI Pro Assessment, Calendar, Assignments */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', justifyContent: 'space-between' }}>
           
-          {/* Go Premium Card */}
+          {/* AI Pro Assessment Card */}
           <div style={{
-            background: '#1E1B26',
-            borderRadius: '16px',
-            padding: '12px',
+            background: 'linear-gradient(135deg, #18181B 0%, #064E3B 100%)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '1.15rem',
             color: '#FFFFFF',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            boxShadow: '0 8px 24px rgba(6, 78, 59, 0.25)',
+            border: '1px solid rgba(16, 185, 129, 0.3)'
           }}>
-            <h4 style={{ fontSize: '0.75rem', fontWeight: 800, color: '#C6F438', margin: '0 0 2px 0' }}>
-              Go Premium
-            </h4>
-            <p style={{ fontSize: '0.55rem', color: '#9CA3AF', margin: '0 0 8px 0', lineHeight: 1.2 }}>
-              Explore 25k+ courses with lifetime access.
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
+              <Zap size={14} color="#C6F438" fill="#C6F438" />
+              <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#C6F438', margin: 0 }}>
+                AI Turing Evaluation
+              </h4>
+            </div>
+            <p style={{ fontSize: '0.725rem', color: '#D1D5DB', margin: '0 0 0.85rem 0', lineHeight: 1.35 }}>
+              Ready for your adaptive technical evaluation session?
             </p>
             <button 
               onClick={() => onNavigateStep(11)}
               style={{
-                background: '#C6F438', color: '#1E1B26', border: 'none', borderRadius: '8px',
-                padding: '4px 10px', fontSize: '0.625rem', fontWeight: 800, cursor: 'pointer'
+                background: '#C6F438', 
+                color: '#18181B', 
+                border: 'none', 
+                borderRadius: 'var(--radius-md)',
+                padding: '0.5rem 1rem', 
+                fontSize: '0.75rem', 
+                fontWeight: 800, 
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                boxShadow: '0 4px 12px rgba(198, 244, 56, 0.3)'
               }}
             >
-              Get Access
+              <span>Start Session</span>
+              <ArrowRight size={13} strokeWidth={2.5} />
             </button>
           </div>
 
-          {/* Mini Calendar Widget - Highly compact */}
-          <div style={{
-            background: '#FFFFFF',
-            border: '1px solid #E5E7EB',
-            borderRadius: '16px',
-            padding: '8px 10px'
+          {/* Mini Calendar Widget */}
+          <div className="glass-card" style={{
+            borderRadius: 'var(--radius-lg)',
+            padding: '0.85rem 1rem'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-              <span style={{ fontSize: '0.625rem', fontWeight: 800, color: '#1E1B26' }}>August, 2023</span>
-              <div style={{ display: 'flex', gap: '2px', fontSize: '0.55rem', color: '#9CA3AF' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>August, 2026</span>
+              <div style={{ display: 'flex', gap: '6px', fontSize: '0.7rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
                 <span>‹</span>
                 <span>›</span>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '1px', textAlign: 'center', fontSize: '0.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '2px', textAlign: 'center', fontSize: '0.625rem' }}>
               {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, idx) => (
-                <span key={idx} style={{ color: '#9CA3AF', fontWeight: 800 }}>{d}</span>
+                <span key={idx} style={{ color: 'var(--text-muted)', fontWeight: 800, paddingBottom: '2px' }}>{d}</span>
               ))}
               {[...Array(31)].map((_, i) => {
                 const day = i + 1;
-                const isSelected = day === 17;
+                const isSelected = day === 8;
                 return (
                   <span 
                     key={i} 
                     style={{
                       borderRadius: '50%',
-                      background: isSelected ? '#C6F438' : 'transparent',
-                      color: isSelected ? '#1E1B26' : '#4B5563',
+                      background: isSelected ? '#10B981' : 'transparent',
+                      color: isSelected ? '#FFFFFF' : 'var(--text-primary)',
                       fontWeight: isSelected ? 800 : 500,
                       display: 'inline-block',
-                      width: '12px',
-                      height: '12px',
-                      lineHeight: '12px',
-                      margin: 'auto'
+                      width: '18px',
+                      height: '18px',
+                      lineHeight: '18px',
+                      margin: 'auto',
+                      boxShadow: isSelected ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none'
                     }}
                   >
                     {day}
@@ -449,43 +514,36 @@ export default function Step15Dashboard({ onNavigateStep }) {
             </div>
           </div>
 
-          {/* Assignments list */}
-          <div style={{
-            background: '#FFFFFF',
-            border: '1px solid #E5E7EB',
-            borderRadius: '16px',
-            padding: '10px 12px',
+          {/* Technical Verification Status */}
+          <div className="glass-card" style={{
+            borderRadius: 'var(--radius-lg)',
+            padding: '0.85rem 1rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '6px'
+            gap: '0.5rem'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h4 style={{ fontSize: '0.7rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>Assignments</h4>
-              <button style={{
-                width: '14px', height: '14px', borderRadius: '50%', background: '#C6F438', border: 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1E1B26', cursor: 'pointer'
-              }}>
-                <Plus size={8} strokeWidth={3} />
-              </button>
+              <h4 style={{ fontSize: '0.785rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>Verification Milestones</h4>
+              <ShieldCheck size={14} color="#10B981" />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {assignments.map((as, idx) => (
                 <div key={idx} style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  background: '#FAF9F6',
-                  borderRadius: '8px',
-                  padding: '4px 6px',
-                  border: '1px solid #F0F0F0'
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '0.4rem 0.6rem',
+                  border: '1px solid rgba(232, 226, 213, 0.7)'
                 }}>
                   <div>
-                    <h5 style={{ fontSize: '0.6rem', fontWeight: 800, color: '#1E1B26', margin: 0 }}>{as.name}</h5>
-                    <span style={{ fontSize: '0.5rem', color: '#9CA3AF' }}>{as.date}</span>
+                    <h5 style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{as.name}</h5>
+                    <span style={{ fontSize: '0.625rem', color: 'var(--text-muted)' }}>{as.date}</span>
                   </div>
                   <span style={{
-                    fontSize: '0.48rem', fontWeight: 800, padding: '1px 4px', borderRadius: '3px',
+                    fontSize: '0.625rem', fontWeight: 800, padding: '2px 6px', borderRadius: 'var(--radius-sm)',
                     background: as.badgeColor, color: as.textColor
                   }}>{as.status}</span>
                 </div>

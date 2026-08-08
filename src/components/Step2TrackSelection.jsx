@@ -59,7 +59,7 @@ export default function Step2TrackSelection({ selectedTrack, setSelectedTrack, o
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
-                justify: 'space-between',
+                justifyContent: 'space-between',
                 cursor: 'pointer',
                 borderWidth: isSelected ? '2px' : '1px'
               }}
@@ -69,7 +69,7 @@ export default function Step2TrackSelection({ selectedTrack, setSelectedTrack, o
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'space-between',
+                  justifyContent: 'space-between',
                   marginBottom: '1.25rem'
                 }}>
                   <div style={{
@@ -80,7 +80,7 @@ export default function Step2TrackSelection({ selectedTrack, setSelectedTrack, o
                     color: isSelected ? 'var(--text-inverse)' : 'var(--text-primary)',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center',
+                    justifyContent: 'center',
                     transition: 'all 0.2s ease'
                   }}>
                     {getIcon(track.iconName)}
@@ -95,7 +95,7 @@ export default function Step2TrackSelection({ selectedTrack, setSelectedTrack, o
                     color: isSelected ? '#FFF' : 'transparent',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center',
+                    justifyContent: 'center',
                     transition: 'all 0.2s ease'
                   }}>
                     <CheckCircle2 size={16} strokeWidth={2.5} />

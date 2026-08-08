@@ -100,14 +100,14 @@ export default function Step4BackendSkills({ selectedBackend, setSelectedBackend
                         borderWidth: isSelected ? '2px' : '1px',
                         display: 'flex',
                         flexDirection: 'column',
-                        justify: 'space-between'
+                        justifyContent: 'space-between'
                       }}
                     >
                       <div>
                         <div style={{
                           display: 'flex',
                           alignItems: 'center',
-                          justify: 'space-between',
+                          justifyContent: 'space-between',
                           marginBottom: '0.5rem'
                         }}>
                           <span style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
@@ -123,7 +123,7 @@ export default function Step4BackendSkills({ selectedBackend, setSelectedBackend
                             color: '#FFF',
                             display: 'flex',
                             alignItems: 'center',
-                            justify: 'center'
+                            justifyContent: 'center'
                           }}>
                             {isSelected && <Check size={14} strokeWidth={3} />}
                           </div>
@@ -146,7 +146,7 @@ export default function Step4BackendSkills({ selectedBackend, setSelectedBackend
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         background: 'var(--bg-card)',
         padding: '1.25rem 1.75rem',
         borderRadius: 'var(--radius-lg)',

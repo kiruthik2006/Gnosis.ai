@@ -35,7 +35,7 @@ export default function Step7UpdatedTree({ onGoToRoadmap }) {
           padding: '1.1rem 1.5rem',
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1rem',
           boxShadow: 'var(--shadow-sm)'
@@ -49,7 +49,7 @@ export default function Step7UpdatedTree({ onGoToRoadmap }) {
               color: '#FFF',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center'
+              justifyContent: 'center'
             }}>
               <Sparkles size={20} />
             </div>

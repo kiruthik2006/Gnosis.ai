@@ -16,7 +16,7 @@ export default function Step1Login({ onContinue }) {
       minHeight: 'calc(100vh - 120px)',
       display: 'flex',
       alignItems: 'center',
-      justify: 'center',
+      justifyContent: 'center',
       padding: '2rem 1rem',
       background: 'var(--bg-main)'
     }} className="animate-fade-in">

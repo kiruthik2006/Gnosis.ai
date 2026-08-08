@@ -47,7 +47,7 @@ export default function Step12Evaluation({ onUpdateTree }) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justify: 'center',
+          justifyContent: 'center',
           borderRadius: 'var(--radius-lg)'
         }}>
           <div style={{
@@ -69,7 +69,7 @@ export default function Step12Evaluation({ onUpdateTree }) {
             background: 'conic-gradient(var(--accent-warm) 0% 82%, var(--bg-subtle) 82% 100%)',
             display: 'flex',
             alignItems: 'center',
-            justify: 'center',
+            justifyContent: 'center',
             boxShadow: 'var(--shadow-md)',
             marginBottom: '1rem'
           }}>
@@ -81,7 +81,7 @@ export default function Step12Evaluation({ onUpdateTree }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              justify: 'center'
+              justifyContent: 'center'
             }}>
               <span style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>
                 {EVALUATION_DATA.score}
@@ -114,7 +114,7 @@ export default function Step12Evaluation({ onUpdateTree }) {
               <div key={idx}>
                 <div style={{
                   display: 'flex',
-                  justify: 'space-between',
+                  justifyContent: 'space-between',
                   fontSize: '0.85rem',
                   fontWeight: 600,
                   color: 'var(--text-primary)',
@@ -242,7 +242,7 @@ export default function Step12Evaluation({ onUpdateTree }) {
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         background: 'var(--bg-card)',
         padding: '1.5rem',
         borderRadius: 'var(--radius-lg)',

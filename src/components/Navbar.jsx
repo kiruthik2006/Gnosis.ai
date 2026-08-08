@@ -48,7 +48,7 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
           fontSize: '0.8125rem',
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           color: 'var(--text-secondary)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
@@ -119,7 +119,7 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
         height: '56px',
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         gap: '1rem'
       }}>
         {/* Brand */}
@@ -199,7 +199,7 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
               color: 'var(--text-primary)',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center',
+              justifyContent: 'center',
               fontSize: '0.6875rem',
               fontWeight: 700,
               border: '1px solid var(--border-light)'

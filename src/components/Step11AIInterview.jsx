@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
-  Bot, User, Mic, MicOff, Send, Sparkles, CheckCircle2, 
-  Code, Award, ArrowRight, Activity, Terminal
+  Bot, Mic, MicOff, Send, Sparkles, CheckCircle2, 
+  Award, Activity, Clock, ShieldCheck, Zap
 } from 'lucide-react';
 import { MOCK_INTERVIEW_SCRIPT } from '../data/mockData';
 
@@ -39,7 +39,7 @@ export default function Step11AIInterview({ onFinishInterview }) {
       const aiReply = {
         role: 'ai',
         isAdaptiveFollowUp: true,
-        text: "Excellent explanation. Based on your answer about queue ordering: how does node's process.nextTick priority interact with standard ES6 Promise microtasks?",
+        text: "Excellent explanation. Based on your answer about queue ordering: how does Node's process.nextTick priority interact with standard ES6 Promise microtasks?",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages(prev => [...prev, aiReply]);
@@ -50,137 +50,156 @@ export default function Step11AIInterview({ onFinishInterview }) {
     <div style={{
       maxWidth: '1240px',
       margin: '0 auto',
-      padding: '1.5rem',
+      padding: '1.25rem',
       height: 'calc(100vh - 110px)',
       display: 'grid',
-      gridTemplateColumns: '260px 1fr 280px',
+      gridTemplateColumns: '270px 1fr 290px',
       gap: '1.25rem'
     }} className="animate-fade-in">
 
-      {/* LEFT SIDEBAR: AI Interviewer Profile */}
-      <div className="saas-card" style={{
+      {/* LEFT SIDEBAR: AI Interviewer Profile & Live Audio Visualizer */}
+      <div className="glass-card" style={{
         padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
-        justify: 'space-between',
-        borderRadius: 'var(--radius-lg)'
+        justifyContent: 'space-between',
+        borderRadius: 'var(--radius-xl)'
       }}>
         <div>
+          {/* Avatar Profile */}
           <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <div style={{
-              width: '72px',
-              height: '72px',
-              margin: '0 auto 0.85rem auto',
+              width: '80px',
+              height: '80px',
+              margin: '0 auto 1rem auto',
               borderRadius: '50%',
-              background: 'var(--text-primary)',
+              background: 'linear-gradient(135deg, #18181B 0%, #064E3B 100%)',
               color: '#FFF',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center',
-              boxShadow: 'var(--shadow-md)',
+              justifyContent: 'center',
+              boxShadow: '0 8px 24px rgba(6, 78, 59, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3)',
+              border: '2px solid rgba(16, 185, 129, 0.4)',
               position: 'relative'
             }}>
-              <Bot size={36} />
+              <Bot size={40} color="#10B981" />
               <div style={{
                 position: 'absolute',
-                bottom: '2px',
-                right: '2px',
-                width: '16px',
-                height: '16px',
+                bottom: '3px',
+                right: '3px',
+                width: '18px',
+                height: '18px',
                 borderRadius: '50%',
-                background: '#4A7C59',
-                border: '2px solid #FFF'
-              }} />
+                background: '#10B981',
+                border: '3px solid #FFF',
+                boxShadow: '0 0 8px #10B981'
+              }} className="pulse-glow" />
             </div>
 
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
               Agent Turing
             </h3>
-            <div style={{ fontSize: '0.785rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
-              AI Tech Interviewer
+            <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600, marginTop: '0.15rem' }}>
+              AI Technical Evaluator
             </div>
-            <span className="badge badge-strong" style={{ marginTop: '0.5rem', fontSize: '0.65rem' }}>
-              ADAPTIVE EVALUATOR
-            </span>
+            
+            <div style={{ marginTop: '0.65rem' }}>
+              <span className="badge badge-strong" style={{ fontSize: '0.6875rem', padding: '0.3rem 0.75rem', gap: '0.35rem' }}>
+                <Zap size={11} fill="#10B981" /> ADAPTIVE ENGINE V2.4
+              </span>
+            </div>
           </div>
 
-          <hr style={{ border: 0, borderTop: '1px solid var(--border-light)', margin: '1rem 0' }} />
-
-          {/* Live Audio Spectrum Simulator */}
+          {/* Live Audio Spectrum Visualizer */}
           <div style={{
-            background: 'var(--bg-subtle)',
-            padding: '1rem',
-            borderRadius: 'var(--radius-md)',
+            background: 'rgba(243, 239, 231, 0.6)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(232, 226, 213, 0.8)',
+            padding: '1.15rem 1rem',
+            borderRadius: 'var(--radius-lg)',
             textAlign: 'center',
             marginBottom: '1rem'
           }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-              VOICE & CONVERSATION
+            <div style={{ fontSize: '0.725rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.05em', marginBottom: '0.75rem', textTransform: 'uppercase' }}>
+              Voice & Audio Spectrum
             </div>
+
+            {/* Audio Waveform Equalizer */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              justify: 'center',
+              justifyContent: 'center',
               gap: '4px',
-              height: '24px'
+              height: '32px'
             }}>
-              {[12, 22, 16, 28, 14, 20, 24, 10, 18].map((h, i) => (
+              {[14, 26, 18, 32, 20, 28, 30, 16, 22, 12].map((h, i) => (
                 <div
                   key={i}
                   style={{
-                    width: '3px',
-                    height: `${h}px`,
-                    background: 'var(--accent-warm)',
-                    borderRadius: '2px',
-                    animation: isAiThinking ? 'pulseGlow 1s infinite alternate' : 'none'
+                    width: '3.5px',
+                    height: `${isAiThinking ? Math.min(32, h + 4) : h}px`,
+                    background: isAiThinking ? '#10B981' : 'var(--accent-warm)',
+                    borderRadius: '4px',
+                    boxShadow: isAiThinking ? '0 0 8px rgba(16,185,129,0.5)' : 'none',
+                    transition: 'all 0.15s ease',
+                    animation: isAiThinking ? `pulseGlow 0.8s infinite alternate ${i * 0.08}s` : 'none'
                   }}
                 />
               ))}
             </div>
-            <div style={{ fontSize: '0.725rem', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-              {isAiThinking ? 'Analyzing response...' : 'Listening to candidate'}
+
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
+              <Activity size={13} color={isAiThinking ? "#10B981" : "var(--accent-warm)"} />
+              <span>{isAiThinking ? 'Evaluating reasoning depth...' : 'Listening to response'}</span>
             </div>
           </div>
         </div>
 
-        {/* Audio Mic Toggle */}
+        {/* Audio Mic Toggle Button */}
         <button
           onClick={() => setIsMicActive(!isMicActive)}
           className={isMicActive ? 'btn-secondary' : 'btn-primary'}
-          style={{ width: '100%', padding: '0.7rem', fontSize: '0.8125rem' }}
+          style={{ 
+            width: '100%', 
+            padding: '0.8rem', 
+            fontSize: '0.8125rem',
+            border: isMicActive ? '1px solid rgba(16,185,129,0.4)' : 'none',
+            boxShadow: isMicActive ? '0 2px 10px rgba(16,185,129,0.12)' : 'var(--shadow-md)'
+          }}
         >
-          {isMicActive ? <Mic size={16} color="var(--status-strong)" /> : <MicOff size={16} />}
-          <span>{isMicActive ? 'Mic Active (Speech-to-Text)' : 'Enable Voice Mic'}</span>
+          {isMicActive ? <Mic size={16} color="#10B981" /> : <MicOff size={16} />}
+          <span>{isMicActive ? 'Voice Speech-to-Text Active' : 'Enable Voice Microphone'}</span>
         </button>
       </div>
 
-      {/* CENTER PANEL: Interactive Conversation Stream */}
-      <div className="saas-card" style={{
+      {/* CENTER PANEL: Interactive AI Evaluation Session Stream */}
+      <div className="glass-card" style={{
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 'var(--radius-lg)',
+        borderRadius: 'var(--radius-xl)',
         overflow: 'hidden'
       }}>
-        {/* Header */}
+        {/* Header Bar */}
         <div style={{
-          padding: '1rem 1.5rem',
-          borderBottom: '1px solid var(--border-light)',
-          background: 'var(--bg-card)',
+          padding: '1.15rem 1.5rem',
+          borderBottom: '1px solid rgba(232, 226, 213, 0.7)',
+          background: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(10px)',
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between'
+          justifyContent: 'space-between'
         }}>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
+            <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-primary)', letterSpacing: '-0.015em' }}>
               Live Technical Session
             </div>
-            <div style={{ fontSize: '0.785rem', color: 'var(--text-muted)' }}>
-              Target: Advanced JavaScript & Asynchronous Mechanics
+            <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: '0.1rem' }}>
+              Focus Domain: <strong style={{ color: 'var(--text-primary)' }}>Advanced JavaScript & Engine Mechanics</strong>
             </div>
           </div>
 
-          <span className="badge badge-moderate" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <Activity size={13} /> ADAPTIVE DIFFICULTY: HIGH
+          <span className="badge badge-moderate" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 0.75rem' }}>
+            <Activity size={14} /> ADAPTIVE DIFFICULTY: HIGH
           </span>
         </div>
 
@@ -192,7 +211,7 @@ export default function Step11AIInterview({ onFinishInterview }) {
           display: 'flex',
           flexDirection: 'column',
           gap: '1.25rem',
-          background: 'var(--bg-card-hover)'
+          background: 'rgba(250, 248, 245, 0.4)'
         }}>
           {messages.map((msg, idx) => {
             const isAi = msg.role === 'ai';
@@ -203,22 +222,24 @@ export default function Step11AIInterview({ onFinishInterview }) {
                   display: 'flex',
                   gap: '0.85rem',
                   alignSelf: isAi ? 'flex-start' : 'flex-end',
-                  maxWidth: '85%'
+                  maxWidth: '82%'
                 }}
               >
                 {isAi && (
                   <div style={{
-                    width: '32px',
-                    height: '32px',
+                    width: '36px',
+                    height: '36px',
                     borderRadius: '50%',
-                    background: 'var(--text-primary)',
-                    color: '#FFF',
+                    background: 'linear-gradient(135deg, #18181B 0%, #064E3B 100%)',
+                    color: '#10B981',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center',
-                    flexShrink: 0
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    boxShadow: '0 4px 12px rgba(6,78,59,0.2)',
+                    marginTop: msg.isAdaptiveFollowUp ? '28px' : 0
                   }}>
-                    <Bot size={18} />
+                    <Bot size={20} />
                   </div>
                 )}
 
@@ -229,39 +250,46 @@ export default function Step11AIInterview({ onFinishInterview }) {
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.35rem',
-                      background: 'var(--accent-warm-light)',
+                      background: 'rgba(253, 246, 238, 0.9)',
                       color: 'var(--accent-warm)',
                       border: '1px solid var(--accent-warm-border)',
-                      padding: '0.15rem 0.55rem',
+                      padding: '0.2rem 0.6rem',
                       borderRadius: 'var(--radius-sm)',
-                      fontSize: '0.7rem',
+                      fontSize: '0.725rem',
                       fontWeight: 700,
-                      marginBottom: '0.35rem'
+                      marginBottom: '0.4rem',
+                      boxShadow: '0 2px 6px rgba(196,120,56,0.1)'
                     }}>
-                      <Sparkles size={11} /> Adaptive Follow-up
+                      <Sparkles size={12} /> Adaptive Dynamic Follow-Up
                     </div>
                   )}
 
                   <div style={{
-                    background: isAi ? 'var(--bg-card)' : 'var(--text-primary)',
-                    color: isAi ? 'var(--text-primary)' : '#FFF',
-                    border: isAi ? '1px solid var(--border-light)' : 'none',
-                    padding: '1rem 1.25rem',
+                    background: isAi ? 'rgba(255, 255, 255, 0.95)' : 'linear-gradient(135deg, #18181B 0%, #04241C 100%)',
+                    color: isAi ? 'var(--text-primary)' : '#FFFFFF',
+                    border: isAi ? '1px solid rgba(232, 226, 213, 0.9)' : 'none',
+                    borderLeft: isAi ? '3px solid #10B981' : 'none',
+                    padding: '1.1rem 1.35rem',
                     borderRadius: isAi ? '0 var(--radius-md) var(--radius-md) var(--radius-md)' : 'var(--radius-md) 0 var(--radius-md) var(--radius-md)',
-                    fontSize: '0.9rem',
-                    lineHeight: 1.5,
-                    boxShadow: 'var(--shadow-sm)'
+                    fontSize: '0.925rem',
+                    lineHeight: 1.55,
+                    boxShadow: isAi ? '0 4px 16px rgba(28, 27, 26, 0.04)' : '0 6px 20px rgba(0, 0, 0, 0.18)'
                   }}>
                     {msg.text}
                   </div>
 
                   <div style={{
                     fontSize: '0.7rem',
+                    fontWeight: 500,
                     color: 'var(--text-muted)',
-                    marginTop: '0.25rem',
-                    textAlign: isAi ? 'left' : 'right'
+                    marginTop: '0.35rem',
+                    textAlign: isAi ? 'left' : 'right',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    justifyContent: isAi ? 'flex-start' : 'flex-end'
                   }}>
-                    {msg.timestamp}
+                    <Clock size={11} /> {msg.timestamp}
                   </div>
                 </div>
               </div>
@@ -269,138 +297,195 @@ export default function Step11AIInterview({ onFinishInterview }) {
           })}
 
           {isAiThinking && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
-              <Bot size={16} />
-              <span>Agent Turing is formulating adaptive question...</span>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.65rem',
+              background: 'rgba(255, 255, 255, 0.9)',
+              padding: '0.75rem 1.25rem',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--border-light)',
+              maxWidth: '300px',
+              fontSize: '0.8125rem',
+              color: 'var(--text-secondary)'
+            }}>
+              <Bot size={18} color="#10B981" />
+              <span>Agent Turing is formulating question...</span>
             </div>
           )}
         </div>
 
-        {/* Suggestion Chips */}
-        <div style={{ padding: '0.5rem 1.25rem', background: 'var(--bg-card)', borderTop: '1px solid var(--border-light)' }}>
-          <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.35rem' }}>
-            QUICK RESPONSE SUGGESTIONS (PROTOTYPE):
+        {/* Quick Suggestion Chips */}
+        <div style={{ 
+          padding: '0.6rem 1.25rem', 
+          background: 'rgba(255, 255, 255, 0.85)', 
+          borderTop: '1px solid rgba(232, 226, 213, 0.7)' 
+        }}>
+          <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            SUGGESTED TECHNICAL ANSWERS (PROTOTYPE QUICK-TEST):
           </div>
-          <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
             {suggestions.map((s, i) => (
               <button
                 key={i}
                 onClick={() => handleSend(s)}
                 style={{
-                  fontSize: '0.725rem',
-                  padding: '0.25rem 0.65rem',
+                  fontSize: '0.75rem',
+                  padding: '0.35rem 0.75rem',
                   borderRadius: 'var(--radius-sm)',
-                  background: 'var(--bg-subtle)',
-                  color: 'var(--text-secondary)',
-                  border: '1px solid var(--border-light)',
-                  whiteSpace: 'nowrap'
+                  background: 'rgba(243, 239, 231, 0.8)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid rgba(214, 207, 190, 0.8)',
+                  whiteSpace: 'nowrap',
+                  fontWeight: 500,
+                  transition: 'all 0.15s ease'
                 }}
               >
-                "{s.slice(0, 45)}..."
+                "{s.slice(0, 48)}..."
               </button>
             ))}
           </div>
         </div>
 
-        {/* Input Box */}
+        {/* Input Controls Box */}
         <div style={{
           padding: '1rem 1.25rem',
-          background: 'var(--bg-card)',
-          borderTop: '1px solid var(--border-light)',
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderTop: '1px solid rgba(232, 226, 213, 0.8)',
           display: 'flex',
-          gap: '0.75rem'
+          gap: '0.75rem',
+          alignItems: 'center'
         }}>
-          <textarea
-            rows={2}
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Type your technical response here..."
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            style={{
-              flex: 1,
-              padding: '0.75rem 1rem',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border-strong)',
-              fontSize: '0.875rem',
-              outline: 'none',
-              resize: 'none'
-            }}
-          />
+          <div style={{ flex: 1, position: 'relative' }}>
+            <textarea
+              rows={2}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Type your technical answer here (e.g. explain microtask queue vs event loop stack)..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                borderRadius: 'var(--radius-md)',
+                border: '1.5px solid var(--border-strong)',
+                fontSize: '0.875rem',
+                outline: 'none',
+                resize: 'none',
+                background: '#FFFFFF',
+                boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.02)'
+              }}
+            />
+          </div>
 
           <button
             onClick={() => handleSend()}
             disabled={!inputText.trim()}
             className="btn-primary"
-            style={{ padding: '0 1.25rem' }}
+            style={{ 
+              height: '52px', 
+              padding: '0 1.5rem', 
+              background: inputText.trim() ? 'linear-gradient(135deg, #18181B 0%, #04241C 100%)' : '#E5E7EB',
+              color: inputText.trim() ? '#FFFFFF' : '#9CA3AF',
+              border: 'none'
+            }}
           >
             <Send size={18} />
           </button>
         </div>
       </div>
 
-      {/* RIGHT SIDEBAR: Live Interview Progress & Criteria */}
-      <div className="saas-card" style={{
+      {/* RIGHT SIDEBAR: Live Interview Progress & Domain Criteria */}
+      <div className="glass-card" style={{
         padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
-        justify: 'space-between',
-        borderRadius: 'var(--radius-lg)'
+        justifyContent: 'space-between',
+        borderRadius: 'var(--radius-xl)'
       }}>
         <div>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-            INTERVIEW PROGRESS
+          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '0.85rem' }}>
+            EVALUATION PROGRESS
           </div>
 
           <div style={{
-            background: 'var(--bg-subtle)',
-            padding: '1rem',
-            borderRadius: 'var(--radius-md)',
-            marginBottom: '1.25rem'
+            background: 'rgba(243, 239, 231, 0.6)',
+            padding: '1.15rem 1rem',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid rgba(232, 226, 213, 0.8)',
+            marginBottom: '1.5rem'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.35rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', fontWeight: 800, marginBottom: '0.45rem', color: 'var(--text-primary)' }}>
               <span>Questions Covered</span>
               <span>{questionCount} / 4</span>
             </div>
-            <div style={{ height: '6px', width: '100%', background: 'var(--border-light)', borderRadius: '99px' }}>
-              <div style={{ height: '100%', width: `${(questionCount / 4) * 100}%`, background: 'var(--text-primary)', borderRadius: '99px' }} />
+            <div style={{ height: '8px', width: '100%', background: 'rgba(214, 207, 190, 0.6)', borderRadius: '99px', overflow: 'hidden' }}>
+              <div style={{ 
+                height: '100%', 
+                width: `${(questionCount / 4) * 100}%`, 
+                background: 'linear-gradient(90deg, #10B981 0%, #059669 100%)', 
+                borderRadius: '99px',
+                transition: 'width 0.3s ease',
+                boxShadow: '0 0 8px rgba(16,185,129,0.4)'
+              }} />
             </div>
           </div>
 
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '0.85rem' }}>
             EVALUATED SKILL DOMAINS
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {[
               { label: 'Event Loop & Call Stack', evaluated: true },
               { label: 'Microtask vs Macrotask', evaluated: true },
               { label: 'Promise Internal States', evaluated: true },
               { label: 'V8 Memory Management', evaluated: false }
             ].map((d, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', justify: 'space-between', fontSize: '0.8125rem' }}>
-                <span style={{ color: d.evaluated ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: d.evaluated ? 600 : 400 }}>
+              <div 
+                key={i} 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between', 
+                  fontSize: '0.8125rem',
+                  padding: '0.5rem 0.75rem',
+                  borderRadius: 'var(--radius-sm)',
+                  background: d.evaluated ? 'rgba(240, 253, 244, 0.8)' : 'rgba(243, 239, 231, 0.4)',
+                  border: d.evaluated ? '1px solid rgba(187, 247, 208, 0.8)' : '1px solid rgba(232, 226, 213, 0.6)'
+                }}
+              >
+                <span style={{ color: d.evaluated ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: d.evaluated ? 700 : 500 }}>
                   {d.label}
                 </span>
                 {d.evaluated ? (
-                  <CheckCircle2 size={15} color="var(--status-strong)" />
+                  <CheckCircle2 size={16} color="#10B981" />
                 ) : (
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Pending</span>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)' }}>Pending</span>
                 )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Complete & Evaluate Button */}
+        {/* Complete & Evaluate Action Button */}
         <button
           onClick={onFinishInterview}
           className="btn-primary"
-          style={{ width: '100%', padding: '0.85rem', marginTop: '1.5rem', background: 'var(--accent-warm)' }}
+          style={{ 
+            width: '100%', 
+            padding: '0.9rem', 
+            marginTop: '1.5rem', 
+            background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+            border: 'none',
+            fontSize: '0.9rem',
+            gap: '0.6rem',
+            boxShadow: '0 4px 16px rgba(5, 150, 105, 0.3)'
+          }}
         >
           <Award size={18} />
           <span>Finish & Evaluate Interview</span>

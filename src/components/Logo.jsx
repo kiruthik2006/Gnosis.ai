@@ -87,20 +87,20 @@ export default function Logo({ size = 36, variant = 'emerald', showText = false,
       </div>
 
       {showText && (
-        <div>
+        <div style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
           <div style={{
-            fontWeight: 800,
-            fontSize: size > 40 ? '1.25rem' : '0.95rem',
+            fontWeight: 850,
+            fontSize: size > 40 ? '1.15rem' : '0.85rem',
             letterSpacing: '-0.02em',
-            color: 'var(--text-primary)',
+            color: isEmerald ? '#FFFFFF' : 'var(--text-primary)',
             lineHeight: 1.15
           }}>
             INTERVIEW AGENT
           </div>
           {subtitle && (
             <div style={{
-              fontSize: size > 40 ? '0.8125rem' : '0.6875rem',
-              color: 'var(--text-muted)',
+              fontSize: size > 40 ? '0.75rem' : '0.65rem',
+              color: isEmerald ? '#A7F3D0' : 'var(--text-muted)',
               fontWeight: 500,
               lineHeight: 1.15,
               marginTop: '0.15rem'

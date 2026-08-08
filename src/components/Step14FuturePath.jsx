@@ -59,7 +59,7 @@ export default function Step14FuturePath({ onGoToDashboard }) {
                   borderRadius: 'var(--radius-lg)',
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'space-between',
+                  justifyContent: 'space-between',
                   border: isTarget ? '2px solid var(--text-primary)' : isActive ? '2px solid var(--accent-warm)' : '1px solid var(--border-light)',
                   background: isTarget ? 'var(--text-primary)' : isCompleted ? 'var(--status-strong-bg)' : isLocked ? 'var(--bg-subtle)' : 'var(--bg-card)',
                   color: isTarget ? '#FFF' : 'var(--text-primary)',
@@ -76,7 +76,7 @@ export default function Step14FuturePath({ onGoToDashboard }) {
                     color: isTarget ? 'var(--text-primary)' : '#FFF',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center',
+                    justifyContent: 'center',
                     fontWeight: 700,
                     fontSize: '0.85rem'
                   }}>
@@ -123,7 +123,7 @@ export default function Step14FuturePath({ onGoToDashboard }) {
         marginBottom: '2.5rem',
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '1rem'
       }}>

@@ -35,7 +35,7 @@ export default function Step9Courses({ onCompleteCourse, onProceedToInterview })
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: '1rem',
         marginBottom: '2.5rem'
@@ -91,7 +91,7 @@ export default function Step9Courses({ onCompleteCourse, onProceedToInterview })
                 padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
-                justify: 'space-between',
+                justifyContent: 'space-between',
                 borderRadius: 'var(--radius-lg)',
                 border: isInProgress ? '2px solid var(--accent-warm)' : '1px solid var(--border-light)'
               }}
@@ -101,7 +101,7 @@ export default function Step9Courses({ onCompleteCourse, onProceedToInterview })
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'space-between',
+                  justifyContent: 'space-between',
                   marginBottom: '0.75rem'
                 }}>
                   <span className="badge" style={{
@@ -183,7 +183,7 @@ export default function Step9Courses({ onCompleteCourse, onProceedToInterview })
                 <div style={{ marginBottom: '1rem' }}>
                   <div style={{
                     display: 'flex',
-                    justify: 'space-between',
+                    justifyContent: 'space-between',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     marginBottom: '0.35rem',
@@ -240,7 +240,7 @@ export default function Step9Courses({ onCompleteCourse, onProceedToInterview })
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         background: 'var(--bg-card)',
         padding: '1.5rem',
         borderRadius: 'var(--radius-lg)',

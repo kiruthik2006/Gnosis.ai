@@ -104,7 +104,7 @@ export default function AppShell({
               position: 'relative',
               zIndex: 5,               // behind main panel (zIndex 10)
               flexShrink: 0,
-              width: isExpanded ? 200 : 72,
+              width: isExpanded ? 220 : 72,
               transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1)',
               overflow: 'visible',
             }}
@@ -135,29 +135,45 @@ export default function AppShell({
             }}>
 
               {/* ── LOGO AREA ── */}
-              <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <div style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isExpanded ? 'flex-start' : 'center',
+                paddingLeft: isExpanded ? 16 : 0,
+                paddingRight: isExpanded ? 20 : 0,
+                transition: 'padding 0.25s, justify-content 0.25s'
+              }}>
                 <Logo
-                  size={42}
+                  size={40}
                   variant="emerald"
+                  showText={isExpanded}
                   onClick={() => navigate('dashboard', 15)}
                 />
+              </div>
 
-                {/* Chevron toggle — dark pill so it's always visible */}
-                <div style={{
+              {/* Chevron toggle — placed on the right edge of sidebar */}
+              <div 
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{
                   position: 'absolute',
-                  top: 12, right: -10,
-                  width: 18, height: 18,
+                  top: 24,
+                  right: -9,
+                  width: 18,
+                  height: 18,
                   borderRadius: '50%',
                   background: '#04241c',
                   border: '1.5px solid rgba(16,185,129,0.6)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   color: '#a7f3d0',
                   zIndex: 30,
                   cursor: 'pointer',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
-                }}>
-                  {isExpanded ? <ChevronLeft size={10} /> : <ChevronRight size={10} />}
-                </div>
+                }}
+              >
+                {isExpanded ? <ChevronLeft size={10} /> : <ChevronRight size={10} />}
               </div>
 
               {/* ── NAV ITEMS ── */}
@@ -166,8 +182,6 @@ export default function AppShell({
                 flexDirection: 'column',
                 gap: 8,
                 width: '100%',
-                paddingLeft: isExpanded ? 12 : 0,
-                transition: 'padding 0.25s',
                 overflow: 'visible',
               }}>
                 {NAV_ITEMS.map(item => {
@@ -189,8 +203,6 @@ export default function AppShell({
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: 12,
-                          padding: 12,
                           border: 'none',
                           cursor: 'pointer',
                           position: 'relative',
@@ -205,19 +217,30 @@ export default function AppShell({
                             : isHovered
                               ? '#ffffff'
                               : '#a7f3d0',
-                          justifyContent: isExpanded ? 'flex-start' : 'center',
                           transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                           width: isExtended ? `calc(100% + ${TAB_PROTRUDE}px)` : '100%',
                           marginRight: isExtended ? -TAB_PROTRUDE : 0,
+                          height: 44,
+                          padding: 0,
                           fontFamily: 'inherit',
                         }}
                       >
-                        <Icon size={18} strokeWidth={isActive ? 2.4 : 1.8} />
-                        {isExpanded && (
-                          <span style={{ fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                            {item.label}
-                          </span>
-                        )}
+                        <div style={{
+                          width: isExpanded ? '100%' : 72,
+                          paddingLeft: isExpanded ? 16 : 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: isExpanded ? 'flex-start' : 'center',
+                          flexShrink: 0,
+                          gap: 12
+                        }}>
+                          <Icon size={18} strokeWidth={isActive ? 2.4 : 1.8} />
+                          {isExpanded && (
+                            <span style={{ fontSize: '0.8rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                              {item.label}
+                            </span>
+                          )}
+                        </div>
                       </button>
                     </div>
                   );
@@ -226,18 +249,36 @@ export default function AppShell({
 
               {/* ── BOTTOM AVATAR ── */}
               <div style={{
-                width: 34, height: 34,
-                borderRadius: '50%',
-                overflow: 'hidden',
-                border: '2px solid rgba(16,185,129,0.45)',
-                cursor: 'pointer',
-                flexShrink: 0,
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isExpanded ? 'flex-start' : 'center',
+                gap: '0.75rem',
+                paddingLeft: isExpanded ? 16 : 0,
+                transition: 'padding 0.25s, justify-content 0.25s'
               }}>
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-                  alt="Avatar"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+                <div style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: '2px solid rgba(16,185,129,0.45)',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  boxShadow: '0 0 10px rgba(16,185,129,0.2)'
+                }}>
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                    alt="Avatar"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+                {isExpanded && (
+                  <div style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#ffffff' }}>Alex Morgan</div>
+                    <div style={{ fontSize: '0.6875rem', color: '#a7f3d0' }}>AI Engineer</div>
+                  </div>
+                )}
               </div>
 
             </div>

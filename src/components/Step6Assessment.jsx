@@ -49,7 +49,7 @@ export default function Step6Assessment({ onCompleteAssessment }) {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           marginBottom: '0.6rem'
         }}>
           <div>
@@ -174,7 +174,7 @@ export default function Step6Assessment({ onCompleteAssessment }) {
                   fontSize: '0.875rem',
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'center'
+                  justifyContent: 'center'
                 }}>
                   {opt.key}
                 </div>
@@ -224,7 +224,7 @@ export default function Step6Assessment({ onCompleteAssessment }) {
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between'
+        justifyContent: 'space-between'
       }}>
         <button
           onClick={handlePrev}

@@ -50,7 +50,7 @@ export default function Step13FinalTreeUpdate({ onGoToFuturePath }) {
           padding: '1.75rem 2rem',
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '1.25rem',
           boxShadow: 'var(--shadow-lg)',
@@ -65,7 +65,7 @@ export default function Step13FinalTreeUpdate({ onGoToFuturePath }) {
               background: 'rgba(255,255,255,0.15)',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center'
+              justifyContent: 'center'
             }}>
               <Trophy size={28} color="#F7D070" />
             </div>

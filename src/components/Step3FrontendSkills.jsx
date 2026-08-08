@@ -68,7 +68,7 @@ export default function Step3FrontendSkills({ selectedSkills, setSelectedSkills,
                 borderWidth: isSelected ? '2px' : '1px',
                 display: 'flex',
                 flexDirection: 'column',
-                justify: 'space-between',
+                justifyContent: 'space-between',
                 minHeight: '130px'
               }}
             >
@@ -76,7 +76,7 @@ export default function Step3FrontendSkills({ selectedSkills, setSelectedSkills,
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'space-between',
+                  justifyContent: 'space-between',
                   marginBottom: '0.75rem'
                 }}>
                   <div style={{
@@ -87,7 +87,7 @@ export default function Step3FrontendSkills({ selectedSkills, setSelectedSkills,
                     color: isSelected ? '#FFF' : 'var(--text-primary)',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center'
+                    justifyContent: 'center'
                   }}>
                     {getTechIcon(skill.name)}
                   </div>
@@ -102,7 +102,7 @@ export default function Step3FrontendSkills({ selectedSkills, setSelectedSkills,
                     color: '#FFF',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center',
+                    justifyContent: 'center',
                     transition: 'all 0.15s ease'
                   }}>
                     {isSelected && <Check size={14} strokeWidth={3} />}
@@ -131,7 +131,7 @@ export default function Step3FrontendSkills({ selectedSkills, setSelectedSkills,
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         background: 'var(--bg-card)',
         padding: '1.25rem 1.75rem',
         borderRadius: 'var(--radius-lg)',
