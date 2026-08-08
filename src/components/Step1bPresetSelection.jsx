@@ -88,7 +88,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            justify: 'space-between',
+            justifyContent: 'space-between',
             transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             position: 'relative'
           }}
@@ -113,7 +113,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
               border: '1px solid rgba(16, 185, 129, 0.35)',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center',
+              justifyContent: 'center',
               flexShrink: 0
             }}>
               <FileJson size={28} />
@@ -139,7 +139,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
             color: '#04241C',
             display: 'flex',
             alignItems: 'center',
-            justify: 'center',
+            justifyContent: 'center',
             flexShrink: 0,
             boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)'
           }}>
@@ -193,7 +193,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
           zIndex: 9999,
           display: 'flex',
           alignItems: 'center',
-          justify: 'center',
+          justifyContent: 'center',
           padding: '1.5rem'
         }} className="animate-fade-in">
           
@@ -216,7 +216,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
               borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
               display: 'flex',
               alignItems: 'center',
-              justify: 'space-between',
+              justifyContent: 'space-between',
               background: '#18181B'
             }}>
               <div>
@@ -239,7 +239,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
                   height: '36px',
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'center',
+                  justifyContent: 'center',
                   cursor: 'pointer'
                 }}
               >
@@ -304,7 +304,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
                       padding: '1.2rem',
                       display: 'flex',
                       flexDirection: 'column',
-                      justify: 'space-between',
+                      justifyContent: 'space-between',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
                       gap: '0.85rem'
@@ -328,9 +328,10 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
                           color: '#04241C',
                           display: 'flex',
                           alignItems: 'center',
-                          justify: 'center',
+                          justifyContent: 'center',
                           fontWeight: 900,
-                          fontSize: '0.9rem'
+                          fontSize: '0.9rem',
+                          flexShrink: 0
                         }}>
                           {member.name ? member.name.charAt(0) : 'U'}
                         </div>
@@ -383,7 +384,7 @@ export default function Step1bPresetSelection({ onSelectPreset, onCreateCustomSt
                         fontWeight: 850,
                         display: 'flex',
                         alignItems: 'center',
-                        justify: 'center',
+                        justifyContent: 'center',
                         gap: '6px',
                         cursor: 'pointer'
                       }}

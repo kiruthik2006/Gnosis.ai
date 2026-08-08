@@ -128,9 +128,8 @@ async def interview_endpoint(req: InterviewRequest):
     # Increment question count (we count the assistant question that was just generated)
     session["questions_asked"] += 1
 
-    # Check if interview should end
-    # Conditions: either LLM says it's complete, or we've exhausted all candidate topics
-    if eval_result.interview_complete or (next_topic is None and session["questions_asked"] >= 8):
+    # Check if interview should end (Strict rule: minimum 8 questions asked)
+    if (eval_result.interview_complete or next_topic is None) and session["questions_asked"] >= 8:
         # Generate final feedback
         feedback_decision = generate_feedback(
             candidate_context=session["candidate_context"],

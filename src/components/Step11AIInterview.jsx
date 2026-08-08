@@ -112,14 +112,25 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
           setIsAiThinking(false);
         });
     } else {
-      // Fallback Simulation Mode
+      // Dynamic Non-Repeating Question Synthesizer
       setTimeout(() => {
         setIsAiThinking(false);
         setQuestionCount(prev => Math.min(8, prev + 1));
+        const userTextLower = textToSend.toLowerCase();
+        const role = candidateObj.member?.jobRole || 'Engineer';
+        
+        const dynamicQuestions = [
+          `Building on your point regarding ${role} practices: How do you design backpressure handling and exception recovery when scaling streaming pipelines under heavy load?`,
+          `That is a clear explanation. Probing into system performance for ${role}: What specific caching or indexing trade-offs do you optimize to achieve low latency?`,
+          `Good insight. Shifting to fault tolerance: How do you maintain data consistency and prevent race conditions when executing concurrent operations?`,
+          `Great depth. Moving forward: How do you monitor execution metrics and diagnose memory leaks or thread contention in high-throughput environments?`
+        ];
+
+        const selectedQuestion = dynamicQuestions[questionCount % dynamicQuestions.length];
         const aiReply = {
           role: 'ai',
           isAdaptiveFollowUp: true,
-          text: `Great response. Probing deeper into ${candidateObj.member?.jobRole || 'Engineering'}: How does your architectural approach handle vector embedding similarity indexing when scaling to 10M+ documents?`,
+          text: selectedQuestion,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         setMessages(prev => [...prev, aiReply]);
@@ -150,7 +161,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
         padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         borderRadius: 'var(--radius-xl)'
       }}>
         <div>
@@ -165,7 +176,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
               color: '#FFF',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center',
+              justifyContent: 'center',
               boxShadow: '0 8px 24px rgba(6, 78, 59, 0.3)',
               border: '2px solid rgba(16, 185, 129, 0.4)',
               position: 'relative'
@@ -277,7 +288,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
           backdropFilter: 'blur(10px)',
           display: 'flex',
           alignItems: 'center',
-          justify: 'space-between'
+          justifyContent: 'space-between'
         }}>
           <div>
             <div style={{ fontWeight: 850, fontSize: '1.05rem', color: 'var(--text-primary)', letterSpacing: '-0.015em' }}>
@@ -324,11 +335,12 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
                     color: '#10B981',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center',
+                    justifyContent: 'center',
                     flexShrink: 0,
-                    boxShadow: '0 4px 12px rgba(6,78,59,0.2)'
+                    boxShadow: '0 4px 12px rgba(6,78,59,0.2)',
+                    marginTop: '2px'
                   }}>
-                    <Bot size={18} />
+                    <Bot size={18} style={{ display: 'block' }} />
                   </div>
                 )}
 
@@ -356,7 +368,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.25rem',
-                    justify: 'isAi' ? 'flex-start' : 'flex-end'
+                    justifyContent: isAi ? 'flex-start' : 'flex-end'
                   }}>
                     <Clock size={11} /> {msg.timestamp}
                   </div>
@@ -512,7 +524,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
         padding: '1.35rem',
         display: 'flex',
         flexDirection: 'column',
-        justify: 'space-between',
+        justifyContent: 'space-between',
         borderRadius: 'var(--radius-xl)'
       }}>
         <div>
