@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AppShell from './components/AppShell';
 import Step1Login from './components/Step1Login';
+import Step1bPresetSelection from './components/Step1bPresetSelection';
 import Step2TrackSelection from './components/Step2TrackSelection';
 import Step3FrontendSkills from './components/Step3FrontendSkills';
 import Step4BackendSkills from './components/Step4BackendSkills';
@@ -20,6 +21,9 @@ export default function App() {
   const [currentStep, setCurrentStep] = useState(15);
   const [activeTab, setActiveTab]     = useState('dashboard');
   const [isLoggedIn, setIsLoggedIn]   = useState(true);
+
+  /* Candidate selection for preset interviews */
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
 
   /* Track / skill selection */
   const [selectedTrack,   setSelectedTrack]   = useState(null);
@@ -53,11 +57,21 @@ export default function App() {
       case 1:
         return (
           <Step1Login
-            onContinue={() => { setIsLoggedIn(true); setCurrentStep(2); }}
+            onContinue={() => { setIsLoggedIn(true); setCurrentStep(1.5); }}
             onNavigateStep={(step) => {
               setIsLoggedIn(true);
               setCurrentStep(step);
             }}
+          />
+        );
+      case 1.5:
+        return (
+          <Step1bPresetSelection
+            onSelectPreset={(cand) => {
+              setSelectedCandidate(cand);
+              setCurrentStep(11);
+            }}
+            onCreateCustomStack={() => setCurrentStep(2)}
           />
         );
       case 2:
@@ -127,6 +141,7 @@ export default function App() {
       case 11:
         return (
           <Step11AIInterview
+            selectedCandidate={selectedCandidate}
             onFinishInterview={() => setCurrentStep(12)}
           />
         );
