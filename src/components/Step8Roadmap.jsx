@@ -203,8 +203,8 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
                 {/* Plus Action Icon */}
                 <div style={{
                   position: 'absolute',
-                  top: '-12px',
-                  right: '-12px',
+                  top: '12px',
+                  right: '12px',
                   width: '28px',
                   height: '28px',
                   borderRadius: '50%',
@@ -284,7 +284,7 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
                   color: '#9333EA',
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'center',
+                  justifyContent: 'center',
                   boxShadow: '0 8px 20px rgba(147, 51, 234, 0.25)',
                   cursor: 'pointer'
                 }}>
@@ -348,8 +348,8 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
               }}>
                 <div style={{
                   position: 'absolute',
-                  top: '-12px',
-                  right: '-12px',
+                  top: '12px',
+                  right: '12px',
                   width: '28px',
                   height: '28px',
                   borderRadius: '50%',
@@ -357,7 +357,7 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
                   color: '#4B5563',
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'center',
+                  justifyContent: 'center',
                   border: '2px solid #FFFFFF',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
                 }}>
@@ -402,8 +402,8 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
               }}>
                 <div style={{
                   position: 'absolute',
-                  top: '-12px',
-                  right: '-12px',
+                  top: '12px',
+                  right: '12px',
                   width: '28px',
                   height: '28px',
                   borderRadius: '50%',
@@ -411,7 +411,7 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
                   color: '#15803D',
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'center',
+                  justifyContent: 'center',
                   border: '2px solid #FFFFFF',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
                 }}>
@@ -461,8 +461,8 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
               }}>
                 <div style={{
                   position: 'absolute',
-                  top: '-12px',
-                  right: '-12px',
+                  top: '12px',
+                  right: '12px',
                   width: '28px',
                   height: '28px',
                   borderRadius: '50%',
@@ -470,7 +470,7 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
                   color: '#4B5563',
                   display: 'flex',
                   alignItems: 'center',
-                  justify: 'center',
+                  justifyContent: 'center',
                   border: '2px solid #FFFFFF',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
                 }}>
@@ -544,7 +544,7 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
                     color: btn.text,
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'center',
+                    justifyContent: 'center',
                     fontWeight: 800,
                     fontSize: '0.85rem',
                     cursor: 'pointer',
@@ -566,7 +566,7 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
               color: '#FFF',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center',
+              justifyContent: 'center',
               cursor: 'pointer'
             }}>
               <Plus size={16} />
@@ -580,7 +580,7 @@ export default function Step8Roadmap({ onStartCourse, onGoToCourses }) {
               color: '#9CA3AF',
               display: 'flex',
               alignItems: 'center',
-              justify: 'center',
+              justifyContent: 'center',
               cursor: 'pointer'
             }}>
               <Lock size={14} />
