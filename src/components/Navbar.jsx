@@ -5,10 +5,10 @@ import {
 
 export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, isLoggedIn }) {
   const steps = [
-    { num: 1,  label: 'Login & Welcome' },
-    { num: 2,  label: 'Track Selection' },
-    { num: 3,  label: 'Frontend Skills' },
-    { num: 4,  label: 'Backend Skills' },
+    { num: 1,  label: 'Target Profile Selection' },
+    { num: 2,  label: 'Application Stack Baseline' },
+    { num: 3,  label: 'AI & Ops Baseline' },
+    { num: 4,  label: 'Claim Tree Payload' },
     { num: 5,  label: 'Initial Skill Tree' },
     { num: 6,  label: 'MCQ Assessment' },
     { num: 7,  label: 'Assessed Skill Tree' },
@@ -43,7 +43,7 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
           fontSize: '0.8125rem',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justify: 'space-between',
           color: 'var(--text-secondary)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
@@ -114,7 +114,7 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
         height: '56px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justify: 'space-between',
         gap: '1rem'
       }}>
         {/* Brand */}
@@ -130,7 +130,7 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
             color: 'var(--bg-card)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justify: 'center'
           }}>
             <Terminal size={17} strokeWidth={2.3} />
           </div>
@@ -223,7 +223,7 @@ export default function Navbar({ currentStep, setStep, activeTab, setActiveTab, 
               color: 'var(--text-primary)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justify: 'center',
               fontSize: '0.6875rem',
               fontWeight: 700,
               border: '1px solid var(--border-light)'

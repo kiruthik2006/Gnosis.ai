@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
-import Step1Login from './components/Step1Login';
-import Step2TrackSelection from './components/Step2TrackSelection';
-import Step3FrontendSkills from './components/Step3FrontendSkills';
-import Step4BackendSkills from './components/Step4BackendSkills';
+import Step1TargetProfile from './components/Step1TargetProfile';
+import Step2AppStack from './components/Step2AppStack';
+import Step3AICoreDevOps from './components/Step3AICoreDevOps';
+import Step4ClaimTreePayload from './components/Step4ClaimTreePayload';
 import Step5SkillTree from './components/Step5SkillTree';
 import Step6Assessment from './components/Step6Assessment';
 import Step7UpdatedTree from './components/Step7UpdatedTree';
@@ -21,83 +21,94 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  // User flow state variables
-  const [selectedTrack, setSelectedTrack] = useState('BOTH');
-  const [selectedFrontend, setSelectedFrontend] = useState(['html', 'css', 'javascript', 'react']);
-  const [selectedBackend, setSelectedBackend] = useState(['nodejs', 'express', 'mongodb']);
+  // Selected candidate profile state (Default: Sarah Johnson -> CAND-001)
+  const [candidateId, setCandidateId] = useState('CAND-001');
 
-  // Skill Tree state
-  const [treeState, setTreeState] = useState({
-    root: 'not_started',
-    fe: 'strong',
-    be: 'not_started',
-    html: 'not_started',
-    css: 'not_started',
-    javascript: 'moderate',
-    nodejs: 'not_started',
-    db: 'locked',
-    react: 'locked',
-    express: 'locked',
-    mongodb: 'locked'
+  // Initial Claim Tree state (3-state confidence levels per category)
+  const [claimTree, setClaimTree] = useState({
+    frontend: {
+      "React & Vite": "CONFIDENT",
+      "Streamlit": "WEAK"
+    },
+    backend: {
+      "FastAPI": "CONFIDENT",
+      "Vector Databases": "FAMILIAR",
+      "Retrieval Engine": "CONFIDENT"
+    },
+    aiCore: {
+      "Embeddings": "CONFIDENT",
+      "Multi-Agent Orchestration": "FAMILIAR",
+      "Model Context Protocol (MCP)": "WEAK"
+    },
+    devOps: {
+      "Docker & Kubernetes": "WEAK",
+      "Security Guardrails": "FAMILIAR"
+    }
+  });
+
+  // Handler to update skill proficiency state
+  const handleUpdateSkill = (category, skillTitle, level) => {
+    setClaimTree((prev) => {
+      const updatedCat = { ...prev[category] };
+      if (!level) {
+        delete updatedCat[skillTitle];
+      } else {
+        updatedCat[skillTitle] = level;
+      }
+      return {
+        ...prev,
+        [category]: updatedCat
+      };
+    });
+  };
+
+  // Compiled payload output function
+  const getCompiledPayload = () => ({
+    candidateId,
+    initialClaimTree: claimTree
   });
 
   const renderStepComponent = () => {
     switch (currentStep) {
       case 1:
         return (
-          <Step1Login
-            onContinue={() => {
-              setIsLoggedIn(true);
-              setCurrentStep(2);
-            }}
+          <Step1TargetProfile
+            candidateId={candidateId}
+            setCandidateId={setCandidateId}
+            onContinue={() => setCurrentStep(2)}
           />
         );
 
       case 2:
         return (
-          <Step2TrackSelection
-            selectedTrack={selectedTrack}
-            setSelectedTrack={setSelectedTrack}
-            onContinue={() => {
-              if (selectedTrack === 'BACKEND') {
-                setCurrentStep(4);
-              } else {
-                setCurrentStep(3);
-              }
-            }}
+          <Step2AppStack
+            claimTree={claimTree}
+            onUpdateSkill={handleUpdateSkill}
+            onContinue={() => setCurrentStep(3)}
           />
         );
 
       case 3:
         return (
-          <Step3FrontendSkills
-            selectedSkills={selectedFrontend}
-            setSelectedSkills={setSelectedFrontend}
-            onContinue={() => {
-              if (selectedTrack === 'BOTH' || selectedTrack === 'BACKEND') {
-                setCurrentStep(4);
-              } else {
-                setCurrentStep(5);
-              }
-            }}
+          <Step3AICoreDevOps
+            claimTree={claimTree}
+            onUpdateSkill={handleUpdateSkill}
+            onContinue={() => setCurrentStep(4)}
           />
         );
 
       case 4:
         return (
-          <Step4BackendSkills
-            selectedBackend={selectedBackend}
-            setSelectedBackend={setSelectedBackend}
-            onGenerateTree={() => {
-              setCurrentStep(5);
-            }}
+          <Step4ClaimTreePayload
+            payload={getCompiledPayload()}
+            onProceed={() => setCurrentStep(5)}
           />
         );
 
       case 5:
         return (
           <Step5SkillTree
-            treeState={treeState}
+            claimTree={claimTree}
             onStartAssessment={() => setCurrentStep(6)}
           />
         );

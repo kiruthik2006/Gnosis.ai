@@ -1,17 +1,38 @@
 import React, { useState } from 'react';
 import { 
-  CheckCircle2, AlertCircle, Circle, Lock, Sparkles, ArrowRight,
-  Info, Shield, Layers, Layout, Server, ChevronRight
+  CheckCircle2, AlertCircle, Circle, Lock, ArrowRight, Info
 } from 'lucide-react';
 
 export default function Step5SkillTree({ 
-  treeState, 
+  claimTree,
   onStartAssessment, 
   title = "Your Initial Skill Tree",
-  subtitle = "Generated from your selected tech stack. Perform baseline assessment to evaluate your node proficiency.",
+  subtitle = "Generated from your selected AI & App stack claims. Perform baseline assessment to evaluate your node proficiency.",
   showAssessmentBtn = true
 }) {
   const [selectedNode, setSelectedNode] = useState(null);
+
+  // Convert confidence string to internal status
+  const mapConfidenceToStatus = (level) => {
+    switch (level) {
+      case 'CONFIDENT': return 'strong';
+      case 'FAMILIAR': return 'moderate';
+      case 'WEAK': return 'needs_practice';
+      default: return 'not_started';
+    }
+  };
+
+  // Helper to retrieve status for a skill title
+  const getSkillStatus = (title) => {
+    if (!claimTree) return 'not_started';
+    const categories = ['frontend', 'backend', 'aiCore', 'devOps'];
+    for (const cat of categories) {
+      if (claimTree[cat] && claimTree[cat][title]) {
+        return mapConfidenceToStatus(claimTree[cat][title]);
+      }
+    }
+    return 'not_started';
+  };
 
   // Status visual mapping helper
   const getStatusBadge = (status) => {
@@ -19,25 +40,25 @@ export default function Step5SkillTree({
       case 'strong':
         return (
           <span className="badge badge-strong">
-            <CheckCircle2 size={12} /> Strong
+            <CheckCircle2 size={12} /> Confident
           </span>
         );
       case 'moderate':
         return (
           <span className="badge badge-moderate">
-            <AlertCircle size={12} /> Moderate
+            <AlertCircle size={12} /> Familiar
           </span>
         );
       case 'needs_practice':
         return (
           <span className="badge badge-practice">
-            <AlertCircle size={12} /> Needs Practice
+            <AlertCircle size={12} /> Weak
           </span>
         );
       case 'not_started':
         return (
           <span className="badge" style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>
-            <Circle size={12} /> Not Started
+            <Circle size={12} /> Unselected
           </span>
         );
       case 'locked':
@@ -50,43 +71,69 @@ export default function Step5SkillTree({
     }
   };
 
-  // Node definitions with coordinates for custom SVG tree diagram
+  // Dynamic Skill Tree Nodes layout for 31-Day AI Engineering
   const nodes = [
-    { id: 'root', label: 'FULL STACK', category: 'Core Target', status: treeState.root || 'not_started', x: 500, y: 50 },
+    { id: 'root', label: 'AI ENGINEER', category: 'Core Target', status: 'strong', x: 500, y: 45 },
     
-    // Level 1
-    { id: 'fe', label: 'FRONTEND', category: 'Track', status: treeState.fe || 'strong', x: 300, y: 150 },
-    { id: 'be', label: 'BACKEND', category: 'Track', status: treeState.be || 'not_started', x: 700, y: 150 },
+    // Level 1: Main Branches
+    { id: 'app_stack', label: 'APP STACK', category: 'Roof 1 & 2', status: 'strong', x: 280, y: 130 },
+    { id: 'ai_ops', label: 'AI & OPS', category: 'Roof 3 & 4', status: 'strong', x: 720, y: 130 },
     
-    // Level 2 (Frontend side)
-    { id: 'html', label: 'HTML', category: 'Markup', status: treeState.html || 'not_started', x: 180, y: 270 },
-    { id: 'css', label: 'CSS', category: 'Styling', status: treeState.css || 'not_started', x: 300, y: 270 },
-    { id: 'javascript', label: 'JavaScript', category: 'Language', status: treeState.javascript || 'moderate', x: 420, y: 270 },
-    
-    // Level 2 (Backend side)
-    { id: 'nodejs', label: 'Node.js', category: 'Runtime', status: treeState.nodejs || 'not_started', x: 620, y: 270 },
-    { id: 'db', label: 'Database', category: 'Storage', status: treeState.db || 'locked', x: 780, y: 270 },
+    // Level 2: Categories
+    { id: 'fe', label: 'Frontend UI', category: 'Roof 1', status: 'strong', x: 160, y: 230 },
+    { id: 'be', label: 'Backend Systems', category: 'Roof 2', status: 'strong', x: 400, y: 230 },
+    { id: 'ai_core', label: 'AI Core Logic', category: 'Roof 3', status: 'strong', x: 600, y: 230 },
+    { id: 'devops', label: 'DevOps & Infra', category: 'Roof 4', status: 'strong', x: 840, y: 230 },
 
-    // Level 3
-    { id: 'react', label: 'React', category: 'Framework', status: treeState.react || 'locked', x: 420, y: 390 },
-    { id: 'express', label: 'Express.js', category: 'Framework', status: treeState.express || 'locked', x: 620, y: 390 },
+    // Level 3: Individual Skills (Frontend)
+    { id: 'react_vite', label: 'React & Vite', category: 'Frontend', status: getSkillStatus('React & Vite'), x: 100, y: 340 },
+    { id: 'streamlit', label: 'Streamlit', category: 'Frontend', status: getSkillStatus('Streamlit'), x: 190, y: 440 },
+    { id: 'rich_fmt', label: 'Rich Formatting', category: 'Frontend', status: getSkillStatus('Rich Formatting'), x: 100, y: 530 },
 
-    // Level 4
-    { id: 'mongodb', label: 'MongoDB', category: 'NoSQL DB', status: treeState.mongodb || 'locked', x: 620, y: 500 }
+    // Level 3: Backend
+    { id: 'fastapi', label: 'FastAPI', category: 'Backend', status: getSkillStatus('FastAPI'), x: 320, y: 340 },
+    { id: 'vector_db', label: 'Vector DBs', category: 'Backend', status: getSkillStatus('Vector Databases'), x: 440, y: 340 },
+    { id: 'retrieval', label: 'Retrieval Engine', category: 'Backend', status: getSkillStatus('Retrieval Engine'), x: 320, y: 450 },
+    { id: 'sql_pandas', label: 'SQL & Pandas', category: 'Backend', status: getSkillStatus('SQL & Pandas'), x: 440, y: 450 },
+
+    // Level 3: AI Core
+    { id: 'embeddings', label: 'Embeddings', category: 'AI Core', status: getSkillStatus('Embeddings'), x: 560, y: 340 },
+    { id: 'prompt_eng', label: 'Prompt Eng.', category: 'AI Core', status: getSkillStatus('Prompt Engineering'), x: 680, y: 340 },
+    { id: 'multi_agent', label: 'Multi-Agent', category: 'AI Core', status: getSkillStatus('Multi-Agent Orchestration'), x: 560, y: 450 },
+    { id: 'mcp', label: 'MCP Protocol', category: 'AI Core', status: getSkillStatus('Model Context Protocol (MCP)'), x: 680, y: 450 },
+
+    // Level 3: DevOps
+    { id: 'docker', label: 'Docker & K8s', category: 'DevOps', status: getSkillStatus('Docker & Kubernetes'), x: 800, y: 340 },
+    { id: 'observability', label: 'Observability', category: 'DevOps', status: getSkillStatus('Observability'), x: 910, y: 340 },
+    { id: 'security', label: 'Guardrails', category: 'DevOps', status: getSkillStatus('Security Guardrails'), x: 840, y: 450 },
   ];
 
-  // SVG Connection curves between nodes
+  // Connections between nodes
   const connections = [
-    { from: 'root', to: 'fe' },
-    { from: 'root', to: 'be' },
-    { from: 'fe', to: 'html' },
-    { from: 'fe', to: 'css' },
-    { from: 'fe', to: 'javascript' },
-    { from: 'be', to: 'nodejs' },
-    { from: 'be', to: 'db' },
-    { from: 'javascript', to: 'react' },
-    { from: 'nodejs', to: 'express' },
-    { from: 'express', to: 'mongodb' }
+    { from: 'root', to: 'app_stack' },
+    { from: 'root', to: 'ai_ops' },
+    { from: 'app_stack', to: 'fe' },
+    { from: 'app_stack', to: 'be' },
+    { from: 'ai_ops', to: 'ai_core' },
+    { from: 'ai_ops', to: 'devops' },
+
+    { from: 'fe', to: 'react_vite' },
+    { from: 'fe', to: 'streamlit' },
+    { from: 'fe', to: 'rich_fmt' },
+
+    { from: 'be', to: 'fastapi' },
+    { from: 'be', to: 'vector_db' },
+    { from: 'be', to: 'retrieval' },
+    { from: 'be', to: 'sql_pandas' },
+
+    { from: 'ai_core', to: 'embeddings' },
+    { from: 'ai_core', to: 'prompt_eng' },
+    { from: 'ai_core', to: 'multi_agent' },
+    { from: 'ai_core', to: 'mcp' },
+
+    { from: 'devops', to: 'docker' },
+    { from: 'devops', to: 'observability' },
+    { from: 'devops', to: 'security' },
   ];
 
   return (
@@ -135,18 +182,18 @@ export default function Step5SkillTree({
           boxShadow: 'var(--shadow-sm)',
           fontSize: '0.8125rem'
         }}>
-          <span style={{ fontWeight: 600, color: 'var(--text-muted)' }}>LEGEND:</span>
+          <span style={{ fontWeight: 600, color: 'var(--text-muted)' }}>CONFIDENCE LEGEND:</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-strong)', fontWeight: 600 }}>
-            <CheckCircle2 size={14} /> ✓ Strong
+            🟢 Confident
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-moderate)', fontWeight: 600 }}>
-            <AlertCircle size={14} /> ● Needs Improvement
+            🟡 Familiar
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-needs-practice)', fontWeight: 600 }}>
+            🔴 Weak
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
-            <Circle size={14} /> ○ Not Started
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-            <Lock size={14} /> 🔒 Locked
+            ⚪ Unselected
           </div>
         </div>
       </div>
@@ -162,7 +209,7 @@ export default function Step5SkillTree({
         overflowX: 'auto',
         marginBottom: '2rem'
       }}>
-        <div style={{ minWidth: '850px', position: 'relative', height: '560px' }}>
+        <div style={{ minWidth: '980px', position: 'relative', height: '600px' }}>
           {/* SVG Connection Lines */}
           <svg style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, pointerEvents: 'none' }}>
             {connections.map((conn, idx) => {
@@ -170,16 +217,16 @@ export default function Step5SkillTree({
               const toNode = nodes.find(n => n.id === conn.to);
               if (!fromNode || !toNode) return null;
 
-              const isLocked = toNode.status === 'locked';
+              const isNotStarted = toNode.status === 'not_started';
 
               return (
                 <path
                   key={idx}
-                  d={`M ${fromNode.x} ${fromNode.y + 25} C ${fromNode.x} ${fromNode.y + 70}, ${toNode.x} ${toNode.y - 70}, ${toNode.x} ${toNode.y - 25}`}
+                  d={`M ${fromNode.x} ${fromNode.y + 20} C ${fromNode.x} ${fromNode.y + 50}, ${toNode.x} ${toNode.y - 50}, ${toNode.x} ${toNode.y - 20}`}
                   fill="none"
-                  stroke={isLocked ? 'var(--border-light)' : 'var(--border-strong)'}
-                  strokeWidth={isLocked ? "1.5" : "2"}
-                  strokeDasharray={isLocked ? "4 4" : "none"}
+                  stroke={isNotStarted ? 'var(--border-light)' : 'var(--border-strong)'}
+                  strokeWidth={isNotStarted ? "1.5" : "2"}
+                  strokeDasharray={isNotStarted ? "4 4" : "none"}
                 />
               );
             })}
@@ -188,25 +235,25 @@ export default function Step5SkillTree({
           {/* Node Elements */}
           {nodes.map((node) => {
             const isSelected = selectedNode?.id === node.id;
-            const isLocked = node.status === 'locked';
             const isStrong = node.status === 'strong';
             const isModerate = node.status === 'moderate';
             const isNeedsPractice = node.status === 'needs_practice';
+            const isNotStarted = node.status === 'not_started';
 
             let bgColor = 'var(--bg-card)';
             let borderColor = 'var(--border-light)';
             let textColor = 'var(--text-primary)';
 
             if (isStrong) {
-              bgColor = 'var(--status-strong-bg)';
-              borderColor = 'var(--status-strong-border)';
+              bgColor = '#F0FDF4';
+              borderColor = '#22C55E';
             } else if (isModerate) {
-              bgColor = 'var(--accent-warm-light)';
-              borderColor = 'var(--accent-warm-border)';
+              bgColor = '#FEFCE8';
+              borderColor = '#EAB308';
             } else if (isNeedsPractice) {
-              bgColor = 'var(--status-needs-practice-bg)';
-              borderColor = 'var(--status-needs-practice-border)';
-            } else if (isLocked) {
+              bgColor = '#FEF2F2';
+              borderColor = '#EF4444';
+            } else if (isNotStarted) {
               bgColor = 'var(--bg-subtle)';
               borderColor = 'var(--border-light)';
               textColor = 'var(--text-muted)';
@@ -222,24 +269,24 @@ export default function Step5SkillTree({
                   top: `${node.y}px`,
                   transform: 'translate(-50%, -50%)',
                   background: bgColor,
-                  border: `2px solid ${isSelected ? 'var(--text-primary)' : borderColor}`,
+                  border: `2px solid ${isSelected ? '#18181b' : borderColor}`,
                   borderRadius: 'var(--radius-md)',
-                  padding: '0.6rem 1.1rem',
-                  minWidth: '130px',
+                  padding: '0.55rem 0.95rem',
+                  minWidth: '120px',
                   textAlign: 'center',
                   cursor: 'pointer',
                   boxShadow: isSelected ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                   zIndex: 2,
-                  opacity: isLocked ? 0.75 : 1
+                  opacity: isNotStarted ? 0.75 : 1
                 }}
               >
                 <div style={{
-                  fontSize: '0.65rem',
+                  fontSize: '0.625rem',
                   fontWeight: 700,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
-                  color: isLocked ? 'var(--text-muted)' : 'var(--text-secondary)',
+                  color: isNotStarted ? 'var(--text-muted)' : 'var(--text-secondary)',
                   marginBottom: '0.15rem'
                 }}>
                   {node.category}
@@ -247,17 +294,17 @@ export default function Step5SkillTree({
 
                 <div style={{
                   fontWeight: 700,
-                  fontSize: '0.9rem',
+                  fontSize: '0.85rem',
                   color: textColor,
                   display: 'flex',
                   alignItems: 'center',
                   justify: 'center',
                   gap: '0.35rem'
                 }}>
-                  {isStrong && <CheckCircle2 size={14} color="var(--status-strong)" />}
-                  {isModerate && <AlertCircle size={14} color="var(--status-moderate)" />}
-                  {isNeedsPractice && <AlertCircle size={14} color="var(--status-needs-practice)" />}
-                  {isLocked && <Lock size={13} color="var(--text-muted)" />}
+                  {isStrong && <span>🟢</span>}
+                  {isModerate && <span>🟡</span>}
+                  {isNeedsPractice && <span>🔴</span>}
+                  {isNotStarted && <span>⚪</span>}
                   <span>{node.label}</span>
                 </div>
               </div>
@@ -266,7 +313,7 @@ export default function Step5SkillTree({
         </div>
       </div>
 
-      {/* Node Detail Inspection Modal / Drawer */}
+      {/* Node Detail Inspection Drawer */}
       {selectedNode && (
         <div className="animate-fade-in" style={{
           background: 'var(--bg-card)',
@@ -297,7 +344,7 @@ export default function Step5SkillTree({
                 {getStatusBadge(selectedNode.status)}
               </div>
               <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                Category: {selectedNode.category} · Status: {selectedNode.status.replace('_', ' ').toUpperCase()}
+                Category: {selectedNode.category} · Claim State: {selectedNode.status.toUpperCase()}
               </p>
             </div>
           </div>
@@ -322,10 +369,10 @@ export default function Step5SkillTree({
         }}>
           <div>
             <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
-              Ready for baseline assessment?
+              Ready for adaptive technical interview evaluation?
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              Take a short 5-question baseline assessment to test your skill levels and update node statuses.
+              Evaluate your claimed initial skill tree against AI engineering benchmarks.
             </div>
           </div>
 
