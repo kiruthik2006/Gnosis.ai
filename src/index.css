@@ -239,3 +239,23 @@ input, textarea, select {
   color: var(--status-locked);
   border: 1px solid var(--status-locked-border);
 }
+
+/* ── Skill Tree premium outer frame ── */
+.skill-tree-frame {
+  /* desktop defaults set inline */
+}
+
+@media (max-width: 1024px) {
+  .skill-tree-frame {
+    border-radius: 24px !important;
+    padding: 2rem 1.5rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .skill-tree-frame {
+    border-radius: 16px !important;
+    padding: 1.25rem 1rem !important;
+  }
+}
+

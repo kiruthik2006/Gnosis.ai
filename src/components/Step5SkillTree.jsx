@@ -137,12 +137,31 @@ export default function Step5SkillTree({
   ];
 
   return (
+    /* ── Page margin wrapper ── */
     <div style={{
-      maxWidth: '1100px',
-      margin: '0 auto',
-      padding: '2.5rem 1.5rem',
-      minHeight: 'calc(100vh - 120px)'
-    }} className="animate-fade-in">
+      padding: '1.5rem 1.5rem 2.5rem',
+      minHeight: 'calc(100vh - 56px)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'stretch'
+    }}>
+    {/* ── Premium outer frame ── */}
+    <div
+      className="animate-fade-in skill-tree-frame"
+      style={{
+        maxWidth: '1200px',
+        width: '100%',
+        margin: '0 auto',
+        flex: 1,
+        background: '#FAFAF8',
+        border: '1.5px solid #E2DDD5',
+        borderRadius: '32px',
+        boxShadow:
+          '0 1px 3px rgba(28,27,26,0.04), 0 4px 24px rgba(28,27,26,0.04)',
+        padding: '2.5rem 2rem',
+        overflow: 'hidden'
+      }}
+    >
 
       {/* Header & Legend Bar */}
       <div style={{
@@ -386,6 +405,7 @@ export default function Step5SkillTree({
           </button>
         </div>
       )}
-    </div>
+    </div>   {/* end premium frame */}
+    </div>   {/* end page-margin wrapper */}
   );
 }
