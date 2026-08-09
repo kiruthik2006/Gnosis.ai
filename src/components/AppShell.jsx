@@ -207,10 +207,12 @@ export default function AppShell({
                           cursor: 'pointer',
                           position: 'relative',
                           background: isActive
-                            ? '#ffffff'
+                            ? 'rgba(255, 255, 255, 0.95)'
                             : isHovered
                               ? 'rgba(255, 255, 255, 0.15)'
                               : 'transparent',
+                          backdropFilter: isActive ? 'blur(16px) saturate(180%)' : undefined,
+                          WebkitBackdropFilter: isActive ? 'blur(16px) saturate(180%)' : undefined,
                           borderRadius: isExtended ? '20px 0 0 20px' : 16,
                           color: isActive
                             ? '#04241c'
@@ -223,6 +225,7 @@ export default function AppShell({
                           height: 44,
                           padding: 0,
                           fontFamily: 'inherit',
+                          zIndex: isActive ? 12 : 1,
                         }}
                       >
                         <div style={{
@@ -241,6 +244,24 @@ export default function AppShell({
                             </span>
                           )}
                         </div>
+
+                        {/* Small rectangular blur box placed over the junction seam */}
+                        {isActive && (
+                          <div style={{
+                            position: 'absolute',
+                            right: -12,
+                            top: -4,
+                            bottom: -4,
+                            width: 28,
+                            background: 'rgba(255, 255, 255, 0.94)',
+                            backdropFilter: 'blur(24px) saturate(190%)',
+                            WebkitBackdropFilter: 'blur(24px) saturate(190%)',
+                            borderRadius: '6px',
+                            boxShadow: '0 0 16px rgba(255, 255, 255, 0.95), 0 4px 12px rgba(0, 0, 0, 0.08)',
+                            pointerEvents: 'none',
+                            zIndex: 25,
+                          }} />
+                        )}
                       </button>
                     </div>
                   );
@@ -338,58 +359,85 @@ export default function AppShell({
           zIndex: 10,
           background: currentStep === 1 
             ? 'linear-gradient(180deg, #F3F1EC 0%, #0E1C14 30%, #050D08 65%, #000000 100%)' 
-            : 'rgba(255, 255, 255, 0.88)',
+            : 'rgba(255, 255, 255, 0.92)',
           backdropFilter: 'blur(20px) saturate(190%)',
           WebkitBackdropFilter: 'blur(20px) saturate(190%)',
           borderRadius: 32,
-          border: currentStep === 1 ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.65)',
+          border: currentStep === 1 ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255, 255, 255, 0.75)',
           borderBottom: currentStep === 1 ? 'none' : undefined,
           boxShadow: currentStep === 1 
             ? '0 24px 60px rgba(0, 0, 0, 0.6)' 
-            : '0 24px 60px rgba(0, 0, 0, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
+            : '0 24px 60px rgba(28, 27, 26, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           minWidth: 0,
         }}>
 
-          {/* Dev jumper bar (hidden on Step 1 Landing & Step 15 Dashboard) */}
-          {currentStep !== 1 && currentStep !== 15 && (
+          {/* Subtle Ambient Light-Themed Animated Background Layer */}
+          {currentStep !== 1 && (
             <div style={{
-              background: currentStep === 1 ? 'rgba(0, 0, 0, 0.4)' : 'rgba(243, 244, 246, 0.68)',
-              color: currentStep === 1 ? '#A7F3D0' : 'inherit',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              borderBottom: currentStep === 1 ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(229, 231, 235, 0.7)',
-              height: 30,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '0 24px',
-              fontSize: '0.7rem',
-              flexShrink: 0,
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              zIndex: 0,
+              overflow: 'hidden',
+              background: 'linear-gradient(135deg, #FAF9F6 0%, #F0F6F2 40%, #EBF4EE 75%, #F7F5F0 100%)'
             }}>
-              <span style={{ fontWeight: 600, color: currentStep === 1 ? '#A7F3D0' : '#374151' }}>
-                STEP {currentStep}: {DEV_STEPS.find(s => s.num === currentStep)?.label}
-              </span>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <select
-                  value={currentStep}
-                  onChange={e => setStep(Number(e.target.value))}
-                  style={{ fontSize: '0.65rem', padding: '1px 2px', borderRadius: 4, border: '1px solid #d1d5db' }}
-                >
-                  {DEV_STEPS.map(s => (
-                    <option key={s.num} value={s.num}>Step {s.num}: {s.label}</option>
-                  ))}
-                </select>
-                <button onClick={() => setStep(Math.max(1, currentStep - 1))} style={{ padding: '1px 5px', background: '#fff', border: '1px solid #d1d5db', borderRadius: 4 }}>Prev</button>
-                <button onClick={() => setStep(Math.min(15, currentStep + 1))} style={{ padding: '1px 5px', background: '#fff', border: '1px solid #d1d5db', borderRadius: 4 }}>Next</button>
-              </div>
+              {/* Dot Grid Matrix Overlay */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.22) 1.4px, transparent 1.4px)',
+                backgroundSize: '26px 26px',
+                opacity: 0.85
+              }} />
+
+              {/* Floating Animated Emerald Blob */}
+              <div style={{
+                position: 'absolute',
+                top: '-15%',
+                left: '10%',
+                width: '500px',
+                height: '500px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0) 70%)',
+                filter: 'blur(45px)',
+                animation: 'floatSlow 18s infinite ease-in-out'
+              }} />
+
+              {/* Floating Animated Warm Amber Blob */}
+              <div style={{
+                position: 'absolute',
+                bottom: '-10%',
+                right: '8%',
+                width: '550px',
+                height: '550px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(245, 158, 11, 0.13) 0%, rgba(245, 158, 11, 0) 70%)',
+                filter: 'blur(55px)',
+                animation: 'floatSlowReverse 22s infinite ease-in-out'
+              }} />
+
+              {/* Floating Animated Soft Blue Glow */}
+              <div style={{
+                position: 'absolute',
+                top: '35%',
+                right: '28%',
+                width: '420px',
+                height: '420px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(59, 130, 246, 0.09) 0%, rgba(59, 130, 246, 0) 70%)',
+                filter: 'blur(50px)',
+                animation: 'floatSlow 26s infinite ease-in-out'
+              }} />
             </div>
           )}
 
+
+
           {/* Page content */}
-          <div style={{ flex: 1, overflowY: currentStep === 1 ? 'hidden' : 'auto', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'relative', zIndex: 1, flex: 1, overflowY: currentStep === 1 ? 'hidden' : 'auto', display: 'flex', flexDirection: 'column' }}>
             {children}
           </div>
 

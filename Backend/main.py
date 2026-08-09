@@ -3,8 +3,8 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from schemas import InterviewRequest, InterviewResponse, Feedback
-from llm_engine import generate_first_question, evaluate_and_next, generate_feedback
+from schemas import InterviewRequest, InterviewResponse, Feedback, PreGoalSheetRequest, PreGoalSheet
+from llm_engine import generate_first_question, evaluate_and_next, generate_feedback, draft_pre_goal_sheet
 from data_utils import (
     load_curriculum,
     load_candidates,
@@ -47,6 +47,13 @@ def get_next_topic(candidate: dict, current_day: int, covered_days: set) -> dict
             return day
     return None
 
+
+@app.post("/api/pre-goal", response_model=PreGoalSheet)
+async def pre_goal_endpoint(req: PreGoalSheetRequest):
+    print(f"[BACKEND] 📥 Pre-Goal Request received — sessionId={req.sessionId}")
+    candidate_context = build_candidate_context(req.candidate)
+    goal_sheet = draft_pre_goal_sheet(candidate_context)
+    return goal_sheet
 
 @app.post("/api/interview", response_model=InterviewResponse)
 async def interview_endpoint(req: InterviewRequest):
@@ -153,6 +160,6 @@ async def interview_endpoint(req: InterviewRequest):
         )
         # Clean up session
         del active_sessions[req.sessionId]
-        return InterviewResponse(reply=eval_result.reply, done=True, feedback=feedback_obj)
+        return InterviewResponse(reply=eval_result.reply, done=True, feedback=feedback_obj, ui_cue=eval_result.ui_cue)
 
-    return InterviewResponse(reply=eval_result.reply, done=False)
+    return InterviewResponse(reply=eval_result.reply, done=False, ui_cue=eval_result.ui_cue)

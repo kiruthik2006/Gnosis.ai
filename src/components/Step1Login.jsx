@@ -161,42 +161,44 @@ export default function Step1Login({ onContinue }) {
         {/* ── 2. CENTER PLATFORM ARCHITECTURE FANCY WORDS & STATS ── */}
         <div style={{ 
           textAlign: 'center', 
-          margin: '1.25rem 0 0.85rem 0',
+          margin: '3.5rem 0 2.25rem 0',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.4rem'
+          gap: '0.85rem'
         }}>
           <span style={{ 
             fontSize: '0.725rem', 
             fontWeight: 850, 
             color: '#10B981', 
-            letterSpacing: '0.1em', 
+            letterSpacing: '0.12em', 
             textTransform: 'uppercase',
             background: 'rgba(16, 185, 129, 0.15)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            padding: '3px 12px',
+            border: '1px solid rgba(16, 185, 129, 0.35)',
+            padding: '4px 14px',
             borderRadius: '99px',
-            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)'
+            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)'
           }}>
             ✨ VERIFICATION & FRICTION INTELLIGENCE
           </span>
-          <h2 style={{ fontSize: '1.7rem', fontWeight: 850, color: '#FFFFFF', margin: 0, letterSpacing: '-0.025em' }}>
+          
+          <h2 style={{ fontSize: '1.95rem', fontWeight: 850, color: '#FFFFFF', margin: 0, letterSpacing: '-0.025em', lineHeight: 1.25 }}>
             31-Day Claim Tree & Adaptive Turing Engine
           </h2>
-          <p style={{ fontSize: '0.875rem', color: '#9CA3AF', margin: 0, maxWidth: '620px', lineHeight: 1.45 }}>
+          
+          <p style={{ fontSize: '0.9rem', color: '#9CA3AF', margin: '0.2rem 0 0.5rem 0', maxWidth: '680px', lineHeight: 1.6 }}>
             Probe real engineering depth, eliminate candidate resume inflation, and inspect live AI evaluation reasoning in real-time.
           </p>
 
           {/* Fancy Stat Pills */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.35rem' }}>
-            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#A7F3D0', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: '99px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#A7F3D0', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '5px 14px', borderRadius: '99px' }}>
               ⚡ 100% Adaptive Probing
             </span>
-            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#93C5FD', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: '99px' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#93C5FD', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '5px 14px', borderRadius: '99px' }}>
               🛡️ Zero Resume Inflation
             </span>
-            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#FDE68A', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '3px 10px', borderRadius: '99px' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FDE68A', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '5px 14px', borderRadius: '99px' }}>
               📊 Real-Time Friction Graphs
             </span>
           </div>
@@ -206,8 +208,9 @@ export default function Step1Login({ onContinue }) {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1.25rem',
-          marginBottom: '0.5rem'
+          gap: '1.5rem',
+          marginTop: '1.5rem',
+          marginBottom: '1rem'
         }}>
           {/* Feature 1 */}
           <div style={{

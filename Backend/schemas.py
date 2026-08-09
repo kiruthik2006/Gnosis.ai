@@ -2,6 +2,15 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any, Literal
 
 # --- API models ---
+class PreGoalSheetRequest(BaseModel):
+    sessionId: str
+    candidate: Dict[str, Any]
+
+class PreGoalSheet(BaseModel):
+    focus_areas: List[str] = Field(description="Top 3 technical areas to focus on based on the candidate's learning history.")
+    suggested_strategy: str = Field(description="A brief paragraph summarizing the interview strategy.")
+    icebreaker: str = Field(description="A personalized icebreaker question to start the interview.")
+
 class InterviewRequest(BaseModel):
     sessionId: str
     message: Optional[str] = None
@@ -17,6 +26,7 @@ class InterviewResponse(BaseModel):
     reply: str
     done: bool
     feedback: Optional[Feedback] = None
+    ui_cue: Optional[str] = None
 
 # --- LLM structured output models ---
 class EvaluatorDecision(BaseModel):
@@ -33,6 +43,10 @@ class EvaluatorDecision(BaseModel):
     interview_complete: bool = Field(
         default=False,
         description="True only when the interview should be concluded (enough topics covered, or candidate clearly needs feedback)."
+    )
+    ui_cue: str = Field(
+        default="none",
+        description="A visual cue to trigger on the frontend based on the candidate's answer. Must be one of: 'none', 'success_confetti', 'warning_pulse', 'show_hint'."
     )
 
 class FinalFeedbackDecision(BaseModel):

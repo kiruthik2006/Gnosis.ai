@@ -5,12 +5,14 @@ import {
 
 export default function Step5SkillTree({ 
   claimTree,
+  customNodeStatuses,
   onStartAssessment, 
   title = "Your Initial Skill Tree",
   subtitle = "Generated from your selected AI & App stack claims. Perform baseline assessment to evaluate your node proficiency.",
   showAssessmentBtn = true
 }) {
   const [selectedNode, setSelectedNode] = useState(null);
+  const [activeOnlyFilter, setActiveOnlyFilter] = useState(false);
 
   // Convert confidence string to internal status
   const mapConfidenceToStatus = (level) => {
@@ -18,17 +20,23 @@ export default function Step5SkillTree({
       case 'CONFIDENT': return 'strong';
       case 'FAMILIAR': return 'moderate';
       case 'WEAK': return 'needs_practice';
+      case 'LOCKED': return 'locked';
       default: return 'not_started';
     }
   };
 
-  // Helper to retrieve status for a skill title
-  const getSkillStatus = (title) => {
-    if (!claimTree) return 'not_started';
-    const categories = ['frontend', 'backend', 'aiCore', 'devOps'];
-    for (const cat of categories) {
-      if (claimTree[cat] && claimTree[cat][title]) {
-        return mapConfidenceToStatus(claimTree[cat][title]);
+  // Helper to retrieve status for a skill title or node id
+  const getSkillStatus = (nodeId, titleStr) => {
+    if (customNodeStatuses) {
+      if (customNodeStatuses[nodeId]) return customNodeStatuses[nodeId];
+      if (customNodeStatuses[titleStr]) return customNodeStatuses[titleStr];
+    }
+    if (claimTree) {
+      const categories = ['frontend', 'backend', 'aiCore', 'devOps'];
+      for (const cat of categories) {
+        if (claimTree[cat] && claimTree[cat][titleStr]) {
+          return mapConfidenceToStatus(claimTree[cat][titleStr]);
+        }
       }
     }
     return 'not_started';
@@ -71,41 +79,51 @@ export default function Step5SkillTree({
     }
   };
 
-  // Dynamic Skill Tree Nodes layout for 31-Day AI Engineering
+  const getCategoryStatus = (keysList) => {
+    for (const key of keysList) {
+      const st = getSkillStatus(key, key);
+      if (st !== 'not_started') return 'strong';
+    }
+    return 'not_started';
+  };
+
+  // Dynamic Skill Tree Nodes layout with spacious non-overlapping coordinates (Width: 1140px, Height: 520px)
   const nodes = [
-    { id: 'root', label: 'AI ENGINEER', category: 'Core Target', status: 'strong', x: 500, y: 45 },
+    { id: 'root', label: 'AI ENGINEER', category: 'Core Target', status: 'strong', x: 570, y: 45 },
     
     // Level 1: Main Branches
-    { id: 'app_stack', label: 'APP STACK', category: 'Roof 1 & 2', status: 'strong', x: 280, y: 130 },
-    { id: 'ai_ops', label: 'AI & OPS', category: 'Roof 3 & 4', status: 'strong', x: 720, y: 130 },
+    { id: 'app_stack', label: 'APP STACK', category: 'Roof 1 & 2', status: getCategoryStatus(['react_vite', 'streamlit', 'fastapi', 'vector_db', 'retrieval']), x: 300, y: 135 },
+    { id: 'ai_ops', label: 'AI & OPS', category: 'Roof 3 & 4', status: getCategoryStatus(['embeddings', 'prompt_eng', 'multi_agent', 'mcp', 'docker', 'observability']), x: 840, y: 135 },
     
-    // Level 2: Categories
-    { id: 'fe', label: 'Frontend UI', category: 'Roof 1', status: 'strong', x: 160, y: 230 },
-    { id: 'be', label: 'Backend Systems', category: 'Roof 2', status: 'strong', x: 400, y: 230 },
-    { id: 'ai_core', label: 'AI Core Logic', category: 'Roof 3', status: 'strong', x: 600, y: 230 },
-    { id: 'devops', label: 'DevOps & Infra', category: 'Roof 4', status: 'strong', x: 840, y: 230 },
+    // Level 2: Categories (Dynamic based on active claims)
+    { id: 'fe', label: 'Frontend UI', category: 'Roof 1', status: getCategoryStatus(['react_vite', 'streamlit', 'rich_fmt', 'React & Vite', 'Streamlit', 'html', 'css', 'javascript']), x: 160, y: 230 },
+    { id: 'be', label: 'Backend Systems', category: 'Roof 2', status: getCategoryStatus(['fastapi', 'vector_db', 'retrieval', 'sql_pandas', 'FastAPI', 'Vector Databases', 'nodejs', 'db']), x: 440, y: 230 },
+    { id: 'ai_core', label: 'AI Core Logic', category: 'Roof 3', status: getCategoryStatus(['embeddings', 'prompt_eng', 'multi_agent', 'mcp', 'Embeddings', 'Prompt Engineering']), x: 700, y: 230 },
+    { id: 'devops', label: 'DevOps & Infra', category: 'Roof 4', status: getCategoryStatus(['docker', 'observability', 'security', 'Docker & Kubernetes', 'Security Guardrails']), x: 980, y: 230 },
 
-    // Level 3: Individual Skills (Frontend)
-    { id: 'react_vite', label: 'React & Vite', category: 'Frontend', status: getSkillStatus('React & Vite'), x: 100, y: 340 },
-    { id: 'streamlit', label: 'Streamlit', category: 'Frontend', status: getSkillStatus('Streamlit'), x: 190, y: 440 },
-    { id: 'rich_fmt', label: 'Rich Formatting', category: 'Frontend', status: getSkillStatus('Rich Formatting'), x: 100, y: 530 },
+    // Level 3: Individual Skills (Row 1)
+    { id: 'react_vite', label: 'React & Vite', category: 'Frontend', status: getSkillStatus('react_vite', 'React & Vite'), x: 160, y: 330 },
 
-    // Level 3: Backend
-    { id: 'fastapi', label: 'FastAPI', category: 'Backend', status: getSkillStatus('FastAPI'), x: 320, y: 340 },
-    { id: 'vector_db', label: 'Vector DBs', category: 'Backend', status: getSkillStatus('Vector Databases'), x: 440, y: 340 },
-    { id: 'retrieval', label: 'Retrieval Engine', category: 'Backend', status: getSkillStatus('Retrieval Engine'), x: 320, y: 450 },
-    { id: 'sql_pandas', label: 'SQL & Pandas', category: 'Backend', status: getSkillStatus('SQL & Pandas'), x: 440, y: 450 },
+    { id: 'fastapi', label: 'FastAPI', category: 'Backend', status: getSkillStatus('fastapi', 'FastAPI'), x: 370, y: 330 },
+    { id: 'vector_db', label: 'Vector DBs', category: 'Backend', status: getSkillStatus('vector_db', 'Vector Databases'), x: 510, y: 330 },
 
-    // Level 3: AI Core
-    { id: 'embeddings', label: 'Embeddings', category: 'AI Core', status: getSkillStatus('Embeddings'), x: 560, y: 340 },
-    { id: 'prompt_eng', label: 'Prompt Eng.', category: 'AI Core', status: getSkillStatus('Prompt Engineering'), x: 680, y: 340 },
-    { id: 'multi_agent', label: 'Multi-Agent', category: 'AI Core', status: getSkillStatus('Multi-Agent Orchestration'), x: 560, y: 450 },
-    { id: 'mcp', label: 'MCP Protocol', category: 'AI Core', status: getSkillStatus('Model Context Protocol (MCP)'), x: 680, y: 450 },
+    { id: 'embeddings', label: 'Embeddings', category: 'AI Core', status: getSkillStatus('embeddings', 'Embeddings'), x: 640, y: 330 },
+    { id: 'prompt_eng', label: 'Prompt Eng.', category: 'AI Core', status: getSkillStatus('prompt_eng', 'Prompt Engineering'), x: 775, y: 330 },
 
-    // Level 3: DevOps
-    { id: 'docker', label: 'Docker & K8s', category: 'DevOps', status: getSkillStatus('Docker & Kubernetes'), x: 800, y: 340 },
-    { id: 'observability', label: 'Observability', category: 'DevOps', status: getSkillStatus('Observability'), x: 910, y: 340 },
-    { id: 'security', label: 'Guardrails', category: 'DevOps', status: getSkillStatus('Security Guardrails'), x: 840, y: 450 },
+    { id: 'docker', label: 'Docker & K8s', category: 'DevOps', status: getSkillStatus('docker', 'Docker & Kubernetes'), x: 915, y: 330 },
+    { id: 'observability', label: 'Observability', category: 'DevOps', status: getSkillStatus('observability', 'Observability'), x: 1045, y: 330 },
+
+    // Level 4: Individual Skills (Row 2)
+    { id: 'streamlit', label: 'Streamlit', category: 'Frontend', status: getSkillStatus('streamlit', 'Streamlit'), x: 100, y: 445 },
+    { id: 'rich_fmt', label: 'Rich Formatting', category: 'Frontend', status: getSkillStatus('rich_fmt', 'Rich Formatting'), x: 220, y: 445 },
+
+    { id: 'retrieval', label: 'Retrieval Engine', category: 'Backend', status: getSkillStatus('retrieval', 'Retrieval Engine'), x: 370, y: 445 },
+    { id: 'sql_pandas', label: 'SQL & Pandas', category: 'Backend', status: getSkillStatus('sql_pandas', 'SQL & Pandas'), x: 510, y: 445 },
+
+    { id: 'multi_agent', label: 'Multi-Agent', category: 'AI Core', status: getSkillStatus('multi_agent', 'Multi-Agent Orchestration'), x: 640, y: 445 },
+    { id: 'mcp', label: 'MCP Protocol', category: 'AI Core', status: getSkillStatus('mcp', 'Model Context Protocol (MCP)'), x: 775, y: 445 },
+
+    { id: 'security', label: 'Guardrails', category: 'DevOps', status: getSkillStatus('security', 'Security Guardrails'), x: 980, y: 445 },
   ];
 
   // Connections between nodes
@@ -189,30 +207,53 @@ export default function Step5SkillTree({
           </p>
         </div>
 
-        {/* Tree Status Legend */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1rem',
-          background: 'var(--bg-card)',
-          padding: '0.6rem 1.25rem',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--border-light)',
-          boxShadow: 'var(--shadow-sm)',
-          fontSize: '0.8125rem'
-        }}>
-          <span style={{ fontWeight: 600, color: 'var(--text-muted)' }}>CONFIDENCE LEGEND:</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-strong)', fontWeight: 600 }}>
-            🟢 Confident
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-moderate)', fontWeight: 600 }}>
-            🟡 Familiar
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-needs-practice)', fontWeight: 600 }}>
-            🔴 Weak
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
-            ⚪ Unselected
+        {/* Tree Status Legend & Active Skillset Focus Toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setActiveOnlyFilter(!activeOnlyFilter)}
+            style={{
+              background: activeOnlyFilter ? '#10B981' : 'rgba(255, 255, 255, 0.9)',
+              color: activeOnlyFilter ? '#FFF' : 'var(--text-primary)',
+              border: `1.5px solid ${activeOnlyFilter ? '#059669' : 'var(--border-strong)'}`,
+              padding: '0.55rem 1rem',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.8125rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              boxShadow: activeOnlyFilter ? '0 4px 14px rgba(16, 185, 129, 0.3)' : 'var(--shadow-sm)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <span>{activeOnlyFilter ? '✨ Focus: User Active Skillset' : '🎯 Shift to User Skillset'}</span>
+          </button>
+
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            background: 'var(--bg-card)',
+            padding: '0.6rem 1.25rem',
+            borderRadius: 'var(--radius-md)',
+            border: '1px solid var(--border-light)',
+            boxShadow: 'var(--shadow-sm)',
+            fontSize: '0.8125rem'
+          }}>
+            <span style={{ fontWeight: 600, color: 'var(--text-muted)' }}>LEGEND:</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-strong)', fontWeight: 600 }}>
+              🟢 Confident
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-moderate)', fontWeight: 600 }}>
+              🟡 Familiar
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--status-needs-practice)', fontWeight: 600 }}>
+              🔴 Weak
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+              ⚪ Unselected
+            </div>
           </div>
         </div>
       </div>
@@ -228,7 +269,7 @@ export default function Step5SkillTree({
         overflowX: 'auto',
         marginBottom: '2rem'
       }}>
-        <div style={{ minWidth: '980px', position: 'relative', height: '600px' }}>
+        <div style={{ minWidth: '1140px', position: 'relative', height: '520px' }}>
           {/* SVG Connection Lines */}
           <svg style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, pointerEvents: 'none' }}>
             {connections.map((conn, idx) => {
@@ -237,15 +278,23 @@ export default function Step5SkillTree({
               if (!fromNode || !toNode) return null;
 
               const isNotStarted = toNode.status === 'not_started';
+              const strokeColor = isNotStarted 
+                ? 'rgba(214, 207, 190, 0.75)' 
+                : toNode.status === 'strong' 
+                  ? '#10B981' 
+                  : toNode.status === 'moderate' 
+                    ? '#F59E0B' 
+                    : '#EF4444';
 
               return (
                 <path
                   key={idx}
-                  d={`M ${fromNode.x} ${fromNode.y + 20} C ${fromNode.x} ${fromNode.y + 50}, ${toNode.x} ${toNode.y - 50}, ${toNode.x} ${toNode.y - 20}`}
+                  d={`M ${fromNode.x} ${fromNode.y + 18} C ${fromNode.x} ${fromNode.y + 45}, ${toNode.x} ${toNode.y - 45}, ${toNode.x} ${toNode.y - 18}`}
                   fill="none"
-                  stroke={isNotStarted ? 'var(--border-light)' : 'var(--border-strong)'}
-                  strokeWidth={isNotStarted ? "1.5" : "2"}
+                  stroke={strokeColor}
+                  strokeWidth={isNotStarted ? "1.5" : "2.2"}
                   strokeDasharray={isNotStarted ? "4 4" : "none"}
+                  opacity={isNotStarted ? 0.6 : 0.85}
                 />
               );
             })}
@@ -259,22 +308,26 @@ export default function Step5SkillTree({
             const isNeedsPractice = node.status === 'needs_practice';
             const isNotStarted = node.status === 'not_started';
 
-            let bgColor = 'var(--bg-card)';
+            let bgColor = 'rgba(255, 255, 255, 0.95)';
             let borderColor = 'var(--border-light)';
             let textColor = 'var(--text-primary)';
+            let glowShadow = '0 4px 12px rgba(0,0,0,0.04)';
 
             if (isStrong) {
               bgColor = '#F0FDF4';
               borderColor = '#22C55E';
+              glowShadow = '0 4px 14px rgba(34, 197, 94, 0.2)';
             } else if (isModerate) {
               bgColor = '#FEFCE8';
               borderColor = '#EAB308';
+              glowShadow = '0 4px 14px rgba(234, 179, 8, 0.2)';
             } else if (isNeedsPractice) {
               bgColor = '#FEF2F2';
               borderColor = '#EF4444';
+              glowShadow = '0 4px 14px rgba(239, 68, 68, 0.2)';
             } else if (isNotStarted) {
-              bgColor = 'var(--bg-subtle)';
-              borderColor = 'var(--border-light)';
+              bgColor = 'rgba(245, 242, 236, 0.7)';
+              borderColor = 'rgba(214, 207, 190, 0.9)';
               textColor = 'var(--text-muted)';
             }
 
@@ -290,19 +343,21 @@ export default function Step5SkillTree({
                   background: bgColor,
                   border: `2px solid ${isSelected ? '#18181b' : borderColor}`,
                   borderRadius: 'var(--radius-md)',
-                  padding: '0.55rem 0.95rem',
-                  minWidth: '120px',
+                  padding: '0.45rem 0.85rem',
+                  minWidth: '110px',
                   textAlign: 'center',
                   cursor: 'pointer',
-                  boxShadow: isSelected ? 'var(--shadow-lg)' : 'var(--shadow-sm)',
+                  boxShadow: isSelected ? '0 8px 24px rgba(0,0,0,0.18)' : glowShadow,
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                   zIndex: 2,
-                  opacity: isNotStarted ? 0.75 : 1
+                  opacity: isNotStarted ? (activeOnlyFilter ? 0.15 : 0.75) : 1,
+                  pointerEvents: isNotStarted && activeOnlyFilter ? 'none' : 'auto',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 <div style={{
-                  fontSize: '0.625rem',
-                  fontWeight: 700,
+                  fontSize: '0.575rem',
+                  fontWeight: 800,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                   color: isNotStarted ? 'var(--text-muted)' : 'var(--text-secondary)',
@@ -312,8 +367,8 @@ export default function Step5SkillTree({
                 </div>
 
                 <div style={{
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
+                  fontWeight: 800,
+                  fontSize: '0.8125rem',
                   color: textColor,
                   display: 'flex',
                   alignItems: 'center',

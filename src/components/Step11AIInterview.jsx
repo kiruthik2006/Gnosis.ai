@@ -18,17 +18,55 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
   const [sessionId] = useState(() => `session-${candidateObj.member?.id || 'CAND-002'}-${Date.now()}`);
   const [interviewFeedback, setInterviewFeedback] = useState(null);
   const [isApiConnected, setIsApiConnected] = useState(false);
+  const [preGoalSheet, setPreGoalSheet] = useState(null);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isGeneratingGoal, setIsGeneratingGoal] = useState(true);
 
-  // Initialize interview with Backend API POST /api/interview
+  // Initialize interview with Backend API POST /api/pre-goal first
   useEffect(() => {
     let isMounted = true;
+    setIsGeneratingGoal(true);
+
+    const payload = {
+      sessionId: sessionId,
+      candidate: candidateObj
+    };
+    console.log('[Step11AIInterview] 📤 PRE-GOAL request payload:', JSON.stringify(payload));
+
+    fetch('http://localhost:8000/api/pre-goal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(async res => {
+        if (!res.ok) throw new Error('Failed to fetch pre-goal sheet');
+        return await res.json();
+      })
+      .then(data => {
+        if (!isMounted) return;
+        setPreGoalSheet(data);
+        setIsGeneratingGoal(false);
+        setIsApiConnected(true);
+      })
+      .catch(err => {
+        console.error('[Step11AIInterview] ❌ Pre-goal failed:', err);
+        if (!isMounted) return;
+        setIsGeneratingGoal(false);
+        setIsApiConnected(false);
+      });
+
+    return () => { isMounted = false; };
+  }, [sessionId]);
+
+  const startInterview = () => {
+    setHasStarted(true);
     setIsAiThinking(true);
 
     const payload = {
       sessionId: sessionId,
       candidate: candidateObj
     };
-    console.log('[Step11AIInterview] 📤 INIT request payload:', JSON.stringify(payload).substring(0, 300));
+    console.log('[Step11AIInterview] 📤 INIT request payload:', JSON.stringify(payload));
 
     fetch('http://localhost:8000/api/interview', {
       method: 'POST',
@@ -36,46 +74,34 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
       body: JSON.stringify(payload)
     })
       .then(async res => {
-        console.log('[Step11AIInterview] 📥 INIT response status:', res.status, res.statusText);
         const body = await res.json();
-        console.log('[Step11AIInterview] 📥 INIT response body:', JSON.stringify(body).substring(0, 300));
-        if (!res.ok) {
-          console.error('[Step11AIInterview] ❌ Server returned non-200:', res.status, body);
-          throw new Error(`Server error ${res.status}: ${body.detail || JSON.stringify(body)}`);
-        }
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
         return body;
       })
       .then(data => {
-        if (!isMounted) return;
         setIsApiConnected(true);
         setIsAiThinking(false);
-        console.log('[Step11AIInterview] ✅ API connected, AI reply received');
         if (data.reply) {
           setMessages([{
             role: 'ai',
             text: data.reply,
+            uiCue: data.ui_cue,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           }]);
         }
       })
       .catch(err => {
         console.error('[Step11AIInterview] ❌ Init failed:', err.message);
-        console.error('[Step11AIInterview] SessionId:', sessionId);
-        console.error('[Step11AIInterview] Candidate:', JSON.stringify(candidateObj.member));
-        if (!isMounted) return;
         setIsApiConnected(false);
         setIsAiThinking(false);
-        setMessages([
-          {
-            role: 'ai',
-            text: '⚠️ Could not connect to the interview server at http://localhost:8000. Please ensure the backend is running and refresh this page.',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          }
-        ]);
+        setMessages([{
+          role: 'ai',
+          text: '⚠️ Could not connect to the interview server. Please check your backend.',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
       });
+  };
 
-    return () => { isMounted = false; };
-  }, [sessionId]);
 
   const handleSend = (textToSend = inputText) => {
     if (!textToSend.trim() || isAiThinking) return;
@@ -121,6 +147,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
               role: 'ai',
               isAdaptiveFollowUp: true,
               text: data.reply,
+              uiCue: data.ui_cue,
               timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }
           ]);
@@ -156,13 +183,16 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
 
   return (
     <div style={{
-      maxWidth: '1240px',
+      maxWidth: '1280px',
+      width: '100%',
       margin: '0 auto',
-      padding: '1.25rem',
-      height: 'calc(100vh - 110px)',
+      padding: '1.25rem 1.25rem 1.75rem',
+      flex: 1,
+      minHeight: 'calc(100vh - 72px)',
       display: 'grid',
       gridTemplateColumns: '270px 1fr 290px',
-      gap: '1.25rem'
+      gap: '1.25rem',
+      boxSizing: 'border-box'
     }} className="animate-fade-in">
 
       {/* LEFT SIDEBAR: AI Interviewer Profile & Candidate Context */}
@@ -323,7 +353,56 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
           gap: '1.15rem',
           background: 'rgba(250, 248, 245, 0.4)'
         }}>
-          {messages.map((msg, idx) => {
+          {!hasStarted ? (
+            <div style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
+              margin: 'auto 0', padding: '1rem', textAlign: 'center', width: '100%'
+            }}>
+              {isGeneratingGoal ? (
+                <div style={{ color: 'var(--text-muted)' }}>
+                  <Bot size={48} className="pulse-glow" style={{ margin: '0 auto 1rem', color: '#10B981' }} />
+                  <h3>Gemma 4 is drafting your pre-interview goal sheet...</h3>
+                </div>
+              ) : preGoalSheet ? (
+                <div style={{
+                  background: 'white', padding: '1.5rem 1.75rem', borderRadius: '20px',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  boxShadow: '0 12px 32px rgba(16, 185, 129, 0.12)', maxWidth: '600px', width: '100%'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                    <Sparkles size={22} color="#10B981" />
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 850, color: 'var(--text-primary)' }}>Interview Strategy Prepared</h3>
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', marginBottom: '1.25rem', fontSize: '0.875rem', lineHeight: 1.5 }}>
+                    {preGoalSheet.suggested_strategy}
+                  </p>
+                  
+                  <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
+                    <h4 style={{ color: '#059669', marginBottom: '0.5rem', fontSize: '0.85rem' }}>🎯 TARGET FOCUS AREAS</h4>
+                    <ul style={{ margin: 0, paddingLeft: '1.2rem', color: 'var(--text-primary)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                      {preGoalSheet.focus_areas.map((area, i) => <li key={i}>{area}</li>)}
+                    </ul>
+                  </div>
+
+                  <button
+                    onClick={startInterview}
+                    className="btn-primary"
+                    style={{ width: '100%', padding: '1rem', fontSize: '1rem' }}
+                  >
+                    Start Technical Interview
+                  </button>
+                </div>
+              ) : (
+                <div style={{ color: '#EF4444' }}>
+                  <AlertCircle size={48} style={{ margin: '0 auto 1rem' }} />
+                  <h3>Failed to generate pre-goal sheet</h3>
+                  <button onClick={startInterview} className="btn-secondary" style={{ marginTop: '1rem' }}>
+                    Start Interview Without Strategy
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : messages.map((msg, idx) => {
             const isAi = msg.role === 'ai';
             return (
               <div
@@ -357,14 +436,28 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
                   <div style={{
                     background: isAi ? 'rgba(255, 255, 255, 0.95)' : 'linear-gradient(135deg, #18181B 0%, #04241C 100%)',
                     color: isAi ? 'var(--text-primary)' : '#FFFFFF',
-                    border: isAi ? '1px solid rgba(232, 226, 213, 0.9)' : 'none',
-                    borderLeft: isAi ? '3px solid #10B981' : 'none',
+                    border: isAi 
+                      ? (msg.uiCue === 'warning_pulse' ? '2px solid #EF4444' : '1px solid rgba(232, 226, 213, 0.9)')
+                      : 'none',
+                    borderLeft: isAi ? (msg.uiCue === 'warning_pulse' ? '4px solid #EF4444' : '3px solid #10B981') : 'none',
                     padding: '1rem 1.25rem',
                     borderRadius: isAi ? '0 var(--radius-md) var(--radius-md) var(--radius-md)' : 'var(--radius-md) 0 var(--radius-md) var(--radius-md)',
                     fontSize: '0.9rem',
                     lineHeight: 1.55,
-                    boxShadow: isAi ? '0 4px 16px rgba(28, 27, 26, 0.04)' : '0 6px 20px rgba(0, 0, 0, 0.18)'
+                    boxShadow: isAi 
+                      ? (msg.uiCue === 'success_confetti' ? '0 0 24px rgba(16,185,129,0.4)' : '0 4px 16px rgba(28, 27, 26, 0.04)')
+                      : '0 6px 20px rgba(0, 0, 0, 0.18)',
+                    position: 'relative',
+                    animation: msg.uiCue === 'warning_pulse' ? 'pulse 2s infinite' : 'none'
                   }}>
+                    {msg.uiCue === 'success_confetti' && (
+                      <Sparkles size={20} color="#10B981" style={{ position: 'absolute', top: '-10px', right: '-10px' }} />
+                    )}
+                    {msg.uiCue === 'show_hint' && (
+                      <div style={{ marginBottom: '0.5rem', color: '#F59E0B', fontWeight: 600, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <Zap size={14} /> AI Hint Active
+                      </div>
+                    )}
                     {msg.text}
                   </div>
 
@@ -445,37 +538,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
           )}
         </div>
 
-        {/* Quick Suggestion Chips */}
-        <div style={{ 
-          padding: '0.55rem 1.15rem', 
-          background: 'rgba(255, 255, 255, 0.85)', 
-          borderTop: '1px solid rgba(232, 226, 213, 0.7)' 
-        }}>
-          <div style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            SUGGESTED TECHNICAL ANSWERS:
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.2rem' }}>
-            {suggestions.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => handleSend(s)}
-                style={{
-                  fontSize: '0.725rem',
-                  padding: '0.3rem 0.65rem',
-                  borderRadius: 'var(--radius-sm)',
-                  background: 'rgba(243, 239, 231, 0.8)',
-                  color: 'var(--text-primary)',
-                  border: '1px solid rgba(214, 207, 190, 0.8)',
-                  whiteSpace: 'nowrap',
-                  fontWeight: 500,
-                  cursor: 'pointer'
-                }}
-              >
-                "{s.slice(0, 42)}..."
-              </button>
-            ))}
-          </div>
-        </div>
+
 
         {/* Input Controls Box */}
         <div style={{
@@ -484,7 +547,9 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
           borderTop: '1px solid rgba(232, 226, 213, 0.8)',
           display: 'flex',
           gap: '0.75rem',
-          alignItems: 'center'
+          alignItems: 'center',
+          opacity: hasStarted ? 1 : 0.5,
+          pointerEvents: hasStarted ? 'auto' : 'none'
         }}>
           <div style={{ flex: 1, position: 'relative' }}>
             <textarea
@@ -538,9 +603,10 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
       }}>
         <div>
           <div style={{ fontSize: '0.725rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-            SESSION METRICS
+            INTERVIEW PROGRESS
           </div>
 
+          {/* Live Interview Phase Indicator */}
           <div style={{
             background: 'rgba(243, 239, 231, 0.6)',
             padding: '1rem',
@@ -548,55 +614,144 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
             border: '1px solid rgba(232, 226, 213, 0.8)',
             marginBottom: '1.25rem'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 800, marginBottom: '0.45rem', color: 'var(--text-primary)' }}>
-              <span>Questions Asked</span>
-              <span>{questionCount} / 8</span>
-            </div>
-            <div style={{ height: '7px', width: '100%', background: 'rgba(214, 207, 190, 0.6)', borderRadius: '99px', overflow: 'hidden' }}>
-              <div style={{ 
-                height: '100%', 
-                width: `${(questionCount / 8) * 100}%`, 
-                background: 'linear-gradient(90deg, #10B981 0%, #059669 100%)', 
-                borderRadius: '99px',
-                transition: 'width 0.3s ease'
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.65rem' }}>
+              <div style={{
+                width: 8, height: 8, borderRadius: '50%',
+                background: questionCount >= 8 ? '#10B981' : '#F59E0B',
+                boxShadow: questionCount >= 8 ? '0 0 8px #10B981' : '0 0 8px #F59E0B',
+                animation: questionCount < 8 ? 'pulse 1.5s infinite' : 'none'
               }} />
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: questionCount >= 8 ? '#059669' : '#D97706' }}>
+                {questionCount >= 8 ? 'Evaluation Ready' : 'Interview In Progress'}
+              </span>
+            </div>
+
+            {/* Phase Steps */}
+            {[
+              { label: 'Opening', minQ: 1, icon: '👋' },
+              { label: 'Core Probing', minQ: 3, icon: '🔍' },
+              { label: 'Deep Dive', minQ: 5, icon: '🧠' },
+              { label: 'Final Assessment', minQ: 7, icon: '📊' },
+            ].map((phase, i) => {
+              const isActive = questionCount >= phase.minQ && questionCount < (i < 3 ? [3, 5, 7, 99][i] : 99);
+              const isComplete = questionCount >= [3, 5, 7, 8][i];
+              return (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: '0.6rem',
+                  padding: '0.35rem 0',
+                  opacity: questionCount >= phase.minQ ? 1 : 0.4
+                }}>
+                  <div style={{
+                    width: 24, height: 24, borderRadius: '50%',
+                    background: isComplete ? '#10B981' : isActive ? '#F59E0B' : 'rgba(214,207,190,0.5)',
+                    color: isComplete || isActive ? '#FFF' : 'var(--text-muted)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.65rem', fontWeight: 800,
+                    transition: 'all 0.3s ease'
+                  }}>
+                    {isComplete ? '✓' : phase.icon}
+                  </div>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    fontWeight: isActive ? 800 : 600,
+                    color: isActive ? 'var(--text-primary)' : isComplete ? '#059669' : 'var(--text-muted)'
+                  }}>
+                    {phase.label}
+                  </span>
+                  {i < 3 && (
+                    <div style={{
+                      position: 'absolute', left: '2.15rem',
+                      top: '100%', width: 2, height: 6,
+                      background: isComplete ? '#10B981' : 'rgba(214,207,190,0.5)'
+                    }} />
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Minimal turn counter */}
+            <div style={{
+              marginTop: '0.65rem', paddingTop: '0.55rem',
+              borderTop: '1px solid rgba(214,207,190,0.5)',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+            }}>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>Turns completed</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 850, color: 'var(--text-primary)' }}>
+                {questionCount}
+              </span>
             </div>
           </div>
 
-          <div style={{ fontSize: '0.725rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-            CURRICULUM MISSIONS
+          <div style={{ fontSize: '0.725rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+            CANDIDATE LEARNING HISTORY
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', maxHeight: '240px', overflowY: 'auto' }}>
-            {(candidateObj.missions || [
-              { day: 7, title: 'Embeddings Explained', passed: true },
-              { day: 12, title: 'Prompt Engineering', passed: true },
-              { day: 16, title: 'Chatbot Backend API', passed: true },
-              { day: 22, title: 'Multi-Agent Orchestration', passed: true }
-            ]).slice(0, 5).map((m, i) => (
-              <div 
-                key={i} 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between', 
-                  fontSize: '0.785rem',
-                  padding: '0.45rem 0.65rem',
-                  borderRadius: 'var(--radius-sm)',
-                  background: m.passed ? 'rgba(240, 253, 244, 0.8)' : 'rgba(254, 242, 242, 0.8)',
-                  border: m.passed ? '1px solid rgba(187, 247, 208, 0.8)' : '1px solid rgba(254, 202, 202, 0.8)'
-                }}
-              >
-                <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.75rem' }}>
-                  Day {m.day}: {m.title.slice(0, 20)}...
-                </span>
-                {m.passed ? (
-                  <CheckCircle2 size={15} color="#10B981" />
-                ) : (
-                  <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#EF4444' }}>Skipped</span>
-                )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, minHeight: '200px', overflowY: 'auto', paddingRight: '4px' }}>
+            {(candidateObj.missions || []).map((m, i) => {
+              const isPassed = m.passed !== false && !m.skipped;
+              const isSkipped = m.skipped === true;
+              const attempts = m.attempts || 1;
+              return (
+                <div 
+                  key={i} 
+                  style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    padding: '0.55rem 0.7rem',
+                    borderRadius: 'var(--radius-md)',
+                    background: isSkipped 
+                      ? 'rgba(254, 242, 242, 0.6)' 
+                      : isPassed 
+                        ? 'rgba(240, 253, 244, 0.7)' 
+                        : 'rgba(255, 251, 235, 0.7)',
+                    border: isSkipped 
+                      ? '1px solid rgba(254, 202, 202, 0.6)' 
+                      : isPassed 
+                        ? '1px solid rgba(187, 247, 208, 0.6)' 
+                        : '1px solid rgba(253, 230, 138, 0.6)'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.4rem' }}>
+                    <span style={{ 
+                      fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-primary)', 
+                      lineHeight: 1.3, flex: 1 
+                    }}>
+                      {m.title}
+                    </span>
+                    {isSkipped ? (
+                      <span style={{ 
+                        fontSize: '0.6rem', fontWeight: 800, color: '#DC2626', 
+                        background: 'rgba(254,226,226,0.8)', padding: '0.1rem 0.4rem', 
+                        borderRadius: '4px', whiteSpace: 'nowrap', flexShrink: 0
+                      }}>SKIPPED</span>
+                    ) : isPassed ? (
+                      <CheckCircle2 size={14} color="#10B981" style={{ flexShrink: 0, marginTop: 1 }} />
+                    ) : (
+                      <AlertCircle size={14} color="#F59E0B" style={{ flexShrink: 0, marginTop: 1 }} />
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                      Day {m.day}
+                    </span>
+                    {!isSkipped && (
+                      <span style={{ 
+                        fontSize: '0.6rem', fontWeight: 700,
+                        color: attempts > 3 ? '#DC2626' : attempts > 1 ? '#D97706' : '#059669'
+                      }}>
+                        {attempts === 1 ? '1st try ✨' : `${attempts} attempts`}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+
+            {(!candidateObj.missions || candidateObj.missions.length === 0) && (
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', padding: '1rem 0' }}>
+                No mission history available
               </div>
-            ))}
+            )}
           </div>
         </div>
 

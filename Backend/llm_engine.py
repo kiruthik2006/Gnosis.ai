@@ -7,7 +7,7 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 
-from schemas import EvaluatorDecision, FinalFeedbackDecision
+from schemas import EvaluatorDecision, FinalFeedbackDecision, PreGoalSheet
 
 # --- ENV ---
 BASE_DIR = Path(__file__).resolve().parent
@@ -26,13 +26,14 @@ if api_key:
 else:
     print("[LLM_ENGINE] ❌ No GEMINI_API_KEY found in .env file!")
 
-# Use ONLY gemini-3.5-flash-lite as specified by user
-MODEL_NAME = "gemini-3.5-flash-lite"
+# Models
+FAST_MODEL = "gemini-3.5-flash-lite"
+PRO_MODEL = "gemma-4-31b-it"
+GEMMA_MODEL = "gemma-4-26b-a4b-it"
 
-
-def _call_gemini(prompt_contents, json_schema=None, temperature=0.75):
+def _call_gemini(prompt_contents, model_name=FAST_MODEL, json_schema=None, temperature=0.75):
     """
-    Single point of Gemini API invocation. Uses ONLY gemini-3.5-flash-lite.
+    Single point of Gemini API invocation.
     Returns the raw text response or None on failure.
     Logs every step to console for debugging.
     """
@@ -40,7 +41,7 @@ def _call_gemini(prompt_contents, json_schema=None, temperature=0.75):
         print(f"[LLM_ENGINE] ❌ SKIPPING API CALL — no Gemini client (missing API key)")
         return None
 
-    print(f"[LLM_ENGINE] 🔄 Calling model={MODEL_NAME}, temperature={temperature}, json_schema={'YES' if json_schema else 'NO'}")
+    print(f"[LLM_ENGINE] 🔄 Calling model={model_name}, temperature={temperature}, json_schema={'YES' if json_schema else 'NO'}")
 
     try:
         config_kwargs = {"temperature": temperature}
@@ -49,26 +50,57 @@ def _call_gemini(prompt_contents, json_schema=None, temperature=0.75):
             config_kwargs["response_schema"] = json_schema
 
         response = client.models.generate_content(
-            model=MODEL_NAME,
+            model=model_name,
             contents=prompt_contents,
             config=types.GenerateContentConfig(**config_kwargs)
         )
 
         if response and response.text:
-            print(f"[LLM_ENGINE] ✅ Got response from {MODEL_NAME}: {response.text[:120]}...")
+            print(f"[LLM_ENGINE] ✅ Got response from {model_name}: {response.text[:120]}...")
             return response.text.strip()
         else:
-            print(f"[LLM_ENGINE] ⚠️ Empty response from {MODEL_NAME}")
+            print(f"[LLM_ENGINE] ⚠️ Empty response from {model_name}")
             return None
 
     except Exception as err:
-        print(f"[LLM_ENGINE] ❌ API CALL FAILED for {MODEL_NAME}: {err}")
+        print(f"[LLM_ENGINE] ❌ API CALL FAILED for {model_name}: {err}")
         traceback.print_exc()
         return None
 
+def draft_pre_goal_sheet(candidate_context: str) -> PreGoalSheet:
+    """Uses Gemma to draft a pre-interview goal sheet for the candidate."""
+    system_prompt = f"""You are an AI Interview Strategist. Review the candidate's learning history and draft an interview plan.
+
+Candidate Background:
+{candidate_context}
+
+Return a structured JSON with:
+- focus_areas: List of 3 technical areas to focus on.
+- suggested_strategy: A brief paragraph describing the interview strategy.
+- icebreaker: A personalized icebreaker question to start the interview.
+"""
+    print(f"[LLM_ENGINE] 📤 draft_pre_goal_sheet() — calling {GEMMA_MODEL}...")
+    result = _call_gemini(system_prompt, model_name=GEMMA_MODEL, json_schema=PreGoalSheet, temperature=0.6)
+    
+    if result:
+        try:
+            sheet = PreGoalSheet.model_validate_json(result)
+            print(f"[LLM_ENGINE] ✅ Pre-Goal Sheet generated successfully")
+            return sheet
+        except Exception as parse_err:
+            print(f"[LLM_ENGINE] ❌ JSON parse failed: {parse_err}")
+            traceback.print_exc()
+            
+    print(f"[LLM_ENGINE] ⚠️ FALLBACK used for pre_goal_sheet (API unavailable)")
+    return PreGoalSheet(
+        focus_areas=["Core Fundamentals", "System Design", "Problem Solving"],
+        suggested_strategy="Start with fundamentals, escalate to design, then assess problem-solving skills under pressure.",
+        icebreaker="Welcome! Let's kick off - what is the most interesting technical challenge you've solved recently?"
+    )
+
 
 def generate_first_question(candidate_context: str, topic: dict) -> str:
-    """Generates a dynamic opening question using gemini-3.5-flash-lite."""
+    """Generates a dynamic opening question using FAST_MODEL."""
     system_prompt = f"""You are a friendly, experienced Senior Staff Engineer conducting an oral technical interview.
 
 Candidate Background:
@@ -84,7 +116,7 @@ Instructions:
 - Keep it under 3 sentences."""
 
     print(f"[LLM_ENGINE] 📤 generate_first_question() — calling Gemini...")
-    result = _call_gemini(system_prompt)
+    result = _call_gemini(system_prompt, model_name=FAST_MODEL)
 
     if result:
         print(f"[LLM_ENGINE] ✅ AI-generated opening question delivered")
@@ -117,7 +149,7 @@ def evaluate_and_next(
     days_covered: int
 ) -> EvaluatorDecision:
     """
-    Evaluates the candidate's answer using gemini-3.5-flash-lite.
+    Evaluates the candidate's answer using PRO_MODEL.
     The AI talks freely, expresses doubt, and probes missing details.
     Enforces minimum 8 questions.
     """
@@ -158,7 +190,7 @@ Guidelines:
 Return your output strictly formatted in the EvaluatorDecision JSON schema."""
 
     print(f"[LLM_ENGINE] 📤 evaluate_and_next() — Q#{questions_asked}, user said: '{user_message[:80]}...'")
-    result = _call_gemini(system_instruction, json_schema=EvaluatorDecision, temperature=0.75)
+    result = _call_gemini(system_instruction, model_name=PRO_MODEL, json_schema=EvaluatorDecision, temperature=0.75)
 
     if result:
         try:
@@ -196,7 +228,7 @@ def generate_feedback(
     chat_history: list,
     verified_tree: dict
 ) -> FinalFeedbackDecision:
-    """Generates structured post-interview feedback using gemini-3.5-flash-lite."""
+    """Generates structured post-interview feedback using PRO_MODEL."""
     chat_text = "\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in chat_history])
     tree_text = "\n".join([f"{topic}: {status}" for topic, status in verified_tree.items()])
 
@@ -217,8 +249,7 @@ Produce a structured JSON report with fields:
 - gaps: list of strings (at least 2 points)
 - next: list of strings (at least 2 recommendations)"""
 
-    print(f"[LLM_ENGINE] 📤 generate_feedback() — calling Gemini...")
-    result = _call_gemini(prompt, json_schema=FinalFeedbackDecision, temperature=0.5)
+    result = _call_gemini(prompt, model_name=PRO_MODEL, json_schema=FinalFeedbackDecision, temperature=0.5)
 
     if result:
         try:
