@@ -18,9 +18,9 @@ import Step14FuturePath from './components/Step14FuturePath';
 import Step15Dashboard from './components/Step15Dashboard';
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(15);
-  const [activeTab, setActiveTab]     = useState('dashboard');
-  const [isLoggedIn, setIsLoggedIn]   = useState(true);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [activeTab, setActiveTab]     = useState('landing');
+  const [isLoggedIn, setIsLoggedIn]   = useState(false);
 
   /* Candidate selection for preset interviews */
   const [selectedCandidate, setSelectedCandidate] = useState(null);
