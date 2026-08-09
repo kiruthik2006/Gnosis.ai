@@ -33,7 +33,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
     };
     console.log('[Step11AIInterview] 📤 PRE-GOAL request payload:', JSON.stringify(payload));
 
-    fetch('http://localhost:8000/api/pre-goal', {
+    fetch('https://gnosis-ai-backend-g8lv.onrender.com/api/pre-goal', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -68,7 +68,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
     };
     console.log('[Step11AIInterview] 📤 INIT request payload:', JSON.stringify(payload));
 
-    fetch('http://localhost:8000/api/interview', {
+    fetch('https://gnosis-ai-backend-g8lv.onrender.com/api/interview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -119,8 +119,8 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
     const sendPayload = { sessionId: sessionId, message: textToSend };
     console.log('[Step11AIInterview] 📤 SEND payload:', JSON.stringify(sendPayload).substring(0, 200));
 
-    // Always attempt live API Call to FastAPI http://localhost:8000/api/interview
-    fetch('http://localhost:8000/api/interview', {
+    // Always attempt live API Call to FastAPI https://gnosis-ai-backend-g8lv.onrender.com/api/interview
+    fetch('https://gnosis-ai-backend-g8lv.onrender.com/api/interview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sendPayload)
@@ -167,7 +167,7 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
           {
             role: 'ai',
             isAdaptiveFollowUp: true,
-            text: '⚠️ Could not reach the interview server. Please make sure the backend is running on http://localhost:8000 and try again.',
+            text: '⚠️ Could not reach the interview server. Please make sure the backend is running and try again.',
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           }
         ]);
