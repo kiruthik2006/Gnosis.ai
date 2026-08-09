@@ -50,11 +50,21 @@ def get_next_topic(candidate: dict, current_day: int, covered_days: set) -> dict
 
 @app.post("/api/interview", response_model=InterviewResponse)
 async def interview_endpoint(req: InterviewRequest):
+    print(f"[BACKEND] 📥 Request received — sessionId={req.sessionId}, has_candidate={req.candidate is not None}, has_message={req.message is not None}")
+    if req.message:
+        print(f"[BACKEND] 📥 User message: '{req.message[:80]}...'")
+    if req.candidate:
+        member = req.candidate.get("member", {})
+        print(f"[BACKEND] 📥 Candidate: {member.get('name', 'unknown')} ({member.get('id', '?')})")
+    print(f"[BACKEND] 📥 Active sessions: {list(active_sessions.keys())}")
     # ========================
     # TURN 1: INITIALIZATION
     # ========================
-    if req.sessionId not in active_sessions:
+    if req.sessionId not in active_sessions or (req.candidate and not req.message):
         if not req.candidate:
+            if req.sessionId in active_sessions:
+                first_q = active_sessions[req.sessionId]["chat_history"][0]["content"]
+                return InterviewResponse(reply=first_q, done=False)
             raise HTTPException(status_code=400, detail="candidate object required on first request")
 
         candidate = req.candidate
@@ -63,7 +73,6 @@ async def interview_endpoint(req: InterviewRequest):
         # Choose starting topic
         starting_topic = choose_starting_topic(candidate, curriculum)
         if not starting_topic:
-            # fallback
             starting_topic = get_day_data(1, curriculum)
 
         # Generate first question

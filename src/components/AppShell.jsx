@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, GitFork, Compass,
   BookOpen, MessageSquareCode,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, LogOut
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -247,38 +247,81 @@ export default function AppShell({
                 })}
               </nav>
 
-              {/* ── BOTTOM AVATAR ── */}
+              {/* ── BOTTOM AVATAR & LOGOUT ── */}
               <div style={{
                 width: '100%',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: isExpanded ? 'flex-start' : 'center',
-                gap: '0.75rem',
-                paddingLeft: isExpanded ? 16 : 0,
-                transition: 'padding 0.25s, justify-content 0.25s'
+                flexDirection: 'column',
+                gap: '0.65rem'
               }}>
                 <div style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  border: '2px solid rgba(16,185,129,0.45)',
-                  cursor: 'pointer',
-                  flexShrink: 0,
-                  boxShadow: '0 0 10px rgba(16,185,129,0.2)'
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isExpanded ? 'flex-start' : 'center',
+                  gap: '0.75rem',
+                  paddingLeft: isExpanded ? 16 : 0,
+                  transition: 'padding 0.25s, justify-content 0.25s'
                 }}>
-                  <img
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-                    alt="Avatar"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                </div>
-                {isExpanded && (
-                  <div style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                    <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#ffffff' }}>Alex Morgan</div>
-                    <div style={{ fontSize: '0.6875rem', color: '#a7f3d0' }}>AI Engineer</div>
+                  <div style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    border: '2px solid rgba(16,185,129,0.45)',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                    boxShadow: '0 0 10px rgba(16,185,129,0.2)'
+                  }}>
+                    <img
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                      alt="Avatar"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
                   </div>
-                )}
+                  {isExpanded && (
+                    <div style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#ffffff' }}>Alex Morgan</div>
+                      <div style={{ fontSize: '0.6875rem', color: '#a7f3d0' }}>AI Engineer</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* ── LOGOUT ACTION ── */}
+                <button
+                  onClick={() => navigate('login', 1)}
+                  title="Logout to Landing Page"
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: isExpanded ? 'flex-start' : 'center',
+                    paddingLeft: isExpanded ? 16 : 0,
+                    gap: 12,
+                    height: 38,
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#FCA5A5',
+                    cursor: 'pointer',
+                    borderRadius: 12,
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.18)';
+                    e.currentTarget.style.color = '#FF8A8A';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.color = '#FCA5A5';
+                  }}
+                >
+                  <LogOut size={17} strokeWidth={2.2} />
+                  {isExpanded && (
+                    <span style={{ fontSize: '0.85rem', fontWeight: 750, whiteSpace: 'nowrap' }}>
+                      Logout
+                    </span>
+                  )}
+                </button>
               </div>
 
             </div>

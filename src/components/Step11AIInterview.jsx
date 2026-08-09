@@ -24,22 +24,32 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
     let isMounted = true;
     setIsAiThinking(true);
 
+    const payload = {
+      sessionId: sessionId,
+      candidate: candidateObj
+    };
+    console.log('[Step11AIInterview] 📤 INIT request payload:', JSON.stringify(payload).substring(0, 300));
+
     fetch('http://localhost:8000/api/interview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId: sessionId,
-        candidate: candidateObj
-      })
+      body: JSON.stringify(payload)
     })
-      .then(res => {
-        if (!res.ok) throw new Error('API server returned error');
-        return res.json();
+      .then(async res => {
+        console.log('[Step11AIInterview] 📥 INIT response status:', res.status, res.statusText);
+        const body = await res.json();
+        console.log('[Step11AIInterview] 📥 INIT response body:', JSON.stringify(body).substring(0, 300));
+        if (!res.ok) {
+          console.error('[Step11AIInterview] ❌ Server returned non-200:', res.status, body);
+          throw new Error(`Server error ${res.status}: ${body.detail || JSON.stringify(body)}`);
+        }
+        return body;
       })
       .then(data => {
         if (!isMounted) return;
         setIsApiConnected(true);
         setIsAiThinking(false);
+        console.log('[Step11AIInterview] ✅ API connected, AI reply received');
         if (data.reply) {
           setMessages([{
             role: 'ai',
@@ -49,14 +59,16 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
         }
       })
       .catch(err => {
-        console.warn('FastAPI server offline, using client simulation:', err);
+        console.error('[Step11AIInterview] ❌ Init failed:', err.message);
+        console.error('[Step11AIInterview] SessionId:', sessionId);
+        console.error('[Step11AIInterview] Candidate:', JSON.stringify(candidateObj.member));
         if (!isMounted) return;
         setIsApiConnected(false);
         setIsAiThinking(false);
         setMessages([
           {
             role: 'ai',
-            text: `Welcome ${candidateObj.member?.name || 'Candidate'}. I am Agent Turing, your AI interviewer. Let's begin by testing your understanding of your Day 12 mission: Prompt Engineering Fundamentals. Can you explain zero-shot vs few-shot system prompting?`,
+            text: '⚠️ Could not connect to the interview server at http://localhost:8000. Please ensure the backend is running and refresh this page.',
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           }
         ]);
@@ -78,64 +90,61 @@ export default function Step11AIInterview({ selectedCandidate, onFinishInterview
     setInputText('');
     setIsAiThinking(true);
 
-    if (isApiConnected) {
-      // Live API Call to FastAPI http://localhost:8000/api/interview
-      fetch('http://localhost:8000/api/interview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: sessionId,
-          message: textToSend
-        })
-      })
-        .then(res => res.json())
-        .then(data => {
-          setIsAiThinking(false);
-          setQuestionCount(prev => prev + 1);
-          if (data.reply) {
-            setMessages(prev => [
-              ...prev,
-              {
-                role: 'ai',
-                isAdaptiveFollowUp: true,
-                text: data.reply,
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              }
-            ]);
-          }
-          if (data.done && data.feedback) {
-            setInterviewFeedback(data.feedback);
-          }
-        })
-        .catch(err => {
-          console.error('API call failed:', err);
-          setIsAiThinking(false);
-        });
-    } else {
-      // Dynamic Non-Repeating Question Synthesizer
-      setTimeout(() => {
-        setIsAiThinking(false);
-        setQuestionCount(prev => Math.min(8, prev + 1));
-        const userTextLower = textToSend.toLowerCase();
-        const role = candidateObj.member?.jobRole || 'Engineer';
-        
-        const dynamicQuestions = [
-          `Building on your point regarding ${role} practices: How do you design backpressure handling and exception recovery when scaling streaming pipelines under heavy load?`,
-          `That is a clear explanation. Probing into system performance for ${role}: What specific caching or indexing trade-offs do you optimize to achieve low latency?`,
-          `Good insight. Shifting to fault tolerance: How do you maintain data consistency and prevent race conditions when executing concurrent operations?`,
-          `Great depth. Moving forward: How do you monitor execution metrics and diagnose memory leaks or thread contention in high-throughput environments?`
-        ];
+    const sendPayload = { sessionId: sessionId, message: textToSend };
+    console.log('[Step11AIInterview] 📤 SEND payload:', JSON.stringify(sendPayload).substring(0, 200));
 
-        const selectedQuestion = dynamicQuestions[questionCount % dynamicQuestions.length];
-        const aiReply = {
-          role: 'ai',
-          isAdaptiveFollowUp: true,
-          text: selectedQuestion,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        setMessages(prev => [...prev, aiReply]);
-      }, 1100);
-    }
+    // Always attempt live API Call to FastAPI http://localhost:8000/api/interview
+    fetch('http://localhost:8000/api/interview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sendPayload)
+    })
+      .then(async res => {
+        console.log('[Step11AIInterview] 📥 SEND response status:', res.status, res.statusText);
+        const body = await res.json();
+        console.log('[Step11AIInterview] 📥 SEND response body:', JSON.stringify(body).substring(0, 300));
+        if (!res.ok) {
+          console.error('[Step11AIInterview] ❌ Server error on SEND:', res.status, body);
+          throw new Error(`Server error ${res.status}: ${body.detail || JSON.stringify(body)}`);
+        }
+        return body;
+      })
+      .then(data => {
+        setIsApiConnected(true);
+        setIsAiThinking(false);
+        setQuestionCount(prev => prev + 1);
+        console.log('[Step11AIInterview] ✅ AI reply received, done:', data.done);
+        if (data.reply) {
+          setMessages(prev => [
+            ...prev,
+            {
+              role: 'ai',
+              isAdaptiveFollowUp: true,
+              text: data.reply,
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+          ]);
+        }
+        if (data.done && data.feedback) {
+          setInterviewFeedback(data.feedback);
+        }
+      })
+      .catch(err => {
+        console.error('[Step11AIInterview] ❌ SEND failed:', err.message);
+        console.error('[Step11AIInterview] SessionId:', sessionId);
+        console.error('[Step11AIInterview] Message sent:', textToSend);
+        setIsApiConnected(false);
+        setIsAiThinking(false);
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'ai',
+            isAdaptiveFollowUp: true,
+            text: '⚠️ Could not reach the interview server. Please make sure the backend is running on http://localhost:8000 and try again.',
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }
+        ]);
+      });
   };
 
   // Quick suggestion chips
