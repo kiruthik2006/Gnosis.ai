@@ -210,12 +210,14 @@ export default function Step15Dashboard({ onNavigateStep }) {
     <div style={{
       maxWidth: '1440px',
       width: '100%',
+      height: '100%',
       margin: '0 auto',
-      padding: '1.25rem 1.5rem 2rem',
+      padding: '0.85rem 1.25rem',
       display: 'flex',
       flexDirection: 'column',
-      gap: '1.25rem',
-      boxSizing: 'border-box'
+      gap: '0.75rem',
+      boxSizing: 'border-box',
+      overflow: 'hidden'
     }} className="animate-fade-in">
 
       
@@ -224,16 +226,17 @@ export default function Step15Dashboard({ onNavigateStep }) {
       ════════════════════════════════════════════════════════════════════════ */}
       <div style={{
         background: 'linear-gradient(135deg, #14181F 0%, #0D1117 100%)',
-        borderRadius: '24px',
+        borderRadius: '16px',
         border: '1.5px solid rgba(16, 185, 129, 0.35)',
-        padding: '1.25rem 1.75rem',
-        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.4)',
+        padding: '0.75rem 1.25rem',
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
         color: '#FFFFFF',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '1.25rem'
+        gap: '0.75rem',
+        flexShrink: 0
       }}>
         {/* Candidate & Live State */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
@@ -378,504 +381,214 @@ export default function Step15Dashboard({ onNavigateStep }) {
             <span>LAUNCH LIVE SESSION →</span>
           </button>
         </div>
+      </div>
+
 
       {/* ════════════════════════════════════════════════════════════════════════
-          MASTER COMMAND CENTER GRID (3-COLUMN LAYOUT)
+          2. CANDIDATE JOURNEY (Compact Horizontal Timeline)
       ════════════════════════════════════════════════════════════════════════ */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '240px 1fr 240px',
-        gap: '1.25rem',
-        alignItems: 'start'
-      }}>
-
-        {/* LEFT COLUMN: VERTICAL CANDIDATE JOURNEY */}
-        <div className="glass-card" style={{ padding: '1.25rem 1rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', height: '100%', boxSizing: 'border-box' }}>
-          <div>
-            <h3 style={{ fontSize: '0.85rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <GitBranch size={14} color="#10B981" /> Journey
-            </h3>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>31-Day Timeline</div>
-          </div>
-
-          {/* Timeline Axis Container (Vertical) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative', paddingLeft: '1rem', marginTop: '0.5rem' }}>
-            {/* Connecting Line (Vertical) */}
-            <div style={{ position: 'absolute', top: '10px', bottom: '10px', left: '1.45rem', width: '3px', background: 'linear-gradient(180deg, #10B981 0%, #3B82F6 50%, #10B981 100%)', zIndex: 0 }} />
-
+      <div className="glass-card" style={{ padding: '0.6rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+          <GitBranch size={13} color="#10B981" />
+          <span style={{ fontSize: '0.7rem', fontWeight: 850, color: 'var(--text-primary)' }}>Journey</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0', flex: 1, position: 'relative', padding: '0.3rem 0' }}>
+          <div style={{ position: 'absolute', top: '50%', left: '1rem', right: '1rem', height: '2px', background: 'linear-gradient(90deg, #10B981 0%, #3B82F6 50%, #10B981 100%)', zIndex: 0 }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', position: 'relative', zIndex: 1 }}>
             {currentCandidate.missions.slice(0, 6).map((m, idx) => {
               const isSelected = selectedDayMission?.day === m.day;
               const isCurrentPos = m.day === 18;
-
               return (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedDayMission(isSelected ? null : m)}
-                  style={{
-                    position: 'relative',
-                    zIndex: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    transform: isSelected ? 'translateX(4px)' : 'none'
-                  }}
-                >
-                  {/* Node Circle */}
-                  <div style={{
-                    minWidth: isSelected ? '18px' : '14px',
-                    height: isSelected ? '18px' : '14px',
-                    borderRadius: '50%',
-                    background: isCurrentPos ? '#3B82F6' : m.score >= 90 ? '#10B981' : '#F59E0B',
-                    border: isSelected ? '2px solid #18181B' : '2px solid #FFF',
-                    boxShadow: isSelected ? '0 0 12px rgba(16, 185, 129, 0.6)' : '0 2px 6px rgba(0,0,0,0.15)',
-                    transition: 'all 0.2s ease'
-                  }} />
-
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem' }}>
-                      <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)' }}>
-                        Day {m.day < 10 ? `0${m.day}` : m.day}
-                      </span>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 850, color: 'var(--text-primary)' }}>
-                        {m.score}%
-                      </span>
-                    </div>
-                    <span style={{ fontSize: '0.625rem', color: 'var(--text-secondary)', maxWidth: '120px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                      {m.title}
-                    </span>
-                  </div>
-
-                  {isCurrentPos && (
-                    <span style={{
-                      position: 'absolute', top: '-14px', left: '2rem', fontSize: '0.5rem', fontWeight: 900,
-                      background: '#3B82F6', color: '#FFF', padding: '1px 5px', borderRadius: '99px',
-                      whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(59, 130, 246, 0.4)'
-                    }}>
-                      CURRENT
-                    </span>
-                  )}
+                <div key={idx} onClick={() => setSelectedDayMission(isSelected ? null : m)} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', padding: '0.15rem 0.4rem', borderRadius: '99px', background: isSelected ? 'rgba(59,130,246,0.12)' : 'transparent', border: isSelected ? '1px solid rgba(59,130,246,0.3)' : '1px solid transparent', transition: 'all 0.15s ease' }}>
+                  <div style={{ width: isSelected ? 12 : 9, height: isSelected ? 12 : 9, borderRadius: '50%', background: isCurrentPos ? '#3B82F6' : m.score >= 90 ? '#10B981' : '#F59E0B', border: '1.5px solid #FFF', boxShadow: '0 1px 4px rgba(0,0,0,0.15)', flexShrink: 0 }} />
+                  <span style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-muted)' }}>D{m.day}</span>
+                  <span style={{ fontSize: '0.625rem', fontWeight: 850, color: 'var(--text-primary)' }}>{m.score}%</span>
                 </div>
               );
             })}
           </div>
-
-          {/* Selected Day Inspector Drawer (Compact) */}
-          {selectedDayMission && (
-            <div className="animate-fade-in" style={{
-              background: 'rgba(248, 250, 252, 0.95)',
-              borderRadius: 'var(--radius-md)',
-              border: '1.5px solid rgba(59, 130, 246, 0.35)',
-              padding: '0.75rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-              marginTop: '0.5rem'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ background: '#3B82F6', color: '#FFF', padding: '0.25rem 0.5rem', borderRadius: '4px', fontWeight: 900, fontSize: '0.65rem' }}>
-                  DAY {selectedDayMission.day}
-                </span>
-                <button onClick={() => setSelectedDayMission(null)} style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer', padding: 0 }}>
-                  <X size={14} />
-                </button>
-              </div>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                {selectedDayMission.title}
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem', fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
-                <div>Time: <strong>{selectedDayMission.time}</strong></div>
-                <div>Correct: <strong style={{ color: '#059669' }}>{selectedDayMission.correctness}%</strong></div>
-              </div>
-              <button
-                onClick={() => onNavigateStep(11)}
-                className="btn-primary"
-                style={{ fontSize: '0.65rem', padding: '0.35rem', marginTop: '0.25rem', display: 'flex', justifyContent: 'center' }}
-              >
-                View Session
-              </button>
-            </div>
-          )}
         </div>
+        {selectedDayMission && (
+          <div className="animate-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(248,250,252,0.95)', border: '1px solid rgba(59,130,246,0.3)', borderRadius: '8px', padding: '0.3rem 0.6rem', flexShrink: 0 }}>
+            <span style={{ fontSize: '0.6rem', fontWeight: 900, background: '#3B82F6', color: '#FFF', padding: '1px 5px', borderRadius: '3px' }}>D{selectedDayMission.day}</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--text-primary)', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedDayMission.title}</span>
+            <span style={{ fontSize: '0.6rem', color: '#059669', fontWeight: 800 }}>{selectedDayMission.correctness}%</span>
+            <button onClick={() => setSelectedDayMission(null)} style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: 0, lineHeight: 1 }}><X size={11} /></button>
+          </div>
+        )}
+      </div>
 
+      {/* ════════════════════════════════════════════════════════════════════════
+          3. MAIN COMMAND CENTER (2-Column Split)
+      ════════════════════════════════════════════════════════════════════════ */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem', flex: 1, minHeight: 0 }}>
 
-        {/* CENTER COLUMN: MAIN COMMAND CENTER (SPLIT VIEW) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-          {/* LEFT COLUMN: CANDIDATE DIGITAL TWIN & AI INFERENCE ENGINE */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* LEFT: Digital Twin + AI Inference Engine */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', minHeight: 0 }}>
 
-          {/* CANDIDATE DIGITAL TWIN & COMPETENCY TOPOLOGY */}
-          <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          {/* DIGITAL TWIN RADAR */}
+          <div className="glass-card" style={{ padding: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, minHeight: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                  <Cpu size={16} color="#10B981" /> Candidate Digital Twin & Competency Topology
-                </h3>
-                <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Interactive cognitive node map — click any domain node for auditable evidence</span>
-              </div>
-              <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#2563EB', background: 'rgba(239, 246, 255, 0.9)', padding: '3px 10px', borderRadius: '99px', border: '1px solid rgba(59,130,246,0.3)' }}>
-                AUDITABLE EVIDENCE
-              </span>
+              <h3 style={{ fontSize: '0.75rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Cpu size={13} color="#10B981" /> Digital Twin & Competency Topology
+              </h3>
+              <span style={{ fontSize: '0.575rem', fontWeight: 800, color: '#2563EB', background: 'rgba(239,246,255,0.9)', padding: '2px 7px', borderRadius: '99px', border: '1px solid rgba(59,130,246,0.3)' }}>AUDITABLE EVIDENCE</span>
             </div>
-
-            {/* SVG Radar / Topology Map */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.9)',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid rgba(232, 226, 213, 0.85)',
-              padding: '1rem',
-              position: 'relative',
-              height: '320px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <svg width="100%" height="100%" viewBox="0 0 400 320" style={{ overflow: 'visible' }}>
-                {/* Background Radar Rings */}
-                <polygon points="200,30 330,120 300,270 100,270 70,120" fill="rgba(16, 185, 129, 0.04)" stroke="rgba(16, 185, 129, 0.2)" strokeWidth="1" />
-                <polygon points="200,60 295,130 270,240 130,240 105,130" fill="rgba(16, 185, 129, 0.06)" stroke="rgba(16, 185, 129, 0.25)" strokeWidth="1" strokeDasharray="3 3" />
-
-                {/* Connecting Edges */}
+            <div style={{ background: 'rgba(255,255,255,0.9)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(232,226,213,0.85)', padding: '0.5rem', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 0 }}>
+              <svg width="100%" height="100%" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid meet" style={{ overflow: 'visible', maxHeight: '100%' }}>
+                <polygon points="200,20 330,100 300,240 100,240 70,100" fill="rgba(16,185,129,0.04)" stroke="rgba(16,185,129,0.2)" strokeWidth="1" />
+                <polygon points="200,50 295,110 270,210 130,210 105,110" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.25)" strokeWidth="1" strokeDasharray="3 3" />
                 {currentCandidate.competencies.map((comp, idx) => (
-                  <line key={idx} x1="200" y1="170" x2={comp.x} y2={comp.y} stroke={comp.score < 70 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(16, 185, 129, 0.4)'} strokeWidth="1.5" />
+                  <line key={idx} x1="200" y1="145" x2={comp.x} y2={comp.y} stroke={comp.score < 70 ? 'rgba(239,68,68,0.4)' : 'rgba(16,185,129,0.4)'} strokeWidth="1.5" />
                 ))}
-
-                {/* Center Digital Twin Nucleus */}
-                <circle cx="200" cy="170" r="22" fill="#0D1117" stroke="#10B981" strokeWidth="2.5" />
-                <text x="200" y="174" textAnchor="middle" fill="#10B981" fontSize="10" fontWeight="900">ALEX</text>
-
-                {/* Competency Domain Nodes */}
+                <circle cx="200" cy="145" r="18" fill="#0D1117" stroke="#10B981" strokeWidth="2" />
+                <text x="200" y="149" textAnchor="middle" fill="#10B981" fontSize="9" fontWeight="900">{currentCandidate.member.name.split(' ')[0].toUpperCase()}</text>
                 {currentCandidate.competencies.map((comp, idx) => {
                   const isSelected = selectedCompetency?.id === comp.id;
                   const isWeak = comp.score < 70;
                   const nodeColor = isWeak ? '#EF4444' : comp.score >= 90 ? '#10B981' : '#F59E0B';
-
                   return (
                     <g key={idx} onClick={() => setSelectedCompetency(isSelected ? null : comp)} style={{ cursor: 'pointer' }}>
-                      <circle cx={comp.x} cy={comp.y} r={isSelected ? "18" : "14"} fill={nodeColor} stroke="#FFF" strokeWidth="2.5" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.15))" />
-                      <text x={comp.x} y={comp.y + (comp.y < 170 ? -20 : 28)} textAnchor="middle" fill="var(--text-primary)" fontSize="10" fontWeight="850">
-                        {comp.name} ({comp.score}%)
-                      </text>
-                      {isWeak && (
-                        <text x={comp.x} y={comp.y + (comp.y < 170 ? -32 : 40)} textAnchor="middle" fill="#EF4444" fontSize="9" fontWeight="900">
-                          ⚠️ PROBE REQUIRED
-                        </text>
-                      )}
+                      <circle cx={comp.x} cy={comp.y} r={isSelected ? 15 : 11} fill={nodeColor} stroke="#FFF" strokeWidth="2" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.15))" />
+                      <text x={comp.x} y={comp.y + (comp.y < 145 ? -16 : 22)} textAnchor="middle" fill="var(--text-primary)" fontSize="8.5" fontWeight="850">{comp.name} ({comp.score}%)</text>
+                      {isWeak && <text x={comp.x} y={comp.y + (comp.y < 145 ? -26 : 32)} textAnchor="middle" fill="#EF4444" fontSize="7.5" fontWeight="900">⚠ PROBE</text>}
                     </g>
                   );
                 })}
               </svg>
             </div>
-
-            {/* Auditable Evidence Inspector Drawer */}
             {selectedCompetency && (
-              <div className="animate-fade-in" style={{
-                background: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: 'var(--radius-md)',
-                border: '1.5px solid rgba(16, 185, 129, 0.4)',
-                padding: '0.85rem 1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.55rem'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 850, color: 'var(--text-primary)' }}>
-                    AUDITABLE EVIDENCE: {selectedCompetency.name.toUpperCase()} ({selectedCompetency.score}% MASTERED)
-                  </span>
-                  <button onClick={() => setSelectedCompetency(null)} className="btn-ghost" style={{ fontSize: '0.7rem', padding: '2px 6px' }}>
-                    Dismiss
-                  </button>
+              <div className="animate-fade-in" style={{ background: 'rgba(255,255,255,0.95)', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(16,185,129,0.35)', padding: '0.5rem 0.65rem', fontSize: '0.625rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>{selectedCompetency.name.toUpperCase()} — {selectedCompetency.score}%</strong>
+                  <button onClick={() => setSelectedCompetency(null)} style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: 0 }}><X size={11} /></button>
                 </div>
-
-                <div style={{ fontSize: '0.725rem', color: 'var(--text-secondary)' }}>
-                  Reliability Index: <strong style={{ color: '#059669' }}>{selectedCompetency.reliability}%</strong> • Attempts required: <strong>{selectedCompetency.attempts}</strong>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.725rem' }}>
-                  <div style={{ background: 'rgba(236, 253, 245, 0.8)', padding: '0.4rem 0.6rem', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ color: '#059669', fontWeight: 800, marginBottom: '0.2rem' }}>VERIFIED INTERACTIONS</div>
-                    {selectedCompetency.evidence.map((ev, i) => <div key={i} style={{ color: 'var(--text-primary)' }}>{ev}</div>)}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.35rem' }}>
+                  <div style={{ background: 'rgba(236,253,245,0.8)', padding: '0.3rem 0.5rem', borderRadius: '4px' }}>
+                    <div style={{ color: '#059669', fontWeight: 800, marginBottom: '0.15rem', fontSize: '0.575rem' }}>VERIFIED</div>
+                    {selectedCompetency.evidence.map((ev, i) => <div key={i} style={{ color: 'var(--text-primary)', fontSize: '0.575rem' }}>{ev}</div>)}
                   </div>
-
-                  <div style={{ background: 'rgba(254, 243, 199, 0.8)', padding: '0.4rem 0.6rem', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ color: '#D97706', fontWeight: 800, marginBottom: '0.2rem' }}>CONTRADICTORY EVIDENCE</div>
-                    {selectedCompetency.gaps.map((gp, i) => <div key={i} style={{ color: 'var(--text-secondary)' }}>{gp}</div>)}
+                  <div style={{ background: 'rgba(254,243,199,0.8)', padding: '0.3rem 0.5rem', borderRadius: '4px' }}>
+                    <div style={{ color: '#D97706', fontWeight: 800, marginBottom: '0.15rem', fontSize: '0.575rem' }}>GAPS</div>
+                    {selectedCompetency.gaps.map((gp, i) => <div key={i} style={{ color: 'var(--text-secondary)', fontSize: '0.575rem' }}>{gp}</div>)}
                   </div>
                 </div>
               </div>
             )}
-
           </div>
 
-          {/* AI INFERENCE ENGINE PANEL */}
-          <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {/* AI INFERENCE ENGINE (Compact) */}
+          <div className="glass-card" style={{ padding: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                  <Sparkles size={16} color="#10B981" /> AI Cognitive Inference Engine
-                </h3>
-                <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Real-time pattern recognition & hesitation metrics</span>
-              </div>
-              <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#D97706', background: 'rgba(254, 243, 199, 0.9)', padding: '3px 10px', borderRadius: '99px', border: '1px solid rgba(245,158,11,0.3)' }}>
-                CONFIDENCE: {currentCandidate.inference.confidence}%
-              </span>
+              <h3 style={{ fontSize: '0.75rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Sparkles size={13} color="#10B981" /> AI Cognitive Inference Engine
+              </h3>
+              <span style={{ fontSize: '0.575rem', fontWeight: 800, color: '#D97706', background: 'rgba(254,243,199,0.9)', padding: '2px 7px', borderRadius: '99px' }}>CONFIDENCE: {currentCandidate.inference.confidence}%</span>
             </div>
-
-            {/* Pattern Signals */}
-            <div style={{ background: 'rgba(236, 253, 245, 0.85)', padding: '0.6rem 0.85rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '0.75rem', color: 'var(--text-primary)' }}>
-              Detected Pattern: <strong style={{ color: '#059669' }}>{currentCandidate.inference.pattern}</strong>
+            <div style={{ background: 'rgba(236,253,245,0.85)', padding: '0.4rem 0.65rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(16,185,129,0.3)', fontSize: '0.65rem', color: 'var(--text-primary)' }}>
+              Pattern: <strong style={{ color: '#059669' }}>{currentCandidate.inference.pattern}</strong>
             </div>
-
-            {/* 4 Cognitive Gauges */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.45rem', fontSize: '0.65rem' }}>
-              <div style={{ background: 'rgba(255,255,255,0.9)', padding: '0.45rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(232, 226, 213, 0.8)' }}>
-                <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>DIFFICULTY</div>
-                <div style={{ fontWeight: 850, color: '#10B981', fontSize: '0.785rem' }}>{currentCandidate.inference.difficulty}%</div>
-                <div style={{ color: '#10B981', fontFamily: 'var(--font-mono)' }}>████████░░</div>
-              </div>
-
-              <div style={{ background: 'rgba(255,255,255,0.9)', padding: '0.45rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(232, 226, 213, 0.8)' }}>
-                <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>CONFIDENCE</div>
-                <div style={{ fontWeight: 850, color: '#10B981', fontSize: '0.785rem' }}>{currentCandidate.inference.confidence}%</div>
-                <div style={{ color: '#10B981', fontFamily: 'var(--font-mono)' }}>█████████░</div>
-              </div>
-
-              <div style={{ background: 'rgba(255,255,255,0.9)', padding: '0.45rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(232, 226, 213, 0.8)' }}>
-                <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>HESITATION</div>
-                <div style={{ fontWeight: 850, color: '#F59E0B', fontSize: '0.785rem' }}>{currentCandidate.inference.hesitation}%</div>
-                <div style={{ color: '#F59E0B', fontFamily: 'var(--font-mono)' }}>███░░░░░░░</div>
-              </div>
-
-              <div style={{ background: 'rgba(255,255,255,0.9)', padding: '0.45rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(232, 226, 213, 0.8)' }}>
-                <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>CONCEPT TRANSFER</div>
-                <div style={{ fontWeight: 850, color: '#2563EB', fontSize: '0.785rem' }}>{currentCandidate.inference.transfer}%</div>
-                <div style={{ color: '#2563EB', fontFamily: 'var(--font-mono)' }}>████████░░</div>
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.35rem' }}>
+              {[
+                { label: 'DIFFICULTY', value: currentCandidate.inference.difficulty, color: '#10B981' },
+                { label: 'CONFIDENCE', value: currentCandidate.inference.confidence, color: '#10B981' },
+                { label: 'HESITATION', value: currentCandidate.inference.hesitation, color: '#F59E0B' },
+                { label: 'TRANSFER', value: currentCandidate.inference.transfer, color: '#2563EB' },
+              ].map((g, i) => (
+                <div key={i} style={{ background: 'rgba(255,255,255,0.9)', padding: '0.3rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(232,226,213,0.8)', fontSize: '0.575rem' }}>
+                  <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>{g.label}</div>
+                  <div style={{ fontWeight: 850, color: g.color, fontSize: '0.7rem' }}>{g.value}%</div>
+                </div>
+              ))}
             </div>
-
-            {/* Inference Quote */}
-            <div style={{ fontSize: '0.75rem', fontStyle: 'italic', color: 'var(--text-secondary)', background: 'rgba(248, 250, 252, 0.9)', padding: '0.55rem 0.85rem', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid #10B981' }}>
+            <div style={{ fontSize: '0.625rem', fontStyle: 'italic', color: 'var(--text-secondary)', background: 'rgba(248,250,252,0.9)', padding: '0.35rem 0.65rem', borderRadius: 'var(--radius-sm)', borderLeft: '2px solid #10B981' }}>
               "{currentCandidate.inference.quote}"
             </div>
           </div>
         </div>
-          {/* RIGHT COLUMN: LIVE EVALUATION STREAM & ADAPTIVE QUESTION ENGINE */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
-          {/* LIVE EVALUATION STREAM (AGENT TURING TERMINAL) */}
-          <div style={{
-            background: '#0D1117',
-            borderRadius: '24px',
-            padding: '1.25rem',
-            border: '1.5px solid rgba(16, 185, 129, 0.35)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
-            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.4)',
-            color: '#FFFFFF'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                <span className="pulse-glow" style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981' }} />
-                <span style={{ fontSize: '0.8rem', fontWeight: 850, letterSpacing: '0.04em' }}>LIVE EVALUATION STREAM</span>
+        {/* RIGHT: Live Evaluation Stream + Adaptive Question Engine */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', minHeight: 0 }}>
+
+          {/* LIVE EVALUATION STREAM */}
+          <div style={{ background: '#0D1117', borderRadius: '16px', padding: '0.85rem', border: '1.5px solid rgba(16,185,129,0.35)', display: 'flex', flexDirection: 'column', gap: '0.5rem', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', color: '#FFF', flex: 1, minHeight: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.35rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <span className="pulse-glow" style={{ width: 7, height: 7, borderRadius: '50%', background: '#10B981' }} />
+                <span style={{ fontSize: '0.7rem', fontWeight: 850, letterSpacing: '0.04em' }}>LIVE EVALUATION STREAM</span>
               </div>
-              <span style={{ fontSize: '0.65rem', color: '#9CA3AF', fontFamily: 'var(--font-mono)' }}>AGENT TURING</span>
+              <span style={{ fontSize: '0.575rem', color: '#9CA3AF', fontFamily: 'var(--font-mono)' }}>AGENT TURING</span>
             </div>
-
-            <div style={{ fontSize: '0.7rem', color: '#A7F3D0', fontWeight: 700 }}>
-              ● {currentCandidate.liveStream.agentState}
+            <div style={{ fontSize: '0.6rem', color: '#A7F3D0', fontWeight: 700 }}>● {currentCandidate.liveStream.agentState}</div>
+            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '0.45rem 0.65rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ fontSize: '0.55rem', color: '#9CA3AF', fontWeight: 800, marginBottom: '0.15rem' }}>ACTIVE QUESTION</div>
+              <div style={{ fontSize: '0.65rem', color: '#FFF', lineHeight: 1.35 }}>"{currentCandidate.liveStream.question}"</div>
             </div>
-
-            {/* Current Probing Question Box */}
-            <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <div style={{ fontSize: '0.625rem', color: '#9CA3AF', fontWeight: 800, marginBottom: '0.2rem' }}>ACTIVE QUESTION</div>
-              <div style={{ fontSize: '0.785rem', color: '#FFF', lineHeight: 1.4 }}>
-                "{currentCandidate.liveStream.question}"
-              </div>
+            <div style={{ background: 'rgba(16,185,129,0.08)', padding: '0.45rem 0.65rem', borderRadius: '6px', border: '1px solid rgba(16,185,129,0.25)' }}>
+              <div style={{ fontSize: '0.55rem', color: '#10B981', fontWeight: 800, marginBottom: '0.15rem' }}>CANDIDATE RESPONSE</div>
+              <div style={{ fontSize: '0.65rem', color: '#E5E7EB', lineHeight: 1.35 }}>"{currentCandidate.liveStream.answer}"</div>
             </div>
-
-            {/* Candidate Response Box */}
-            <div style={{ background: 'rgba(16, 185, 129, 0.08)', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
-              <div style={{ fontSize: '0.625rem', color: '#10B981', fontWeight: 800, marginBottom: '0.2rem' }}>CANDIDATE RESPONSE</div>
-              <div style={{ fontSize: '0.785rem', color: '#E5E7EB', lineHeight: 1.4 }}>
-                "{currentCandidate.liveStream.answer}"
-              </div>
-            </div>
-
-            {/* AI Reasoning Analysis */}
-            <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '0.7rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <div style={{ fontSize: '0.625rem', color: '#F59E0B', fontWeight: 800 }}>AI REAL-TIME REASONING</div>
-              {currentCandidate.liveStream.analysis.map((an, i) => <div key={i} style={{ color: '#D1D5DB' }}>{an}</div>)}
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.25rem', color: '#9CA3AF', fontSize: '0.65rem' }}>
+            <div style={{ background: 'rgba(255,255,255,0.04)', padding: '0.4rem 0.6rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)', fontSize: '0.6rem' }}>
+              <div style={{ fontSize: '0.55rem', color: '#F59E0B', fontWeight: 800, marginBottom: '0.15rem' }}>AI REAL-TIME REASONING</div>
+              {currentCandidate.liveStream.analysis.map((an, i) => <div key={i} style={{ color: '#D1D5DB', fontSize: '0.6rem' }}>{an}</div>)}
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.2rem', color: '#9CA3AF', fontSize: '0.55rem' }}>
                 <span>Confidence: <strong style={{ color: '#10B981' }}>{currentCandidate.liveStream.streamConfidence}%</strong></span>
                 <span>Difficulty: <strong style={{ color: '#F59E0B' }}>{currentCandidate.liveStream.streamDifficulty}</strong></span>
               </div>
             </div>
-
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                onClick={() => onNavigateStep(11)}
-                style={{
-                  flex: 1, background: 'rgba(255, 255, 255, 0.1)', color: '#FFF', border: '1px solid rgba(255, 255, 255, 0.2)',
-                  padding: '0.45rem', borderRadius: '8px', fontSize: '0.725rem', fontWeight: 800, cursor: 'pointer'
-                }}
-              >
-                DEEPER PROBE
-              </button>
-              <button
-                onClick={() => onNavigateStep(11)}
-                style={{
-                  flex: 1, background: '#10B981', color: '#04241C', border: 'none',
-                  padding: '0.45rem', borderRadius: '8px', fontSize: '0.725rem', fontWeight: 850, cursor: 'pointer'
-                }}
-              >
-                ACCEPT ANSWER
-              </button>
+            <div style={{ display: 'flex', gap: '0.4rem' }}>
+              <button onClick={() => onNavigateStep(11)} style={{ flex: 1, background: 'rgba(255,255,255,0.1)', color: '#FFF', border: '1px solid rgba(255,255,255,0.2)', padding: '0.35rem', borderRadius: '6px', fontSize: '0.625rem', fontWeight: 800, cursor: 'pointer' }}>DEEPER PROBE</button>
+              <button onClick={() => onNavigateStep(11)} style={{ flex: 1, background: '#10B981', color: '#04241C', border: 'none', padding: '0.35rem', borderRadius: '6px', fontSize: '0.625rem', fontWeight: 850, cursor: 'pointer' }}>ACCEPT ANSWER</button>
             </div>
-
-            {/* Terminal Input Injector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px', padding: '4px 8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <span style={{ color: '#10B981', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>&gt;_</span>
-              <input 
-                type="text" 
-                value={termInput}
-                onChange={e => setTermInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleInjectProbe()}
-                placeholder="Inject custom prompt test..." 
-                style={{ border: 'none', background: 'transparent', outline: 'none', color: '#FFF', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', width: '100%' }}
-              />
-              <button onClick={handleInjectProbe} style={{ background: 'transparent', border: 'none', color: '#10B981', cursor: 'pointer' }}>
-                <Send size={12} />
-              </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', padding: '3px 6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <span style={{ color: '#10B981', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>&gt;_</span>
+              <input type="text" value={termInput} onChange={e => setTermInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleInjectProbe()} placeholder="Inject prompt..." style={{ border: 'none', background: 'transparent', outline: 'none', color: '#FFF', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', width: '100%' }} />
+              <button onClick={handleInjectProbe} style={{ background: 'transparent', border: 'none', color: '#10B981', cursor: 'pointer' }}><Send size={10} /></button>
             </div>
           </div>
 
-          {/* ADAPTIVE QUESTION ENGINE */}
-          <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {/* ADAPTIVE QUESTION ENGINE (Compact) */}
+          <div className="glass-card" style={{ padding: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                  <Sliders size={16} color="#10B981" /> Adaptive Question Decision Engine
-                </h3>
-                <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Real-time next question selection based on information gain</span>
-              </div>
-              <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#D97706', background: 'rgba(254, 243, 199, 0.9)', padding: '3px 9px', borderRadius: '99px' }}>
-                WEAKNESS DETECTED
-              </span>
+              <h3 style={{ fontSize: '0.75rem', fontWeight: 850, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Sliders size={13} color="#10B981" /> Adaptive Question Engine
+              </h3>
+              <span style={{ fontSize: '0.575rem', fontWeight: 800, color: '#D97706', background: 'rgba(254,243,199,0.9)', padding: '2px 7px', borderRadius: '99px' }}>WEAKNESS DETECTED</span>
             </div>
-
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              Target Weakness: <strong style={{ color: '#D97706' }}>{currentCandidate.nextProbe.weakness}</strong> (Previous: {currentCandidate.nextProbe.prevPerf})
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
+              Target: <strong style={{ color: '#D97706' }}>{currentCandidate.nextProbe.weakness}</strong> ({currentCandidate.nextProbe.prevPerf})
             </div>
-
-            {/* Adaptive Decision Card */}
-            <div style={{
-              background: 'rgba(236, 253, 245, 0.9)',
-              borderRadius: 'var(--radius-md)',
-              border: '1.5px solid rgba(16, 185, 129, 0.35)',
-              padding: '0.75rem 0.85rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.45rem',
-              fontSize: '0.75rem'
-            }}>
-              <div>Increase Difficulty: <strong style={{ color: '#10B981' }}>{currentCandidate.nextProbe.diffDelta}</strong></div>
-              <div>Target Concept: <strong style={{ color: 'var(--text-primary)' }}>{currentCandidate.nextProbe.targetConcept}</strong></div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span>Expected Information Gain:</span>
-                <strong style={{ color: '#059669', fontFamily: 'var(--font-mono)' }}>█████████░ {currentCandidate.nextProbe.infoGain}%</strong>
-              </div>
+            <div style={{ background: 'rgba(236,253,245,0.9)', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(16,185,129,0.3)', padding: '0.45rem 0.65rem', display: 'flex', gap: '1rem', fontSize: '0.625rem', flexWrap: 'wrap' }}>
+              <span>Difficulty: <strong style={{ color: '#10B981' }}>{currentCandidate.nextProbe.diffDelta}</strong></span>
+              <span>Concept: <strong style={{ color: 'var(--text-primary)' }}>{currentCandidate.nextProbe.targetConcept}</strong></span>
+              <span>Info Gain: <strong style={{ color: '#059669' }}>{currentCandidate.nextProbe.infoGain}%</strong></span>
             </div>
-
-            <button
-              onClick={() => onNavigateStep(11)}
-              className="btn-primary"
-              style={{
-                width: '100%', padding: '0.6rem', fontSize: '0.785rem',
-                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)', gap: '0.4rem'
-              }}
-            >
-              <Zap size={14} fill="#FFF" />
-              <span>{activeProbeDeployed ? 'PROBE DEPLOYED TO STREAM ✓' : 'DEPLOY ADAPTIVE PROBE →'}</span>
+            <button onClick={() => onNavigateStep(11)} className="btn-primary" style={{ width: '100%', padding: '0.45rem', fontSize: '0.7rem', background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', boxShadow: '0 3px 10px rgba(16,185,129,0.3)', gap: '0.35rem' }}>
+              <Zap size={12} fill="#FFF" />
+              <span>{activeProbeDeployed ? 'PROBE DEPLOYED ✓' : 'DEPLOY ADAPTIVE PROBE →'}</span>
             </button>
-        </div>
-
-{/* RIGHT COLUMN: VERTICAL OS TELEMETRY RAIL (ENDS AT CANDIDATE JOURNEY LEVEL) */}
-        <div style={{
-          background: '#0D1117',
-          borderRadius: '24px',
-          border: '1.5px solid rgba(16, 185, 129, 0.35)',
-          padding: '1.25rem 1rem',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          color: '#9CA3AF',
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.6875rem',
-          boxShadow: '0 12px 32px rgba(0, 0, 0, 0.4)',
-          gap: '0.85rem',
-          height: '100%',
-          boxSizing: 'border-box'
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {/* Header Status */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.45rem',
-              color: '#10B981',
-              fontWeight: 850,
-              fontSize: '0.75rem',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              paddingBottom: '0.75rem'
-            }}>
-              <span className="pulse-glow" style={{ width: 7, height: 7, borderRadius: '50%', background: '#10B981' }} />
-              ENGINE ONLINE
-            </div>
-
-            {/* Telemetry Stack */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '0.55rem 0.7rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: '0.575rem', color: '#6B7280', fontWeight: 800 }}>EVALUATED</div>
-                <div style={{ fontWeight: 850, color: '#FFF', marginTop: '2px', fontSize: '0.8rem' }}>14 DOMAINS</div>
-              </div>
-
-              <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '0.55rem 0.7rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: '0.575rem', color: '#6B7280', fontWeight: 800 }}>EVENTS AUDITED</div>
-                <div style={{ fontWeight: 850, color: '#FFF', marginTop: '2px', fontSize: '0.8rem' }}>284 EVENTS</div>
-              </div>
-
-              <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '0.55rem 0.7rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: '0.575rem', color: '#6B7280', fontWeight: 800 }}>VECTOR INDEX</div>
-                <div style={{ fontWeight: 850, color: '#10B981', marginTop: '2px', fontSize: '0.8rem' }}>READY</div>
-              </div>
-
-              <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '0.55rem 0.7rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: '0.575rem', color: '#6B7280', fontWeight: 800 }}>KNOWLEDGE GRAPH</div>
-                <div style={{ fontWeight: 850, color: '#10B981', marginTop: '2px', fontSize: '0.8rem' }}>SYNCED</div>
-              </div>
-
-              <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '0.55rem 0.7rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: '0.575rem', color: '#6B7280', fontWeight: 800 }}>ACTIVE EVALUATOR</div>
-                <div style={{ fontWeight: 850, color: '#A7F3D0', marginTop: '2px', fontSize: '0.8rem' }}>AGENT TURING</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer Metrics */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.75rem', fontSize: '0.65rem' }}>
-            <div>LATENCY: <strong style={{ color: '#93C5FD' }}>82ms</strong></div>
-            <div>LAST EVENT: <strong style={{ color: '#FDE68A' }}>1.2s AGO</strong></div>
           </div>
         </div>
       </div>
 
+      {/* ════════════════════════════════════════════════════════════════════════
+          4. OS TELEMETRY STRIP (Compact Horizontal)
+      ════════════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: '#0D1117', borderRadius: '12px', padding: '0.5rem 1.25rem', border: '1px solid rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#9CA3AF', fontFamily: 'var(--font-mono)', fontSize: '0.575rem', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#10B981', fontWeight: 850, fontSize: '0.625rem' }}>
+          <span className="pulse-glow" style={{ width: 6, height: 6, borderRadius: '50%', background: '#10B981' }} />
+          ENGINE ONLINE
+        </div>
+        <div style={{ display: 'flex', gap: '1.25rem' }}>
+          <span>EVALUATED: <strong style={{ color: '#FFF' }}>14 DOMAINS</strong></span>
+          <span>EVENTS: <strong style={{ color: '#FFF' }}>284</strong></span>
+          <span>VECTOR: <strong style={{ color: '#10B981' }}>READY</strong></span>
+          <span>GRAPH: <strong style={{ color: '#10B981' }}>SYNCED</strong></span>
+          <span>AGENT: <strong style={{ color: '#A7F3D0' }}>TURING</strong></span>
+          <span>LATENCY: <strong style={{ color: '#93C5FD' }}>82ms</strong></span>
+        </div>
       </div>
-</div>
-</div>
+
       {/* ════════════════════════════════════════════════════════════════════════
           5. "WHY 88?" READINESS BREAKDOWN MODAL DIALOG
       ════════════════════════════════════════════════════════════════════════ */}
